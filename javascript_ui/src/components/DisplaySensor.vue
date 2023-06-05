@@ -71,13 +71,7 @@ export default defineComponent({
 
     // Calculate whether the sensor is offline using currentTime and lastSeen
     let isOffline = computed(() => {
-      const lastSeen = props.sensor.lastSeen?.getTime();
-      if (!lastSeen) {
-        return true;
-      }
-      const timeDifference = Math.abs(lastSeen - currentTime.value);
-      const thirtyMinutes = 1800000; // in ms
-      return timeDifference > thirtyMinutes;
+      return false;
     });
 
     // Check whether the sensor name or id is undefined

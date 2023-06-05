@@ -3,14 +3,8 @@
     <q-card-section horizontal class="full-height">
       <q-card-section>
         <div>
-          <img
-            :src="iconUrl"
-            :alt="forecastStore.weatherDescription"
-            style="width: 100px"
-          />
-          <div class="fontsize-16 text-capitalize text-center">
-            {{ forecastStore.weatherDescription }}
-          </div>
+          <q-icon name="sunny" size="100px" class="q-pa-sm" />
+          <div class="fontsize-16 text-capitalize text-center">Sunny</div>
         </div>
       </q-card-section>
 
@@ -19,9 +13,7 @@
       <div class="full-width">
         <q-card-section class="q-pa-sm">
           <div class="fontsize-22 text-bold">
-            <span v-if="forecastStore.stationName">
-              {{ forecastStore.stationName }} -
-            </span>
+            <span> Ipswich - </span>
             <span>Weather Station</span>
           </div>
         </q-card-section>
@@ -29,16 +21,10 @@
         <q-separator dark />
 
         <q-card-section class="q-pa-sm fontsize-26">
-          <div v-if="forecastStore.errorMessage">
-            Weather Station Offline <br />
-            Reason: {{ forecastStore.errorMessage }}
-          </div>
-          <div v-else class="row">
+          <div class="row">
             <div class="col">
-              <div>
-                Temperature: {{ forecastStore.currentTemp?.toFixed(1) }}°C
-              </div>
-              <div>Humidity: {{ forecastStore.currentHumidity }}% RH</div>
+              <div>Temperature: 36.3°C</div>
+              <div>Humidity: 55.7% RH</div>
               <q-btn class="q-mt-sm fontsize-16" color="secondary"
                 >View Detailed Forecast</q-btn
               >

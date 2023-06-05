@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { io } from 'socket.io-client';
-import { SensorData } from 'src/components/models';
+import { SensorData, RiskLevel } from 'src/components/models';
 import { getRiskLevel } from 'src/helper/riskLevel';
 import { playAudio } from 'src/helper/audioAlertDispatcher';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
@@ -103,6 +103,41 @@ export const useDataSensorStore = defineStore('dataSensor', {
     setup() {
       console.log('Setting up socket...');
       const socket = io('ws://localhost:5000');
+
+      this.allSensorData = [
+        {
+          id: 1,
+          name: 'Kitchen',
+          temperature: 33.1,
+          humidity: 45.9,
+          lastSeen: new Date(Date.now() - 34 * 1000),
+          riskLevel: RiskLevel.LOW,
+        },
+        {
+          id: 2,
+          name: 'Living Room',
+          temperature: 35.4,
+          humidity: 51.2,
+          lastSeen: new Date(Date.now() - 1 * 1000),
+          riskLevel: RiskLevel.MEDIUM,
+        },
+        {
+          id: 3,
+          name: 'Bedroom',
+          temperature: 29.2,
+          humidity: 49.7,
+          lastSeen: new Date(Date.now() - 185 * 1000),
+          riskLevel: RiskLevel.LOW,
+        },
+        {
+          id: 4,
+          name: 'Outside',
+          temperature: 38.5,
+          humidity: 56.3,
+          lastSeen: new Date(Date.now() - 120 * 1000),
+          riskLevel: RiskLevel.HIGH,
+        },
+      ];
 
       // Callbacks for socket
       socket.on('connect', () => {
