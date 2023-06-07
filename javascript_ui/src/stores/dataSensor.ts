@@ -139,6 +139,17 @@ export const useDataSensorStore = defineStore('dataSensor', {
         },
       ];
 
+      setTimeout(() => {
+        this.allSensorData[1].temperature = 37.4;
+        this.allSensorData[1].humidity = 53.7;
+        this.allSensorData[1].lastSeen = new Date(Date.now());
+        this.allSensorData[1].riskLevel = RiskLevel.HIGH;
+      }, 10000);
+
+      setTimeout(() => {
+        this.alertSensor = this.allSensorData[1];
+      }, 11000);
+
       // Callbacks for socket
       socket.on('connect', () => {
         this.isConnected = true;
