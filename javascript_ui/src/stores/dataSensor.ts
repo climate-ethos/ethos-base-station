@@ -118,7 +118,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
           name: 'Living Room',
           temperature: 35.4,
           humidity: 51.2,
-          lastSeen: new Date(Date.now() - 1 * 1000),
+          lastSeen: new Date(Date.now() - 520 * 1000),
           riskLevel: RiskLevel.MEDIUM,
         },
         {
