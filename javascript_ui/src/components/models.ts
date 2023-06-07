@@ -20,7 +20,7 @@ export interface UserData {
 export interface CoolingStrategy {
   name: string;
   shortName: string;
-  imageUrl: string;
+  icon: string;
   effectiveness: number;
   extraInfo: {
     bestUse: Array<string>;

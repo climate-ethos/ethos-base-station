@@ -30,7 +30,8 @@ export default defineComponent({
         // Subtract header's height from q-card height
         return (
           header.value.$el.parentElement.offsetHeight -
-          header.value.$el.offsetHeight +
+          header.value.$el.offsetHeight -
+          1 + // Needed to stop overflow
           'px'
         );
       } else {
