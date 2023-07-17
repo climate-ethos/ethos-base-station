@@ -4,12 +4,12 @@
       <!-- Header slot -->
       <slot name="header"></slot>
     </q-card-section>
-    <BaseScrollArea :height="scrollAreaHeight">
+    <base-scroll-area :height="scrollAreaHeight">
       <q-card-section class="q-pt-none fontsize-14">
         <!-- Main slot here -->
         <slot name="main"></slot>
       </q-card-section>
-    </BaseScrollArea>
+    </base-scroll-area>
   </q-card>
 </template>
 

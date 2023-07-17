@@ -12,29 +12,39 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary: #1976d2;
-$secondary: #26a69a;
+$primary: #2f6582;
+$secondary: #368574;
 $accent: #9c27b0;
 
 $dark: #1d1d1d;
 $dark-page: #121212;
 
-$positive: #009422;
+$positive: #37955d;
 $negative: #a10013;
-$info: #31ccec;
-$warning: #d59500;
-
-// -60px for toolbar (50px) + extra room (10px)
+$info: #13aecd;
+$warning: #d69c1f;
 
 $toolbar-height: 80px;
 
-$remaining-height: calc(100vh - #{$toolbar-height} - 10px);
+$remaining-height: calc(
+  100vh - #{$toolbar-height} - 10px
+); // 10px for extra room
 
 $keyboard-height: calc(#{$remaining-height} * 0.52);
 
 $remaining-height-keyboard-open: calc(
   #{$remaining-height} - #{$keyboard-height}
 );
+
+.remaining-height {
+  height: $remaining-height;
+  transition: height 0.1s ease-in;
+}
+
+.remaining-height-keyboard-open {
+  height: $remaining-height-keyboard-open;
+  transition: height 0.1s ease-out;
+}
 
 @function fluid-font-size(
   $minimumSize,

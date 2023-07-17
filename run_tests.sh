@@ -1,6 +1,13 @@
+# RUN JS TESTS
+cd javascript_ui
+echo "-----\nTesting Javascript UI:\n-----"
+npm run test:unit:ci
+cd ..
+
+# RUN PYTHON TESTS
 cd python_radio
 . ./env/bin/activate
-cd src
 # Find and run all tests inside `tests` directory
-python3 -m unittest discover tests -b
+echo "-----\nTesting Python Code:\n-----"
+PYTHONPATH=./src python3 test/main.py
 cd ../..

@@ -12,72 +12,100 @@
         If you need to lower your body temperature, here are the best ways to do
         it (click on a row for more info):
       </div>
-      <div class="table-container">
-        <q-table
-          ref="tableRef"
-          :rows="coolingStrategies"
-          class="large-font my-sticky-header-table"
-          row-key="name"
-          :pagination="pagination"
-          :columns="columns"
-          @row-click="onRowClick"
-          hide-bottom
-        >
-          <template v-slot:body-cell-icon="props">
-            <q-td :props="props">
-              <q-icon :name="props.row.icon" size="60px" color="grey" />
-            </q-td>
-          </template>
-
-          <template v-slot:body-cell-effectiveness="props">
-            <q-td :props="props">
-              <CoolingInterventionEffectiveness
-                :effectiveness="props.row.effectiveness"
-              />
-            </q-td>
-          </template>
-        </q-table>
-        <q-avatar
-          icon="arrow_upward"
-          size="xl"
-          color="primary"
-          text-color="white"
-          class="scroll-indicator-top"
-          v-show="showTopScrollIndicator"
-          @click="scrollTo(0)"
-        />
-        <q-avatar
-          icon="arrow_downward"
-          size="xl"
-          color="primary"
-          text-color="white"
-          class="scroll-indicator-bottom"
-          v-show="showBottomScrollIndicator"
-          @click="scrollTo(1)"
-        />
+      <div class="row">
+        <div class="col-4 q-pr-lg">
+          <CoolingInterventionFanBlinds />
+        </div>
+        <div class="table-container col-8">
+          <q-table
+            ref="tableRef"
+            :rows="rows"
+            class="my-sticky-header-table"
+            row-key="name"
+            :pagination="pagination"
+            :columns="columns"
+            hide-bottom
+          >
+            <template v-slot:body="props">
+              <q-tr
+                @click="onRowClick(props.row)"
+                :props="props"
+                :class="{
+                  'bg-grey text-white': !props.row.effectiveness,
+                }"
+              >
+                <q-td v-for="col in props.cols" :key="col.name" :props="props">
+                  <template v-if="col.name === 'icon'">
+                    <q-icon
+                      :name="props.row[col.name]"
+                      size="60px"
+                      color="grey"
+                    />
+                  </template>
+                  <template v-else-if="col.name === 'effectiveness'">
+                    <CoolingInterventionEffectiveness
+                      :effectiveness="props.row[col.name]"
+                    />
+                  </template>
+                  <template v-else>
+                    {{ props.row[col.name] }}
+                  </template>
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+          <q-avatar
+            icon="arrow_upward"
+            size="xl"
+            color="primary"
+            text-color="white"
+            class="scroll-indicator-top"
+            v-show="showTopScrollIndicator"
+            @click="scrollTo(0)"
+          />
+          <q-avatar
+            icon="arrow_downward"
+            size="xl"
+            color="primary"
+            text-color="white"
+            class="scroll-indicator-bottom"
+            v-show="showBottomScrollIndicator"
+            @click="scrollTo(1)"
+          />
+        </div>
       </div>
     </q-card-section>
   </q-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, onBeforeUnmount } from 'vue';
+import {
+  defineComponent,
+  ref,
+  Ref,
+  onMounted,
+  onBeforeUnmount,
+  computed,
+} from 'vue';
+import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import { CoolingStrategy } from 'src/components/models';
-import { coolingStrategies } from 'src/helper/coolingStrategies';
 import { QTable, QTableProps } from 'quasar';
 import CoolingInterventionEffectiveness from './CoolingInterventionEffectiveness.vue';
+import CoolingInterventionFanBlinds from './CoolingInterventionFanBlinds.vue';
 
 export default defineComponent({
   name: 'CoolingInterventionList',
-  components: { CoolingInterventionEffectiveness },
+  components: {
+    CoolingInterventionEffectiveness,
+    CoolingInterventionFanBlinds,
+  },
   setup(props, { emit }) {
+    const dataPreferencesStore = useDataPreferencesStore();
     const showBottomScrollIndicator = ref(false);
     const showTopScrollIndicator = ref(false);
     const tableRef: Ref<null | QTable> = ref(null);
     const pagination = {
       rowsPerPage: 0,
-      sortBy: 'effectiveness',
-      descending: true,
     };
     const columns: QTableProps['columns'] = [
       {
@@ -86,7 +114,6 @@ export default defineComponent({
         label: '',
         align: 'left',
         field: 'icon',
-        format: (val: string) => `<img src="${val}" alt="" />`,
       },
       {
         name: 'name',
@@ -98,12 +125,46 @@ export default defineComponent({
       {
         name: 'effectiveness',
         required: true,
-        sortable: true,
         label: 'Potential Effectiveness',
         align: 'left',
         field: 'effectiveness',
       },
     ];
+
+    const rows = computed(() => {
+      // Separate the strategies into two arrays based on haveAccessTo and wouldUse properties
+      const availableAndUsable =
+        dataPreferencesStore.coolingStrategyOptions.filter(
+          (option) => option.haveAccessTo && option.wouldUse
+        );
+      const remaining = dataPreferencesStore.coolingStrategyOptions.filter(
+        (option) => !(option.haveAccessTo && option.wouldUse)
+      );
+
+      // Sort both arrays
+      availableAndUsable.sort((a, b) => b.effectiveness - a.effectiveness);
+      remaining.sort((a, b) => b.effectiveness - a.effectiveness);
+
+      // Concatenate the sorted arrays with the special row in between
+      return availableAndUsable.concat([
+        {
+          name: 'You might also consider using...',
+          haveAccessTo: true,
+          wouldUse: true,
+          whyNotUse: [],
+          whyNotUseOther: '',
+          shortName: '',
+          icon: '',
+          effectiveness: 0,
+          extraInfo: {
+            bestUse: [],
+            whenUse: [],
+            whenNotUse: [],
+          },
+        },
+        ...remaining,
+      ]);
+    });
 
     onMounted(() => {
       const table = tableRef.value?.$el;
@@ -168,12 +229,15 @@ export default defineComponent({
       }
     };
 
-    const onRowClick = (evt: Event, row: CoolingStrategy) => {
-      emit('show-info', row);
+    const onRowClick = (row: CoolingStrategy) => {
+      if (row.effectiveness) {
+        emit('show-info', row);
+      }
     };
 
     return {
-      coolingStrategies,
+      dataPreferencesStore,
+      rows,
       columns,
       pagination,
       tableRef,
@@ -186,69 +250,13 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
-.large-font {
-  tbody td,
-  thead th {
-    font-size: 26px;
-  }
-}
-
+<style lang="scss" scoped>
 .table-container {
   position: relative; // This allows absolute positioning of children
-}
-
-.q-table__middle.scroll::-webkit-scrollbar {
-  width: 20px; /* barStyle width */
-  background-color: #027ae333; /* barStyle background color */
-  border-radius: 9px; /* barStyle border radius */
-}
-
-.q-table__middle.scroll::-webkit-scrollbar-thumb {
-  right: 4px; /* thumbStyle right */
-  border-radius: 9px; /* thumbStyle border radius */
-  background-color: #027ae3bf; /* thumbStyle background color */
-  width: 16px; /* thumbStyle width */
-}
-
-.scroll-indicator-top,
-.scroll-indicator-bottom {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.scroll-indicator-bottom {
-  bottom: 10px;
-}
-
-.scroll-indicator-top {
-  top: 60px;
 }
 
 .my-sticky-header-table {
   /* height or max-height is important */
   height: calc(100vh / 1.5);
-
-  .q-table__top,
-  .q-table__bottom,
-  thead tr:first-child th {
-    /* bg color is important for th; just specify one */
-    background-color: $grey-3;
-  }
-
-  thead tr th {
-    position: sticky;
-    z-index: 1;
-  }
-  thead tr:first-child th {
-    top: 0;
-  }
-
-  /* prevent scrolling behind sticky top row on focus */
-  tbody {
-    /* height of all previous header rows */
-    scroll-margin-top: 48px;
-  }
 }
 </style>

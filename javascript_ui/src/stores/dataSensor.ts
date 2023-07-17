@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { io } from 'socket.io-client';
-import { SensorData, RiskLevel } from 'src/components/models';
-import { getRiskLevel } from 'src/helper/riskLevel';
-import { playAudio } from 'src/helper/audioAlertDispatcher';
+import { SensorData } from 'src/components/models';
+import { getRiskLevel } from 'src/helpers/riskLevel';
+import { playAudio } from 'src/helpers/audioAlertDispatcher';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 
 const deserializeSensorData = (sensorDataString: string) => {
@@ -16,6 +16,20 @@ const deserializeSensorData = (sensorDataString: string) => {
   });
   // Return parsed state
   return state;
+};
+
+export const isOutdoorSensor = (sensor: SensorData) => {
+  return sensor.name?.toLowerCase().includes('out');
+};
+
+const findOutdoorSensorIndex = (sensorData: Array<SensorData>) => {
+  const outsideIndex = sensorData.findIndex((el) => {
+    if (isOutdoorSensor(el)) {
+      return true;
+    }
+    return false;
+  });
+  return outsideIndex;
 };
 
 export const useDataSensorStore = defineStore('dataSensor', {
@@ -76,6 +90,11 @@ export const useDataSensorStore = defineStore('dataSensor', {
       }
       return false;
     },
+    // Return outdoor sensor values
+    getOutdoorSensor: (state) => {
+      const outsideIndex = findOutdoorSensorIndex(state.allSensorData);
+      return state.allSensorData[outsideIndex];
+    },
     // Get deep copy of sensor data
     getDeepCopySensorData: (state) => {
       return deserializeSensorData(JSON.stringify(state)).allSensorData;
@@ -85,12 +104,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
       // Take a shallow copy of the array to prevent data mutation
       const copyOfSensorData = [...state.allSensorData];
       // Find index of the sensor that has 'out' in its name
-      const outsideIndex = copyOfSensorData.findIndex((el) => {
-        if (el.name?.toLowerCase().includes('out')) {
-          return true;
-        }
-        return false;
-      });
+      const outsideIndex = findOutdoorSensorIndex(copyOfSensorData);
       // If a sensor matches outside, push it to the end of the array
       if (outsideIndex >= 0) {
         copyOfSensorData.push(copyOfSensorData.splice(outsideIndex, 1)[0]);
@@ -102,7 +116,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
   actions: {
     setup() {
       console.log('Setting up socket...');
-      const socket = io('ws://localhost:5000');
+      const socket = io('ws://localhost:5001');
 
       this.allSensorData = [
         {
@@ -168,7 +182,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
 
         // Check data
         if (!(data.id && data.temperature && data.humidity)) {
-          // Some of the data is missing
+          // Error: Some of the data is missing
           console.error('Invalid/missing socket data');
           console.log('ID:', data.id);
           console.log('Temperature:', data.temperature);
@@ -183,6 +197,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
 
         // Check
         if (isNaN(id) || isNaN(temperature) || isNaN(humidity)) {
+          // Error:
           console.error('Error parsing strings to numbers');
           console.log('ID:', data.id);
           console.log('Temperature:', data.temperature);

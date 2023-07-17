@@ -19,11 +19,19 @@
     <q-separator />
 
     <q-card-section class="q-pa-sm">
-      <div class="fontsize-40 text-bold">{{ sensor.temperature }}°C</div>
+      <div class="fontsize-36 text-bold">{{ sensor.temperature }}°C</div>
       <div class="fontsize-30 text-bold">{{ sensor.humidity }}% RH</div>
+      <div class="fontsize-14 text-italic">
+        {{ formattedLastSeen }}
+      </div>
     </q-card-section>
-    <div class="fontsize-18 text-italic q-ma-sm absolute-bottom">
-      {{ formattedLastSeen }}
+
+    <!-- Fan use -->
+    <div v-if="isDisplayFanWarning">
+      <q-separator />
+      <q-card-section class="q-ml-sm q-pa-none">
+        <div class="fontsize-22 text-bold">DONT USE FAN</div>
+      </q-card-section>
     </div>
   </q-card>
 </template>
@@ -38,7 +46,8 @@ import {
   onUnmounted,
 } from 'vue';
 import { SensorData, RiskLevel } from 'components/models';
-import { playTextToSpeech } from 'src/helper/audioAlertDispatcher';
+import { playTextToSpeech } from 'src/helpers/audioAlertDispatcher';
+import { shouldUseFan } from 'src/helpers/fanAndWindowUse';
 
 export default defineComponent({
   name: 'DisplaySensor',
@@ -68,6 +77,11 @@ export default defineComponent({
     onUnmounted(() => {
       clearInterval(updateCurrentTimeInterval);
     });
+
+    // Whether we should display 'DON'T USE FAN' at bottom of component
+    const isDisplayFanWarning = computed(
+      () => shouldUseFan(props.sensor) === 'no'
+    );
 
     // Calculate whether the sensor is offline using currentTime and lastSeen
     let isOffline = computed(() => {
@@ -165,6 +179,7 @@ export default defineComponent({
     };
 
     return {
+      isDisplayFanWarning,
       isUndefined,
       isOffline,
       backgroundColor,

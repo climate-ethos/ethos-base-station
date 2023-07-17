@@ -7,7 +7,7 @@
     >
       <DisplaySensor :sensor="sensor"></DisplaySensor>
     </div>
-    <div class="col-xs-12 col-sm-8 display-component">
+    <div v-if="true" class="col-xs-12 col-sm-8 display-component">
       <DisplayForecast />
     </div>
   </q-page>
@@ -25,7 +25,6 @@ export default defineComponent({
   components: { DisplaySensor, DisplayForecast },
   setup() {
     const sortedSensorData = useDataSensorStore().getSortedSensorData;
-
     return { sortedSensorData };
   },
 });

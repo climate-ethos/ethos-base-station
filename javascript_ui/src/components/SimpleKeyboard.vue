@@ -1,13 +1,13 @@
 <template>
   <!-- Mousedown.prevent prevents loss of focus on original input element when clicked -->
-  <div @mousedown.prevent class="simple-keyboard"></div>
+  <div @mousedown.prevent class="simple-keyboard" ref="keyboardRef"></div>
 </template>
 
 <script lang="ts">
 import Keyboard from 'simple-keyboard';
 import 'simple-keyboard/build/css/index.css';
 import { useKeyboardStore } from 'src/stores/keyboard';
-import { defineComponent, nextTick, onMounted, watch } from 'vue';
+import { Ref, ref, defineComponent, nextTick, onMounted, watch } from 'vue';
 
 const textLayout = {
   default: [
@@ -30,6 +30,7 @@ export default defineComponent({
   name: 'SimpleKeyboard',
   setup() {
     const keyboardStore = useKeyboardStore();
+    const keyboardRef: Ref<null | HTMLDivElement> = ref(null);
     let keyboard: null | Keyboard = null;
 
     onMounted(() => {
@@ -46,6 +47,11 @@ export default defineComponent({
           '{abc}': 'ABC',
         },
       });
+      // Get height and set store
+      if (keyboardRef.value) {
+        const keyboardHeight = keyboardRef.value.offsetHeight;
+        keyboardStore.keyboardHeight = keyboardHeight;
+      }
     });
 
     // Watch for keyboard changing state between text and numerical input
@@ -92,9 +98,8 @@ export default defineComponent({
       }
 
       // Get starting and ending cursor position
-      const selectionStart =
-        keyboardStore.keyboardBinding.nativeEl.selectionStart;
-      const selectionEnd = keyboardStore.keyboardBinding.nativeEl.selectionEnd;
+      const selectionStart = keyboardStore.keyboardBinding.selectionStart;
+      const selectionEnd = keyboardStore.keyboardBinding.selectionEnd;
 
       if (selectionStart === null || selectionEnd === null) {
         console.error('No cursor position in input element');
@@ -133,7 +138,7 @@ export default defineComponent({
           selectionEnd
         );
         // Restore cursor position
-        restoreInputCursorToPosition(selectionStart - 1);
+        restoreInputCursorToPosition(selectionEnd - 1);
       }
     };
 
@@ -197,14 +202,14 @@ export default defineComponent({
     // Restore the input cursor position to the specified position
     const restoreInputCursorToPosition = (newStartPos: number) => {
       nextTick(() => {
-        keyboardStore.keyboardBinding?.nativeEl.setSelectionRange(
+        keyboardStore.keyboardBinding?.setSelectionRange(
           newStartPos,
           newStartPos
         );
       });
     };
 
-    return { keyboard };
+    return { keyboard, keyboardRef };
   },
 });
 </script>

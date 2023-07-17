@@ -16,6 +16,8 @@
     "Persistedstate",
     "pinia",
     "SETTINGSPASSCODE",
-    "Vetur"
-  ]
+    "Vetur",
+    "WBGT"
+  ],
+  "python.analysis.extraPaths": ["./python_radio/src"]
 }

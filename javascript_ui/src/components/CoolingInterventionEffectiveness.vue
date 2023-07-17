@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="effectiveness">
     <q-icon
       v-for="index in 5"
       :key="index"

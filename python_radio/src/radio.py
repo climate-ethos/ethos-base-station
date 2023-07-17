@@ -1,6 +1,8 @@
+
 from adafruit_rfm9x import RFM9x
 import socketio
 import re
+from logger import Logger
 
 async def radio_listen(sio: socketio.AsyncServer, rfm9x: RFM9x):
   # Radio listen loop
@@ -8,20 +10,18 @@ async def radio_listen(sio: socketio.AsyncServer, rfm9x: RFM9x):
     try:
       radio_packet = rfm9x.receive(timeout=5.0)
     except Exception as e:
-      print(f"Error receiving packet: {e}")
+      Logger.error(f"Error receiving packet: {e}")
       continue
 
     if radio_packet is None:
       print("Nothing received, trying again...")
       continue
 
-    rssi = rfm9x.last_rssi
-    print("Received signal strength: {0} dB".format(rssi))
-
+    # Radio packet received
     try:
       radio_data = process_packet(radio_packet)
     except Exception as e:
-      print(f"Error processing packet: {e}")
+      Logger.error(f"Error processing packet: {e}")
       continue
 
     if radio_data is None:
@@ -31,13 +31,15 @@ async def radio_listen(sio: socketio.AsyncServer, rfm9x: RFM9x):
       acknowledgement_data = bytes("R" + radio_data["id"] + "\r\n","utf-8")
       rfm9x.send(acknowledgement_data)
     except Exception as e:
-      print(f"Error sending acknowledgement: {e}")
+      Logger.error(f"Error sending acknowledgement: {e}")
 
-    print("Emitting data... id: {0}, temp: {1}, RH: {2}".format(radio_data["id"], radio_data["temperature"], radio_data["humidity"]))
+    # Log radio data
+    rssi = rfm9x.last_rssi
+    Logger.log_radio_data(radio_data, rssi)
     try:
       await sio.emit('data', radio_data)
     except Exception as e:
-      print(f"Error emitting data: {e}")
+      Logger.error(f"Error emitting data: {e}")
 
 
 def process_packet(packet: bytearray):
@@ -60,4 +62,4 @@ def process_packet(packet: bytearray):
       "humidity": match[3]
     }
   except Exception as e:
-    print(f"Error processing packet: {e}")
+    Logger.error(f"Error processing packet: {e}")

@@ -168,7 +168,6 @@ export default defineComponent({
 
     return {
       showModal,
-      isTemperatureRisk: computed(() => true),
     };
   },
 });

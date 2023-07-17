@@ -44,4 +44,4 @@ if __name__ == '__main__':
     # Start radio listen thread
     radio_thread = threading.Thread(target=asyncio.run, args=(radio_listen(sio, rfm9x),))
     radio_thread.start()
-  web.run_app(app, port=5000)
+  web.run_app(app, port=5001)

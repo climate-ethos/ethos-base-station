@@ -1,4 +1,5 @@
 import { AudioType, RiskLevel, SensorData } from 'src/components/models';
+import { useVolumeStore } from 'src/stores/volume';
 
 let currentAudio: HTMLAudioElement | null = null;
 let currentUtterance: SpeechSynthesisUtterance | null = null;
@@ -22,11 +23,13 @@ const generateTextToSpeech = (
 };
 
 const playAudioTone = (riskLevel: RiskLevel): Promise<void> => {
+  const volumeStore = useVolumeStore();
   return new Promise((resolve) => {
     let audio = new Audio('/medium-priority-alert.mp3');
     if (riskLevel === RiskLevel.HIGH) {
       audio = new Audio('/high-priority-alert.mp3');
     }
+    audio.volume = volumeStore.volumePercent;
     audio.onended = () => {
       currentAudio = null;
       resolve();
@@ -37,9 +40,11 @@ const playAudioTone = (riskLevel: RiskLevel): Promise<void> => {
 };
 
 export const playTextToSpeech = (text: string): Promise<void> => {
+  const volumeStore = useVolumeStore();
   return new Promise((resolve) => {
     const utter = new SpeechSynthesisUtterance();
     utter.text = text;
+    utter.volume = volumeStore.volumePercent;
     utter.rate = 0.9;
     utter.onend = () => {
       currentUtterance = null;
@@ -53,11 +58,10 @@ export const playTextToSpeech = (text: string): Promise<void> => {
 export const stopAudio = () => {
   if (currentAudio) {
     currentAudio.pause();
-    currentAudio = null;
+    currentAudio.dispatchEvent(new Event('ended'));
   }
   if (currentUtterance) {
     speechSynthesis.cancel();
-    currentUtterance = null;
   }
 };
 

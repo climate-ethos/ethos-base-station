@@ -1,7 +1,8 @@
 <template>
-  <div class="settings-menu-quit">
-    <q-btn color="negative" label="Quit" @click="quitApp" />
-  </div>
+  <div class="text-h6 q-mb-md">Quit Application</div>
+  <!-- Inputs below -->
+  <div class="q-mb-sm text">Press below to quit the app</div>
+  <q-btn color="negative" label="Quit" @click="quitApp" />
 </template>
 
 <script lang="ts">
@@ -17,6 +18,7 @@ export default defineComponent({
       }
     },
   },
+  components: {},
 });
 </script>
 

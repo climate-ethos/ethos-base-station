@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia';
-import { QInput } from 'quasar';
 
 export const useKeyboardStore = defineStore('keyboard', {
   state: () => ({
     // What input the keyboard is bound to (used to refocus input)
-    keyboardBinding: undefined as undefined | QInput,
+    keyboardBinding: undefined as undefined | HTMLInputElement,
     // The value the keyboard is bound to
     keyboardValue: undefined as undefined | { value: string },
     // Whether to use a text or numeric keyboard
     keyboardType: 'text' as 'text' | 'number',
+    // Height of the keyboard in px
+    keyboardHeight: undefined as undefined | number,
   }),
 
   getters: {
@@ -19,7 +20,7 @@ export const useKeyboardStore = defineStore('keyboard', {
 
   actions: {
     bindKeyboard(
-      el: undefined | QInput,
+      el: undefined | HTMLInputElement,
       value: { value: string },
       type: 'text' | 'number'
     ) {

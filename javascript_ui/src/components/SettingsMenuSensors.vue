@@ -1,30 +1,28 @@
 <template>
-  <div>
-    <!-- For each sensor -->
-    <div v-for="(sensor, index) in allSensorData" :key="index" class="q-mb-md">
-      <div class="row q-mb-md">
-        <!-- Display sensor number -->
-        <div class="col-2 text-bold">Sensor {{ index + 1 }}</div>
-        <!-- Things that can be edited -->
-        <div class="col">
-          <input-keyboard
-            v-model="sensor.name"
-            label="Location"
-            :customRule="checkSensorName"
-          />
-          <input-keyboard
-            outlined
-            v-model.number="sensor.id"
-            :customRule="checkSensorId"
-            type="number"
-            label="ID"
-            hint="The ID number on the case"
-          />
-        </div>
+  <!-- For each sensor -->
+  <div v-for="(sensor, index) in allSensorData" :key="index" class="q-mb-md">
+    <div class="row q-mb-md">
+      <!-- Display sensor number -->
+      <div class="col-2 text-bold">Sensor {{ index + 1 }}</div>
+      <!-- Things that can be edited -->
+      <div class="col">
+        <input-keyboard
+          v-model="sensor.name"
+          label="Location"
+          :customRule="checkSensorName"
+        />
+        <input-keyboard
+          outlined
+          v-model.number="sensor.id"
+          :customRule="checkSensorId"
+          type="number"
+          label="ID"
+          hint="The ID number on the case"
+        />
       </div>
-      <!-- Dividing line between sensors -->
-      <q-separator />
     </div>
+    <!-- Dividing line between sensors -->
+    <q-separator />
   </div>
 </template>
 
@@ -61,3 +59,5 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped lang="scss"></style>

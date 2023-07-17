@@ -1,1 +1,156 @@
 // app global css in SCSS form
+/**
+ * CURSOR
+ */
+
+// Hide cursor
+* {
+  cursor: none !important;
+}
+
+// Click effect for feedback
+.click-effect {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  animation: click-effect 1s ease-out;
+}
+
+@keyframes click-effect {
+  from {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/**
+ * BUTTON
+ */
+.q-btn {
+  @extend .fontsize-12;
+}
+
+/**
+ * INPUT
+ */
+.q-input {
+  @extend .fontsize-18;
+}
+.q-field__control {
+  height: 80px !important;
+}
+.q-field__label {
+  @extend .fontsize-14;
+  line-height: 30px;
+}
+.q-field__messages {
+  @extend .fontsize-10;
+}
+
+/**
+ * TEXT
+ */
+.text,
+.text-bold {
+  @extend .fontsize-14;
+}
+.text-h6 {
+  @extend .fontsize-18;
+}
+
+/**
+ * CHECKBOX
+ */
+.q-checkbox__label {
+  @extend .fontsize-14;
+}
+
+/**
+ * TABLE
+ */
+.q-table th,
+.q-table tbody td {
+  @extend .fontsize-14;
+}
+
+// Scrollbar styling
+.q-table__middle.scroll::-webkit-scrollbar {
+  width: 20px; /* barStyle width */
+  background-color: #027ae333; /* barStyle background color */
+  border-radius: 9px; /* barStyle border radius */
+}
+
+.q-table__middle.scroll::-webkit-scrollbar-thumb {
+  right: 4px; /* thumbStyle right */
+  border-radius: 9px; /* thumbStyle border radius */
+  background-color: #027ae3bf; /* thumbStyle background color */
+  width: 16px; /* thumbStyle width */
+}
+
+// Styling for scroll indicators at top and bottom of table when content is there
+.scroll-indicator-top,
+.scroll-indicator-bottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.scroll-indicator-bottom {
+  bottom: 10px;
+}
+
+.scroll-indicator-top {
+  top: 60px;
+}
+
+.q-table__top,
+.q-table__bottom,
+thead tr:first-child th {
+  /* bg color is important for th; just specify one */
+  background-color: $grey-3;
+}
+
+thead tr th {
+  position: sticky;
+  z-index: 1;
+}
+thead tr:first-child th {
+  top: 0;
+}
+
+/* prevent scrolling behind sticky top row on focus */
+tbody {
+  /* height of all previous header rows */
+  scroll-margin-top: 48px;
+}
+
+/**
+ * CHECKBOX
+ */
+.q-checkbox {
+  @extend .fontsize-12;
+}
+
+/**
+ * TAB
+ */
+.q-tab {
+  height: 110px;
+}
+.q-tab__label {
+  @extend .fontsize-12;
+}
+
+/**
+ * STEPPER
+ */
+.q-stepper__title {
+  @extend .fontsize-12;
+}

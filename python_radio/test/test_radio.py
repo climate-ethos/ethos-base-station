@@ -1,8 +1,7 @@
 import unittest
-
 from radio import process_packet
 
-class TestProcessPacket(unittest.TestCase):
+class TestRadio(unittest.TestCase):
   def test_valid_packet(self):
     packet = b"I123T24.5H55.6"
     expected_result = {"id": "123", "temperature": "24.5", "humidity": "55.6"}

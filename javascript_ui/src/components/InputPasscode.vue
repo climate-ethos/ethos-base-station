@@ -10,7 +10,7 @@
         ref="passcodeInputRef"
         filled
         bottom-slots
-        class="full-width large-font fontsize-20"
+        class="full-width"
         v-model="passcode"
         placeholder="passcode"
         type="password"
@@ -26,7 +26,7 @@
             flat
             @click="backspacePasscode"
             icon="backspace"
-            class="fontsize-18"
+            class="fontsize-18 q-mt-lg"
           />
         </template>
       </q-input>

@@ -33,37 +33,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-/* Hide cursor in program for touch screen use */
-* {
-  cursor: none !important;
-}
-
-/* Extend all q-btn components with a larger font size */
-.q-btn {
-  @extend .fontsize-12;
-}
-
-/* Click effect for haptic feedback */
-.click-effect {
-  position: absolute;
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-  animation: click-effect 1s ease-out;
-}
-
-@keyframes click-effect {
-  from {
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  to {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-</style>

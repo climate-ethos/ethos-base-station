@@ -76,7 +76,7 @@ export const coolingStrategies: Array<CoolingStrategy> = [
   },
   {
     name: 'Drink (cool) water',
-    shortName: 'cool fluids',
+    shortName: 'cool water',
     icon: 'local_drink',
     effectiveness: 0.4,
     extraInfo: {
@@ -158,9 +158,20 @@ export const coolingStrategies: Array<CoolingStrategy> = [
     icon: 'bathroom',
     effectiveness: 0.8,
     extraInfo: {
-      bestUse: [],
-      whenUse: [],
-      whenNotUse: [],
+      bestUse: [
+        'Use a spray bottle filled with cool water and mist yourself periodically.',
+        'Take quick, cool showers to cool down your entire body.',
+        'Spray water on your face, neck, and pulse points for a quick cool-down.',
+        'Combine with a fan for enhanced cooling as the water evaporates.',
+      ],
+      whenUse: [
+        'When you feel hot and sweaty and need quick relief.',
+        'After spending time in a hot environment to lower your body temperature.',
+      ],
+      whenNotUse: [
+        "When you don't have a change of clothes and can't get wet.",
+        'If you are in a situation where getting wet would be inappropriate or inconvenient.',
+      ],
     },
   },
   {
@@ -169,9 +180,19 @@ export const coolingStrategies: Array<CoolingStrategy> = [
     icon: 'kitchen',
     effectiveness: 0.7,
     extraInfo: {
-      bestUse: [],
-      whenUse: [],
-      whenNotUse: [],
+      bestUse: [
+        'Apply an ice pack to pulse points, such as your wrists, neck, elbows, groin, ankles, and behind the knees.',
+        'Use a cloth or towel between your skin and the ice pack to prevent frostbite.',
+        'Rotate the ice pack to different pulse points for consistent cooling.',
+      ],
+      whenUse: [
+        'When you are overheated and need to cool down quickly.',
+        'After spending time in a hot environment to reduce your body temperature.',
+      ],
+      whenNotUse: [
+        'If you have certain medical conditions such as poor circulation or nerve damage.',
+        'When using it directly on bare skin for extended periods as it may lead to frostbite.',
+      ],
     },
   },
   {
@@ -180,9 +201,20 @@ export const coolingStrategies: Array<CoolingStrategy> = [
     icon: 'ac_unit',
     effectiveness: 0.9,
     extraInfo: {
-      bestUse: [],
-      whenUse: [],
-      whenNotUse: [],
+      bestUse: [
+        'Keep the air conditioning at a comfortable temperature, usually between 23-25 degrees Celsius.',
+        "Maintain your air conditioning system regularly to ensure it's working efficiently.",
+        'Combine with a Fan to help move cool air over your body',
+        'Close doors and windows to keep the cool air inside.',
+      ],
+      whenUse: [
+        'When it is extremely hot outside, and other cooling methods are not effective.',
+        'During the hottest parts of the day to keep indoor temperatures comfortable.',
+      ],
+      whenNotUse: [
+        'When the weather outside is cooler than inside, it might be more energy-efficient to open windows or use fans instead.',
+        'If you are leaving the room or house for an extended period, turn off the AC to save energy.',
+      ],
     },
   },
   {
@@ -191,9 +223,19 @@ export const coolingStrategies: Array<CoolingStrategy> = [
     icon: 'roller_shades',
     effectiveness: 0.6,
     extraInfo: {
-      bestUse: [],
-      whenUse: [],
-      whenNotUse: [],
+      bestUse: [
+        'Open windows in the early morning and late evening when the outside temperature is cooler.',
+        'Use window coverings to block out sunlight and reduce heat gain during the day.',
+        'Create a cross breeze by opening windows on opposite sides of the room or house.',
+      ],
+      whenUse: [
+        'During the cooler parts of the day to bring in fresh, cool air.',
+        'When the outside temperature is lower than the inside temperature.',
+      ],
+      whenNotUse: [
+        "During the hottest parts of the day, it's better to keep windows and blinds closed to prevent hot air from coming in.",
+        'When outdoor allergen levels are high, as open windows may lead to increased allergy symptoms.',
+      ],
     },
   },
 ];

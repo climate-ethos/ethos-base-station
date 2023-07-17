@@ -37,4 +37,4 @@ const getRiskLevel = (sensorData: SensorData) => {
   }
 };
 
-export { getRiskLevel };
+export { calculateWBGT, getRiskLevel };

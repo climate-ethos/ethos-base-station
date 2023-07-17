@@ -1,9 +1,12 @@
 <template>
-  <div @click="showDemoAlert">
-    <q-chip color="grey" class="fontsize-20" text-color="white">
-      {{ currentTime }}
-    </q-chip>
-  </div>
+  <q-chip
+    @click="showDemoAlert"
+    color="transparent"
+    text-color="primary"
+    class="text-bold"
+  >
+    {{ currentTime }}
+  </q-chip>
 </template>
 
 <script lang="ts">
