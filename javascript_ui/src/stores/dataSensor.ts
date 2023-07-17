@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import { SensorData } from 'src/components/models';
 import { getRiskLevel } from 'src/helpers/riskLevel';
 import { playAudio } from 'src/helpers/audioAlertDispatcher';
+import { RiskLevel } from 'src/components/models';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 
 const deserializeSensorData = (sensorDataString: string) => {
