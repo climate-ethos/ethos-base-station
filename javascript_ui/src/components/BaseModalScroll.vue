@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section ref="header" class="text-bold fontsize-20">
+    <q-card-section ref="header" class="text-bold fontsize-20 bg-grey-3">
       <!-- Header slot -->
       <slot name="header"></slot>
     </q-card-section>

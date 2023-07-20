@@ -158,6 +158,16 @@ export default defineComponent({
     });
 
     const chartOptions = computed((): ChartOptions<'line'> => {
+      // Find max and min temperature
+      let minTemperature = 10;
+      let maxTemperature = 45;
+      if (forecastStore.forecastTemps) {
+        let temperatures = forecastStore.forecastTemps.map(
+          (tempObj) => tempObj.temperature
+        );
+        minTemperature = Math.min(...temperatures);
+        maxTemperature = Math.max(...temperatures);
+      }
       return {
         animation: {
           duration: 1000, // general animation time
@@ -189,8 +199,8 @@ export default defineComponent({
           },
           y: {
             display: false,
-            // min: 11, adjust min value for y axis
-            grace: '1%',
+            min: minTemperature - 5,
+            max: maxTemperature + 5,
             ticks: {
               stepSize: 20, // step size on y axis. found 20 to look best.
             },

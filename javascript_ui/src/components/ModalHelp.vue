@@ -17,7 +17,7 @@
         </p>
 
         <h4>Support</h4>
-        <contact-card />
+        <CardContact />
 
         <h4>Dashboard Components</h4>
         <p>
@@ -141,12 +141,12 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, computed } from 'vue';
-import ContactCard from './ContactCard.vue';
+import CardContact from './CardContact.vue';
 import BaseModalScroll from './BaseModalScroll.vue';
 
 export default defineComponent({
   name: 'ModalNoConnection',
-  components: { ContactCard, BaseModalScroll },
+  components: { CardContact, BaseModalScroll },
   emits: ['update:modelValue'],
   props: {
     modelValue: {

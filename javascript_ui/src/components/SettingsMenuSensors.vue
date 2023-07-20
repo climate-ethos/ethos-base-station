@@ -6,10 +6,13 @@
       <div class="col-2 text-bold">Sensor {{ index + 1 }}</div>
       <!-- Things that can be edited -->
       <div class="col">
-        <input-keyboard
+        <q-select
+          outlined
           v-model="sensor.name"
+          :options="roomTypes"
+          class="q-mb-md"
           label="Location"
-          :customRule="checkSensorName"
+          behavior="menu"
         />
         <input-keyboard
           outlined
@@ -35,13 +38,21 @@ export default defineComponent({
   components: { InputKeyboard },
   setup() {
     const { allSensorData } = useDataSensorStore();
-
-    const checkSensorName = (newName: string) => {
-      if (newName?.length > 0) {
-        return true;
-      }
-      return 'Please enter sensor location';
-    };
+    const roomTypes = [
+      'Outside',
+      'Main bedroom',
+      'Guest bedroom',
+      'Study',
+      'Living room',
+      'Kitchen',
+      'Dining room',
+      'Rumpus room',
+      'Bathroom',
+      'Garage',
+      'Basement',
+      'Shed',
+      'Hallway',
+    ];
 
     const checkSensorId = (newId: number) => {
       // Check if ID is valid
@@ -53,7 +64,7 @@ export default defineComponent({
 
     return {
       allSensorData,
-      checkSensorName,
+      roomTypes,
       checkSensorId,
     };
   },

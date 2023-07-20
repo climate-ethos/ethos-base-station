@@ -7,6 +7,7 @@ import { defineComponent } from 'vue';
 
 import { useDataSensorStore } from 'stores/dataSensor';
 import { useForecastStore } from 'stores/forecast';
+import { useDataPreferencesStore } from './stores/dataPreferences';
 
 export default defineComponent({
   name: 'App',
@@ -14,6 +15,9 @@ export default defineComponent({
   setup() {
     const dataSensorStore = useDataSensorStore();
     dataSensorStore.setup();
+
+    const dataPreferencesStore = useDataPreferencesStore();
+    dataPreferencesStore.updateCoolingStrategyOptions();
 
     const forecastStore = useForecastStore();
     forecastStore.setup();

@@ -8,13 +8,18 @@
       </q-btn>
     </q-card-section>
     <q-card-section>
-      <div class="fontsize-16">
-        If you need to lower your body temperature, here are the best ways to do
-        it (click on a row for more info):
+      <div class="fontsize-16 q-mb-md">
+        Best ways to cool yourself (click on a row for more info):
       </div>
       <div class="row">
         <div class="col-4 q-pr-lg">
-          <CoolingInterventionFanBlinds />
+          <CoolingInterventionFan />
+          <q-btn
+            label="When should I not use a fan?"
+            color="info"
+            class="q-mt-xl q-ma-lg"
+            @click="isShowFanModal = true"
+          />
         </div>
         <div class="table-container col-8">
           <q-table
@@ -86,20 +91,23 @@ import {
   onMounted,
   onBeforeUnmount,
   computed,
+  inject,
 } from 'vue';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import { CoolingStrategy } from 'src/components/models';
+import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import { QTable, QTableProps } from 'quasar';
 import CoolingInterventionEffectiveness from './CoolingInterventionEffectiveness.vue';
-import CoolingInterventionFanBlinds from './CoolingInterventionFanBlinds.vue';
+import CoolingInterventionFan from './CoolingInterventionFan.vue';
 
 export default defineComponent({
   name: 'CoolingInterventionList',
   components: {
     CoolingInterventionEffectiveness,
-    CoolingInterventionFanBlinds,
+    CoolingInterventionFan,
   },
   setup(props, { emit }) {
+    const isShowFanModal = inject('isShowFanModal');
     const dataPreferencesStore = useDataPreferencesStore();
     const showBottomScrollIndicator = ref(false);
     const showTopScrollIndicator = ref(false);
@@ -133,26 +141,31 @@ export default defineComponent({
 
     const rows = computed(() => {
       // Separate the strategies into two arrays based on haveAccessTo and wouldUse properties
-      const availableAndUsable =
+      const availableOptions =
         dataPreferencesStore.coolingStrategyOptions.filter(
           (option) => option.haveAccessTo && option.wouldUse
         );
-      const remaining = dataPreferencesStore.coolingStrategyOptions.filter(
-        (option) => !(option.haveAccessTo && option.wouldUse)
+      const remainingOptions =
+        dataPreferencesStore.coolingStrategyOptions.filter(
+          (option) => !(option.haveAccessTo && option.wouldUse)
+        );
+
+      // Get strategy text from source
+      const avaliableStrategies = availableOptions.map(
+        (el) => coolingStrategies[el.key]
+      );
+      const remainingStrategies = remainingOptions.map(
+        (el) => coolingStrategies[el.key]
       );
 
       // Sort both arrays
-      availableAndUsable.sort((a, b) => b.effectiveness - a.effectiveness);
-      remaining.sort((a, b) => b.effectiveness - a.effectiveness);
+      avaliableStrategies.sort((a, b) => b.effectiveness - a.effectiveness);
+      remainingStrategies.sort((a, b) => b.effectiveness - a.effectiveness);
 
       // Concatenate the sorted arrays with the special row in between
-      return availableAndUsable.concat([
+      return avaliableStrategies.concat([
         {
           name: 'You might also consider using...',
-          haveAccessTo: true,
-          wouldUse: true,
-          whyNotUse: [],
-          whyNotUseOther: '',
           shortName: '',
           icon: '',
           effectiveness: 0,
@@ -162,7 +175,7 @@ export default defineComponent({
             whenNotUse: [],
           },
         },
-        ...remaining,
+        ...remainingStrategies,
       ]);
     });
 
@@ -236,6 +249,7 @@ export default defineComponent({
     };
 
     return {
+      isShowFanModal,
       dataPreferencesStore,
       rows,
       columns,
@@ -257,6 +271,6 @@ export default defineComponent({
 
 .my-sticky-header-table {
   /* height or max-height is important */
-  height: calc(100vh / 1.5);
+  height: calc(70vh);
 }
 </style>

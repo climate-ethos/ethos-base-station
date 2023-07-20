@@ -80,6 +80,23 @@
   @extend .fontsize-14;
 }
 
+/**
+ * SELECT
+ */
+.q-select {
+  @extend .fontsize-14;
+}
+.q-item {
+  @extend .fontsize-14;
+}
+
+/**
+ * TOGGLE
+ */
+.q-toggle__label {
+  @extend .fontsize-14;
+}
+
 // Scrollbar styling
 .q-table__middle.scroll::-webkit-scrollbar {
   width: 20px; /* barStyle width */

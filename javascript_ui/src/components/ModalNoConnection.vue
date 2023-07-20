@@ -6,7 +6,7 @@
           Error, unable to connect to temperature sensors (socket issue). This
           indicates that the app has crashed and will need to be relaunched.
         </div>
-        <ContactCard />
+        <CardContact />
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -16,11 +16,11 @@
 import { defineComponent, computed } from 'vue';
 
 import { useDataSensorStore } from 'stores/dataSensor';
-import ContactCard from './ContactCard.vue';
+import CardContact from './CardContact.vue';
 
 export default defineComponent({
   name: 'ModalNoConnection',
-  components: { ContactCard },
+  components: { CardContact },
   setup() {
     const store = useDataSensorStore();
     return {

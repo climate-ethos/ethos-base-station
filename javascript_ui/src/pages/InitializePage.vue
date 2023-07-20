@@ -17,7 +17,7 @@
             <div class="q-my-sm">
               If you do not intend to be here please contact the Ethos team:
             </div>
-            <ContactCard />
+            <CardContact />
           </div>
         </base-scroll-area>
       </q-step>
@@ -87,7 +87,7 @@
 <script lang="ts">
 import { defineComponent, Ref, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import ContactCard from 'src/components/ContactCard.vue';
+import CardContact from 'src/components/CardContact.vue';
 import SettingsMenuUserData from 'src/components/SettingsMenuUserData.vue';
 import SettingsMenuSensors from 'src/components/SettingsMenuSensors.vue';
 import SettingsMenuPreferences from 'src/components/SettingsMenuPreferences.vue';
@@ -99,7 +99,7 @@ import BaseScrollArea from 'src/components/BaseScrollArea.vue';
 
 export default defineComponent({
   components: {
-    ContactCard,
+    CardContact,
     SettingsMenuUserData,
     SettingsMenuSensors,
     SettingsMenuPreferences,

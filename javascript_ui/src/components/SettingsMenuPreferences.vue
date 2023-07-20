@@ -50,23 +50,40 @@
     :pagination="{ rowsPerPage: 0 }"
     hide-bottom
   >
+    <template v-slot:body-cell-name="props">
+      <q-td :props="props">
+        {{ coolingStrategies[props.row.key].name }}
+      </q-td>
+    </template>
+
     <template v-slot:body-cell-haveAccessTo="props">
       <q-td :props="props">
-        <q-toggle v-model="props.row.haveAccessTo" color="primary" size="xl" />
+        <q-toggle
+          v-model="props.row.haveAccessTo"
+          :label="props.row.haveAccessTo ? 'Yes' : 'No'"
+          color="primary"
+          size="xl"
+        />
       </q-td>
     </template>
 
     <template v-slot:body-cell-wouldUse="props">
       <q-td :props="props">
-        <q-toggle v-model="props.row.wouldUse" color="primary" size="xl" />
+        <q-toggle
+          v-model="props.row.wouldUse"
+          :label="props.row.wouldUse ? 'Yes' : 'No'"
+          color="primary"
+          size="xl"
+        />
       </q-td>
     </template>
   </q-table>
 
   <!-- WHY NOT COOLING STRATEGY -->
-  <div v-for="strategy in coolingStrategiesThatWontBeUsed" :key="strategy.name">
+  <div v-for="strategy in coolingStrategiesThatWontBeUsed" :key="strategy.key">
     <div class="q-mt-lg text-bold">
-      Why wont you use {{ strategy.shortName }}
+      Reason/s why you wouldn't use
+      {{ coolingStrategies[strategy.key].shortName }}
     </div>
     <q-option-group
       v-model="strategy.whyNotUse"
@@ -84,11 +101,23 @@
       label="Why other? Click here to enter more info..."
     />
   </div>
+
+  <!-- MARK FOR FOLLOW UP -->
+  <div class="q-mt-lg text-bold">
+    Would you be interested in a follow up with a focus group discussion?
+  </div>
+  <q-toggle
+    v-model="dataPreferencesStore.isFollowUp"
+    :label="dataPreferencesStore.isFollowUp ? 'Yes' : 'No'"
+    color="primary"
+    size="xl"
+  />
 </template>
 
 <script lang="ts">
 import { QTableProps } from 'quasar';
 import { playAudio, stopAudio } from 'src/helpers/audioAlertDispatcher';
+import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import InputKeyboard from './InputKeyboard.vue';
 import { computed, defineComponent, reactive } from 'vue';
@@ -207,30 +236,35 @@ export default defineComponent({
 
     const whyWontUseOptions = [
       {
-        label: 'Not practical - time consuming',
-        value: 'Not practical - time consuming',
+        label: 'Time consuming',
+        value: 'Time consuming',
       },
       {
-        label: 'Not practical - too much equipment needed',
-        value: 'Not practical - too much equipment needed',
+        label: 'Too much equipment needed',
+        value: 'Too much equipment needed',
       },
       {
-        label: 'Not practical - too much movement required',
-        value: 'Not practical - too much movement required',
+        label: 'Too much movement required',
+        value: 'Too much movement required',
       },
       {
-        label: 'Not practical - difficult for me to perform',
-        value: 'Not practical - difficult for me to perform',
+        label: 'Difficult to perform',
+        value: 'Difficult to perform',
       },
       {
-        label: 'Too uncomfortable to perform',
-        value: 'Too uncomfortable to perform',
+        label: 'Messy to perform',
+        value: 'Messy to perform',
       },
-      { label: 'Too unsafe', value: 'Too unsafe' },
+      {
+        label: 'Uncomfortable to perform',
+        value: 'Uncomfortable to perform',
+      },
+      { label: 'Unsafe', value: 'Unsafe' },
       { label: 'Other', value: 'Other' },
     ];
 
     return {
+      coolingStrategies,
       RiskLevel,
       dataPreferencesStore,
       audioOptions,

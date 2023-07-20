@@ -24,7 +24,9 @@
         </div>
       </q-card-section>
 
-      <q-card-section class="q-pt-none"> <LineGraph /></q-card-section>
+      <q-card-section class="q-pt-none">
+        <LineGraph />
+      </q-card-section>
     </q-card>
   </q-dialog>
 </template>

@@ -1,10 +1,10 @@
 import { CoolingStrategy } from 'src/components/models';
 
-export const coolingStrategies: Array<CoolingStrategy> = [
-  {
+export const coolingStrategies: Record<string, CoolingStrategy> = {
+  fan: {
     name: 'Turn on a fan',
     shortName: 'a fan',
-    icon: 'air',
+    icon: 'mdi-fan',
     effectiveness: 0.7,
     extraInfo: {
       bestUse: [
@@ -25,36 +25,36 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
-    name: 'Water immersion',
-    shortName: 'immersion',
+  bath: {
+    name: 'Cold bath',
+    shortName: 'a cold bath',
     icon: 'bathtub',
     effectiveness: 1,
     extraInfo: {
       bestUse: [
         'Fill a basin or tub with cool or cold water, depending on your tolerance and desired cooling effect.',
-        'Submerge your hands and/or feet in the water for 10-20 minutes at a time.',
+        'Submerge your body in th water for 10-20 minutes at a time.',
         'Wiggle your fingers and toes occasionally to improve circulation and enhance the cooling effect.',
-        'Pat your hands and feet dry with a towel after immersion, and avoid exposing them to heat immediately afterwards.',
-        'Combine hand/foot immersion with other cooling methods, such as a fan, for better results.',
+        'Combine with other cooling methods, such as a fan, for better results.',
       ],
       whenUse: [
-        'When you need a quick and easy way to cool down your body.',
+        'When you need an effective way to cool down your body.',
         'During breaks from physical activities or work in hot environments.',
         'As a means to recover from heat exposure or reduce the risk of heat-related illnesses.',
       ],
       whenNotUse: [
         'When you have open wounds or infections on your hands or feet, as it may worsen the condition.',
+        'If you feel like you are not mobile enough to get in and out of a bath',
         "In cases of severe cold intolerance or conditions like Raynaud's phenomenon, as it may cause discomfort or trigger symptoms.",
         'When there is a risk of water contamination or poor hygiene in the immersion area.',
       ],
     },
   },
-  {
+  sitting: {
     name: 'Sit down quietly',
     shortName: 'sitting quietly',
     icon: 'self_improvement',
-    effectiveness: 0.5,
+    effectiveness: 0.6,
     extraInfo: {
       bestUse: [
         'Find a cool, shaded, or well-ventilated area to sit down.',
@@ -74,11 +74,11 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
+  drinking: {
     name: 'Drink (cool) water',
     shortName: 'cool water',
     icon: 'local_drink',
-    effectiveness: 0.4,
+    effectiveness: 0.5,
     extraInfo: {
       bestUse: [
         'Drinking fluids containing electrolytes, such as sports drinks, coconut water, or diluted fruit juice, to replace lost minerals and help maintain proper hydration levels.',
@@ -100,10 +100,10 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
+  wetClothes: {
     name: '(Cold) wet clothing',
     shortName: 'wetting clothes',
-    icon: 'water_drop',
+    icon: 'mdi-tshirt-crew',
     effectiveness: 0.7,
     extraInfo: {
       bestUse: [
@@ -128,7 +128,7 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
+  removeClothes: {
     name: 'Remove excess clothing',
     shortName: 'removing unnecessary clothing',
     icon: 'checkroom',
@@ -152,15 +152,14 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
-    name: 'Dousing/spraying',
-    shortName: 'dousing/spraying',
-    icon: 'bathroom',
-    effectiveness: 0.8,
+  misting: {
+    name: 'Misting',
+    shortName: 'misting',
+    icon: 'water',
+    effectiveness: 0.6,
     extraInfo: {
       bestUse: [
         'Use a spray bottle filled with cool water and mist yourself periodically.',
-        'Take quick, cool showers to cool down your entire body.',
         'Spray water on your face, neck, and pulse points for a quick cool-down.',
         'Combine with a fan for enhanced cooling as the water evaporates.',
       ],
@@ -174,7 +173,7 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
+  ice: {
     name: 'Ice pack application',
     shortName: 'ice pack application',
     icon: 'kitchen',
@@ -195,7 +194,7 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
+  airCon: {
     name: 'Air conditioning',
     shortName: 'air conditioning',
     icon: 'ac_unit',
@@ -217,7 +216,7 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-  {
+  windows: {
     name: 'Open/close windows/blinds',
     shortName: 'open/close windows/blinds',
     icon: 'roller_shades',
@@ -238,4 +237,96 @@ export const coolingStrategies: Array<CoolingStrategy> = [
       ],
     },
   },
-];
+  shower: {
+    name: 'Cold shower',
+    shortName: 'a cold shower',
+    icon: 'bathroom',
+    effectiveness: 0.8,
+    extraInfo: {
+      bestUse: [
+        'Begin with lukewarm water and gradually decrease the temperature to a level that is cool, but not uncomfortably cold.',
+        'Use a shower head with different settings that allow you to control the water flow and coverage.',
+        'Focus the cool water on your pulse points, such as the inside of your wrists, neck, and inner elbows, for a more effective cooling effect.',
+        'Try to keep your cold showers to around 5-10 minutes at a time to avoid overcooling.',
+      ],
+      whenUse: [
+        'After physical activities, to rapidly cool down and refresh your body.',
+        'During hot weather, as a cold shower can effectively lower body temperature and alleviate discomfort from heat.',
+      ],
+      whenNotUse: [
+        'If you have certain health conditions, like heart disease or cold-induced asthma, as the sudden cold can lead to an exacerbation of symptoms.',
+        'When you are feeling chilled or if the environmental temperature is very low, as this could lower your body temperature excessively.',
+      ],
+    },
+  },
+  swimming: {
+    name: 'Swimming',
+    shortName: 'swimming',
+    icon: 'pool',
+    effectiveness: 0.6,
+    extraInfo: {
+      bestUse: [
+        'Choose a pool that is properly maintained and has a comfortable water temperature.',
+        'Combine swimming with sun protection measures, like applying waterproof sunscreen, wearing a hat, and using a UV-protective swim shirt.',
+        'Hydrate regularly, as swimming, especially in hot weather, can still lead to dehydration.',
+      ],
+      whenUse: [
+        'During the heat of the day, as a dip in a pool can quickly lower your body temperature.',
+        'As a form of exercise that can also keep you cool during hot weather.',
+      ],
+      whenNotUse: [
+        'If you have open wounds or skin infections, to avoid worsening the condition or spreading it to others.',
+        'If the temperature outside is significantly warmer than inside, or if there is not adequate shade.',
+        "If you don't feel comfortable swimming or it feels unsafe to do so.",
+        "If you can't swim or if there is no lifeguard present.",
+      ],
+    },
+  },
+  handBath: {
+    name: 'Hand/forearm bath',
+    shortName: 'a hand/forearm bath',
+    icon: 'wash',
+    effectiveness: 0.7,
+    extraInfo: {
+      bestUse: [
+        'Immerse your hands and forearms in cool water for about 10-15 minutes.',
+        'Use a large bowl or basin filled with cool water, and sit comfortably while immersing your arms.',
+        'Wiggle your fingers every so often to increase circulation and the cooling effect.',
+        'Combine with other methods such as a foot bath, misting and using a fan.',
+        'Dry your hands and forearms thoroughly after the bath to prevent skin issues.',
+      ],
+      whenUse: [
+        'When you need a quick and easy method to cool down.',
+        'After spending time in a hot environment or doing physical activities.',
+      ],
+      whenNotUse: [
+        'If you have open wounds or skin conditions, as this could aggravate them.',
+        'If moving a tub of water will be too heavy.',
+      ],
+    },
+  },
+  footBath: {
+    name: 'Foot bath',
+    shortName: 'a foot bath',
+    icon: 'airline_seat_legroom_normal',
+    effectiveness: 0.7,
+    extraInfo: {
+      bestUse: [
+        'Immerse your feet and lower part of your legs in cool water.',
+        'Wiggle your toes every so often to increase circulation and the cooling effect.',
+        'Combine with other methods such as a hand/forearm bath, misting and using a fan.',
+        'Sit comfortably and relax while your feet are in the bath, ensuring they are thoroughly dried afterwards.',
+      ],
+      whenUse: [
+        'After a long day of standing or walking, especially in hot weather.',
+        'When you need a quick way to cool down and relax.',
+      ],
+      whenNotUse: [
+        'If you have open wounds, skin infections, or other foot conditions, as a foot bath may exacerbate these conditions.',
+        'If you have circulatory problems or diabetes, consult with your healthcare provider before using a foot bath for cooling.',
+        'If moving a tub of water will be too heavy.',
+        'If there is a risk of slipping from having wet feet.',
+      ],
+    },
+  },
+};
