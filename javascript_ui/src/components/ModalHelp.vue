@@ -145,7 +145,7 @@ import CardContact from './CardContact.vue';
 import BaseModalScroll from './BaseModalScroll.vue';
 
 export default defineComponent({
-  name: 'ModalNoConnection',
+  name: 'ModalHelp',
   components: { CardContact, BaseModalScroll },
   emits: ['update:modelValue'],
   props: {

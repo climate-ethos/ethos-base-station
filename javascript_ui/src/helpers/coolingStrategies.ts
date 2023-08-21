@@ -1,4 +1,4 @@
-import { CoolingStrategy } from 'src/components/models';
+import { CoolingStrategy } from 'src/typings/data-types';
 
 export const coolingStrategies: Record<string, CoolingStrategy> = {
   fan: {
@@ -6,6 +6,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'a fan',
     icon: 'mdi-fan',
     effectiveness: 0.7,
+    group: 'Air ventilation',
     extraInfo: {
       bestUse: [
         'Position the fan to create optimal airflow in the room.',
@@ -30,6 +31,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'a cold bath',
     icon: 'bathtub',
     effectiveness: 1,
+    group: 'Water immersion',
     extraInfo: {
       bestUse: [
         'Fill a basin or tub with cool or cold water, depending on your tolerance and desired cooling effect.',
@@ -55,6 +57,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'sitting quietly',
     icon: 'self_improvement',
     effectiveness: 0.6,
+    group: 'Activity based',
     extraInfo: {
       bestUse: [
         'Find a cool, shaded, or well-ventilated area to sit down.',
@@ -78,7 +81,8 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     name: 'Drink (cool) water',
     shortName: 'cool water',
     icon: 'local_drink',
-    effectiveness: 0.5,
+    effectiveness: 0.6,
+    group: 'Other water',
     extraInfo: {
       bestUse: [
         'Drinking fluids containing electrolytes, such as sports drinks, coconut water, or diluted fruit juice, to replace lost minerals and help maintain proper hydration levels.',
@@ -101,10 +105,11 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     },
   },
   wetClothes: {
-    name: '(Cold) wet clothing',
-    shortName: 'wetting clothes',
+    name: 'Dampening clothing',
+    shortName: 'dampening clothes',
     icon: 'mdi-tshirt-crew',
-    effectiveness: 0.7,
+    effectiveness: 0.5,
+    group: 'Clothing related',
     extraInfo: {
       bestUse: [
         'Soak a towel or cloth in cold water, wring it out slightly, so it remains damp but not dripping wet.',
@@ -123,6 +128,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
         'As a means to recover from heat exposure or reduce the risk of heat-related illnesses.',
       ],
       whenNotUse: [
+        'Be careful of any drips coming off clothing and any slips that may result.',
         'When you have open wounds, skin infections, or rashes, as the wet towel may exacerbate the condition or cause discomfort.',
         'When the humidity is very high, as the evaporative cooling effect of the wet towel might be reduced.',
       ],
@@ -133,6 +139,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'removing unnecessary clothing',
     icon: 'checkroom',
     effectiveness: 0.6,
+    group: 'Clothing related',
     extraInfo: {
       bestUse: [
         'Remove or loosen any tight-fitting clothing that may restrict airflow or trap heat.',
@@ -157,6 +164,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'misting',
     icon: 'water',
     effectiveness: 0.6,
+    group: 'Other water',
     extraInfo: {
       bestUse: [
         'Use a spray bottle filled with cool water and mist yourself periodically.',
@@ -178,6 +186,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'ice pack application',
     icon: 'kitchen',
     effectiveness: 0.7,
+    group: 'Activity based',
     extraInfo: {
       bestUse: [
         'Apply an ice pack to pulse points, such as your wrists, neck, elbows, groin, ankles, and behind the knees.',
@@ -199,6 +208,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'air conditioning',
     icon: 'ac_unit',
     effectiveness: 0.9,
+    group: 'Air ventilation',
     extraInfo: {
       bestUse: [
         'Keep the air conditioning at a comfortable temperature, usually between 23-25 degrees Celsius.',
@@ -221,6 +231,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'open/close windows/blinds',
     icon: 'roller_shades',
     effectiveness: 0.6,
+    group: 'Air ventilation',
     extraInfo: {
       bestUse: [
         'Open windows in the early morning and late evening when the outside temperature is cooler.',
@@ -242,6 +253,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'a cold shower',
     icon: 'bathroom',
     effectiveness: 0.8,
+    group: 'Other water',
     extraInfo: {
       bestUse: [
         'Begin with lukewarm water and gradually decrease the temperature to a level that is cool, but not uncomfortably cold.',
@@ -259,34 +271,12 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
       ],
     },
   },
-  swimming: {
-    name: 'Swimming',
-    shortName: 'swimming',
-    icon: 'pool',
-    effectiveness: 0.6,
-    extraInfo: {
-      bestUse: [
-        'Choose a pool that is properly maintained and has a comfortable water temperature.',
-        'Combine swimming with sun protection measures, like applying waterproof sunscreen, wearing a hat, and using a UV-protective swim shirt.',
-        'Hydrate regularly, as swimming, especially in hot weather, can still lead to dehydration.',
-      ],
-      whenUse: [
-        'During the heat of the day, as a dip in a pool can quickly lower your body temperature.',
-        'As a form of exercise that can also keep you cool during hot weather.',
-      ],
-      whenNotUse: [
-        'If you have open wounds or skin infections, to avoid worsening the condition or spreading it to others.',
-        'If the temperature outside is significantly warmer than inside, or if there is not adequate shade.',
-        "If you don't feel comfortable swimming or it feels unsafe to do so.",
-        "If you can't swim or if there is no lifeguard present.",
-      ],
-    },
-  },
   handBath: {
     name: 'Hand/forearm bath',
     shortName: 'a hand/forearm bath',
     icon: 'wash',
     effectiveness: 0.7,
+    group: 'Water immersion',
     extraInfo: {
       bestUse: [
         'Immerse your hands and forearms in cool water for about 10-15 minutes.',
@@ -310,6 +300,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     shortName: 'a foot bath',
     icon: 'airline_seat_legroom_normal',
     effectiveness: 0.7,
+    group: 'Water immersion',
     extraInfo: {
       bestUse: [
         'Immerse your feet and lower part of your legs in cool water.',

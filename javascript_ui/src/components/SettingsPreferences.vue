@@ -41,41 +41,60 @@
 
   <!-- COOLING STRATEGIES OPTION -->
   <div class="q-mt-lg text-bold">
-    Which cooling strategies do you have access to?
+    Which cooling strategies do you have access to and which would you use?
   </div>
   <q-table
-    :rows="dataPreferencesStore.coolingStrategyOptions"
+    :rows="dataPreferencesStore.coolingStrategyRows"
     :columns="coolingStrategyColumns"
     row-key="label"
     :pagination="{ rowsPerPage: 0 }"
     hide-bottom
   >
-    <template v-slot:body-cell-name="props">
-      <q-td :props="props">
-        {{ coolingStrategies[props.row.key].name }}
-      </q-td>
-    </template>
-
-    <template v-slot:body-cell-haveAccessTo="props">
-      <q-td :props="props">
-        <q-toggle
-          v-model="props.row.haveAccessTo"
-          :label="props.row.haveAccessTo ? 'Yes' : 'No'"
-          color="primary"
-          size="xl"
-        />
-      </q-td>
-    </template>
-
-    <template v-slot:body-cell-wouldUse="props">
-      <q-td :props="props">
-        <q-toggle
-          v-model="props.row.wouldUse"
-          :label="props.row.wouldUse ? 'Yes' : 'No'"
-          color="primary"
-          size="xl"
-        />
-      </q-td>
+    <template v-slot:body="props">
+      <q-tr
+        :props="props"
+        :class="{
+          'bg-grey text-white': !props.row.effectiveness,
+        }"
+      >
+        <q-td :props="props" key="name">
+          {{ props.row.name }}
+        </q-td>
+        <q-td :props="props" key="haveAccessTo">
+          <q-toggle
+            v-if="props.row.effectiveness"
+            :model-value="props.row.haveAccessTo"
+            @update:model-value="
+              (val) =>
+                dataPreferencesStore.setWouldUseOrHaveAccessTo(
+                  props.row.key,
+                  'haveAccessTo',
+                  val
+                )
+            "
+            :label="props.row.haveAccessTo ? 'Yes' : 'No'"
+            color="primary"
+            size="xl"
+          />
+        </q-td>
+        <q-td :props="props" key="wouldUse">
+          <q-toggle
+            v-if="props.row.effectiveness"
+            :model-value="props.row.wouldUse"
+            @update:model-value="
+              (val) =>
+                dataPreferencesStore.setWouldUseOrHaveAccessTo(
+                  props.row.key,
+                  'wouldUse',
+                  val
+                )
+            "
+            :label="props.row.wouldUse ? 'Yes' : 'No'"
+            color="primary"
+            size="xl"
+          />
+        </q-td>
+      </q-tr>
     </template>
   </q-table>
 
@@ -120,8 +139,8 @@ import { playAudio, stopAudio } from 'src/helpers/audioAlertDispatcher';
 import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import InputKeyboard from './InputKeyboard.vue';
-import { computed, defineComponent, reactive } from 'vue';
-import { AudioType, RiskLevel } from './models';
+import { computed, defineComponent, onBeforeUnmount, reactive } from 'vue';
+import { AudioType, RiskLevel } from 'src/typings/data-types';
 
 interface TableOptions {
   label: string;
@@ -132,6 +151,10 @@ export default defineComponent({
   components: { InputKeyboard },
   setup() {
     const dataPreferencesStore = useDataPreferencesStore();
+
+    onBeforeUnmount(() => {
+      dataPreferencesStore.postToDatabase();
+    });
 
     // AUDIO TONE OPTIONS
     const isPlayingMedium = reactive<Record<AudioType, boolean>>({
@@ -244,22 +267,31 @@ export default defineComponent({
         value: 'Too much equipment needed',
       },
       {
-        label: 'Too much movement required',
-        value: 'Too much movement required',
+        label:
+          'Too much movement required (dexterity, physical exertion, etc.)',
+        value:
+          'Too much movement required (dexterity, physical exertion, etc.)',
       },
       {
-        label: 'Difficult to perform',
-        value: 'Difficult to perform',
+        label: 'Messy to perform (water dripping, risk of stains, etc.)',
+        value: 'Messy to perform (water dripping, risk of stains, etc.)',
       },
       {
-        label: 'Messy to perform',
-        value: 'Messy to perform',
+        label: 'Costs too much (electricity, maintenance, etc.)',
+        value: 'Costs too much (electricity, maintenance, etc.)',
       },
       {
-        label: 'Uncomfortable to perform',
-        value: 'Uncomfortable to perform',
+        label: 'Too noisy',
+        value: 'Too noisy',
       },
-      { label: 'Unsafe', value: 'Unsafe' },
+      {
+        label: 'Physically uncomfortable to perform (too cold, too wet, etc.)',
+        value: 'Physically uncomfortable to perform (too cold, too wet, etc.)',
+      },
+      {
+        label: 'Unsafe (risk of slips, falls, etc.)',
+        value: 'Unsafe (risk of slips, falls, etc.)',
+      },
       { label: 'Other', value: 'Other' },
     ];
 

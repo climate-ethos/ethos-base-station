@@ -1,6 +1,8 @@
+:: Setup docker environment (for CouchDB)
+call docker-compose build
 :: Setup javascript npm
 cd javascript_ui
-call npm install
+call yarn install
 :: Setup python environment
 cd ..\python_radio
 call python3 -m venv .\env

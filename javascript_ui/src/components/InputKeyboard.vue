@@ -1,8 +1,9 @@
 <template>
   <!-- Type="text" has to be used so cursor position can be obtained -->
+  <!-- Passing emitModelValue to the directive allows the text value to be lazily updated on blur() -->
   <q-input
     v-scroll-to-input
-    v-bind-on-screen-keyboard="{ reactiveValue, type }"
+    v-bind-on-screen-keyboard="{ reactiveValue, type, emitModelValue }"
     :model-value="reactiveValue.value"
     :label="label"
     :hint="hint"
@@ -15,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, ref, watch } from 'vue';
+import { defineComponent, PropType, reactive, ref } from 'vue';
 import { scrollToInput } from 'src/directives/scrollToInput';
 import { bindOnScreenKeyboard } from 'src/directives/bindOnScreenKeyboard';
 
@@ -76,8 +77,11 @@ export default defineComponent({
       value: toString(props.modelValue) as string,
     });
 
-    // Watch reactiveValue and emit 'update:modelValue' when changed (for v-model binding)
-    watch(reactiveValue, () => {
+    /**
+     * Function which will check if the data type is valid and then
+     * emit 'update:modelValue' to indicate that the data has changed
+     */
+    const emitModelValue = () => {
       let emitValue;
       // Cast value to correct type
       if (props.type === 'number') {
@@ -103,12 +107,13 @@ export default defineComponent({
         // Something went wrong
         console.error('validCheck is not a valid type:', typeof validCheck);
       }
-    });
+    };
 
     return {
       error,
       errorMessage,
       reactiveValue,
+      emitModelValue,
     };
   },
 });

@@ -11,10 +11,9 @@ def suite():
   return suite
 
 def tearDown():
-  if os.path.exists('logs/radio_data.csv'):
-    os.remove('logs/radio_data.csv')
-  if os.path.exists('logs/radio_errors.csv'):
-    os.remove('logs/radio_errors.csv')
+  # Clean up the log file after tests
+  if os.path.exists('logs/radio_data.log'):
+    os.remove('logs/radio_data.log')
 
 if __name__ == '__main__':
   runner = unittest.TextTestRunner()

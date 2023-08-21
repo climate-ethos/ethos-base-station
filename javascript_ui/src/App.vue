@@ -3,16 +3,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch } from 'vue';
+
+import { getSpeechSynthesisVoices } from './helpers/audioAlertDispatcher';
 
 import { useDataSensorStore } from 'stores/dataSensor';
 import { useForecastStore } from 'stores/forecast';
 import { useDataPreferencesStore } from './stores/dataPreferences';
+import { useDatabaseStore } from './stores/database';
+import { useDataUserStore } from './stores/dataUser';
+import { useSurveyStore } from './stores/survey';
 
 export default defineComponent({
   name: 'App',
   // Setup store connections here
   setup() {
+    // Note: This needs to be called to initialize the list of voices available
+    getSpeechSynthesisVoices();
+
+    // Setup stores
     const dataSensorStore = useDataSensorStore();
     dataSensorStore.setup();
 
@@ -21,8 +30,28 @@ export default defineComponent({
 
     const forecastStore = useForecastStore();
     forecastStore.setup();
+    const surveyStore = useSurveyStore();
+    surveyStore.setup();
 
-    // Add touch/click feedback to app
+    const databaseStore = useDatabaseStore();
+    databaseStore.initializeDatabase();
+
+    const dataUserStore = useDataUserStore();
+    // Update database link when user id changes
+    watch(
+      () => dataUserStore.id,
+      (newId, oldId) => {
+        if (newId && newId !== oldId) {
+          databaseStore.initializeDatabase();
+        }
+      },
+      { immediate: true }
+    );
+
+    /**
+     * Add touch/click feedback to the screen.
+     * Every time a user presses the screen, an animated circle will appear in that location.
+     */
     document.addEventListener('click', function (event: MouseEvent) {
       const effect = document.createElement('div');
       effect.classList.add('click-effect');

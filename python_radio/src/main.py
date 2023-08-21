@@ -4,7 +4,7 @@ import asyncio
 import sys
 import threading
 
-from radio import radio_listen
+from core_temperature import RiskLevelData, calculate_predicted_core_temperature
 
 try:
   import board
@@ -37,9 +37,16 @@ def connect(sid, environ):
 def disconnect(sid):
   print('disconnect ', sid)
 
+
+# Take in RiskLevelData and return core temperature
+@sio.event
+async def calculatePredictedCoreTemperature(sid, data: RiskLevelData):
+  return calculate_predicted_core_temperature(data)
+
 if __name__ == '__main__':
   production_arg = sys.argv[1] if len(sys.argv) > 1 else False
   if production_arg == 'prod' or production_arg == 'production':
+    from radio import radio_listen
     rfm9x = radio_init()
     # Start radio listen thread
     radio_thread = threading.Thread(target=asyncio.run, args=(radio_listen(sio, rfm9x),))

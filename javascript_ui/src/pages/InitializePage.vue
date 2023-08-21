@@ -25,7 +25,7 @@
       <q-step :name="2" title="Setup User Data" icon="person" :done="step > 2">
         <base-scroll-area height="75vh">
           <div class="q-ma-md">
-            <SettingsMenuUserData />
+            <SettingsUserData />
           </div>
         </base-scroll-area>
       </q-step>
@@ -39,7 +39,7 @@
       >
         <base-scroll-area height="75vh">
           <div class="q-ma-md">
-            <SettingsMenuSensors />
+            <SettingsSensors />
           </div>
         </base-scroll-area>
       </q-step>
@@ -53,7 +53,7 @@
       >
         <base-scroll-area height="75vh">
           <div class="q-ma-md">
-            <SettingsMenuPreferences />
+            <SettingsPreferences />
           </div>
         </base-scroll-area>
       </q-step>
@@ -88,9 +88,9 @@
 import { defineComponent, Ref, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import CardContact from 'src/components/CardContact.vue';
-import SettingsMenuUserData from 'src/components/SettingsMenuUserData.vue';
-import SettingsMenuSensors from 'src/components/SettingsMenuSensors.vue';
-import SettingsMenuPreferences from 'src/components/SettingsMenuPreferences.vue';
+import SettingsUserData from 'src/components/SettingsUserData.vue';
+import SettingsSensors from 'src/components/SettingsSensors.vue';
+import SettingsPreferences from 'src/components/SettingsPreferences.vue';
 import { useDataUserStore } from 'src/stores/dataUser';
 import { useDataSensorStore } from 'src/stores/dataSensor';
 import { useKeyboardStore } from 'src/stores/keyboard';
@@ -100,9 +100,9 @@ import BaseScrollArea from 'src/components/BaseScrollArea.vue';
 export default defineComponent({
   components: {
     CardContact,
-    SettingsMenuUserData,
-    SettingsMenuSensors,
-    SettingsMenuPreferences,
+    SettingsUserData,
+    SettingsSensors,
+    SettingsPreferences,
     BaseScrollArea,
   },
   setup() {

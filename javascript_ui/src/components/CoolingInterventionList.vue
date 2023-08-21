@@ -8,20 +8,11 @@
       </q-btn>
     </q-card-section>
     <q-card-section>
-      <div class="fontsize-16 q-mb-md">
-        Best ways to cool yourself (click on a row for more info):
-      </div>
       <div class="row">
-        <div class="col-4 q-pr-lg">
-          <CoolingInterventionFan />
-          <q-btn
-            label="When should I not use a fan?"
-            color="info"
-            class="q-mt-xl q-ma-lg"
-            @click="isShowFanModal = true"
-          />
-        </div>
         <div class="table-container col-8">
+          <div class="fontsize-16 q-mb-sm">
+            Best ways to cool yourself (click on a row for more info):
+          </div>
           <q-table
             ref="tableRef"
             :rows="rows"
@@ -78,6 +69,16 @@
             @click="scrollTo(1)"
           />
         </div>
+        <div class="col-4 q-pl-lg">
+          <div class="fontsize-16 q-mb-sm">Should you use a fan:</div>
+          <CoolingInterventionFan />
+          <q-btn
+            label="When should I not use a fan?"
+            color="info"
+            class="q-mt-xl q-ma-lg"
+            @click="isShowFanModal = true"
+          />
+        </div>
       </div>
     </q-card-section>
   </q-card>
@@ -94,7 +95,7 @@ import {
   inject,
 } from 'vue';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
-import { CoolingStrategy } from 'src/components/models';
+import { CoolingStrategy } from 'src/typings/data-types';
 import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import { QTable, QTableProps } from 'quasar';
 import CoolingInterventionEffectiveness from './CoolingInterventionEffectiveness.vue';
@@ -151,7 +152,7 @@ export default defineComponent({
         );
 
       // Get strategy text from source
-      const avaliableStrategies = availableOptions.map(
+      const availableStrategies = availableOptions.map(
         (el) => coolingStrategies[el.key]
       );
       const remainingStrategies = remainingOptions.map(
@@ -159,16 +160,17 @@ export default defineComponent({
       );
 
       // Sort both arrays
-      avaliableStrategies.sort((a, b) => b.effectiveness - a.effectiveness);
+      availableStrategies.sort((a, b) => b.effectiveness - a.effectiveness);
       remainingStrategies.sort((a, b) => b.effectiveness - a.effectiveness);
 
       // Concatenate the sorted arrays with the special row in between
-      return avaliableStrategies.concat([
+      return availableStrategies.concat([
         {
           name: 'You might also consider using...',
           shortName: '',
           icon: '',
           effectiveness: 0,
+          group: '',
           extraInfo: {
             bestUse: [],
             whenUse: [],

@@ -2,9 +2,9 @@
   <q-card class="full-height bg-dark text-white">
     <q-card-section horizontal class="full-height">
       <q-card-section>
-        <div>
+        <div class="text-center">
           <q-icon :name="iconName" size="100px" />
-          <div class="fontsize-16 text-capitalize text-center">
+          <div class="fontsize-16 text-capitalize">
             {{ forecastStore.weatherDescription }}
           </div>
         </div>

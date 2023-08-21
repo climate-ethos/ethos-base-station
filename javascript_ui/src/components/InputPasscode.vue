@@ -2,7 +2,7 @@
   <div class="justify-center items-center text-center" style="margin: 20px 10%">
     <b class="fontsize-14"
       >If you are a researcher, enter passcode to go to settings page, otherwise
-      click the "GO BACK" button</b
+      click the "GO BACK TO HOME " button</b
     >
 
     <div class="row">
@@ -39,11 +39,11 @@
     >
       <div class="col q-pa-sm" v-for="key in row" :key="key">
         <q-btn
-          v-if="key == 'go back'"
+          v-if="key == 'delete'"
           class="full-width full-height fontsize-14"
-          color="info"
+          color="negative"
           :label="key"
-          to="/"
+          @click="backspacePasscode"
         ></q-btn>
         <q-btn
           v-else-if="key == 'submit'"
@@ -77,13 +77,20 @@ export default defineComponent({
       ['1', '2', '3'],
       ['4', '5', '6'],
       ['7', '8', '9'],
-      ['go back', '0', 'submit'],
+      ['delete', '0', 'submit'],
     ];
     const isIncorrectPasscode = ref(false);
 
     const backspacePasscode = () => {
       // Remove last character of passcode
       passcode.value = passcode.value.slice(0, -1);
+
+      // Set the focus back to the input
+      nextTick(() => {
+        if (passcodeInputRef.value) {
+          passcodeInputRef.value.focus();
+        }
+      });
     };
 
     const appendPasscode = (char: string) => {

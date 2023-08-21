@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import axios, { AxiosError } from 'axios';
 import { useDataUserStore } from './dataUser';
 import { watch } from 'vue';
+import { useDatabaseStore } from './database';
 
 export const useForecastStore = defineStore('forecast', {
   state: () => ({
@@ -73,19 +74,22 @@ export const useForecastStore = defineStore('forecast', {
           responseType: 'text',
           maxContentLength: 65536,
         });
-        // console.log(result.data);
         // Update weather values
         const weatherObj = JSON.parse(result.data);
-        // console.log(weatherObj);
         this.stationName = weatherObj.name;
         this.currentTemp = weatherObj.main.temp;
         this.currentHumidity = weatherObj.main.humidity;
-        // this.minTemp = weatherObj.main.temp_min;
-        // this.maxTemp = weatherObj.main.temp_max;
         this.weatherDescription = weatherObj.weather[0].description;
         this.weatherIconId = weatherObj.weather[0].icon;
         // Clear error message
         this.errorMessage = '';
+        // Post data to database
+        const databaseStore = useDatabaseStore();
+        databaseStore.postDocument('weather', {
+          weatherLocation: this.stationName,
+          temperature: this.currentTemp,
+          humidity: this.currentHumidity,
+        });
       } catch (error: unknown) {
         if (error instanceof AxiosError) {
           this.errorMessage = error.message;

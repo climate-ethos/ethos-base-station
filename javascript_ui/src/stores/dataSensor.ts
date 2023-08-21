@@ -1,10 +1,15 @@
 import { defineStore } from 'pinia';
-import { io } from 'socket.io-client';
-import { SensorData } from 'src/components/models';
-import { getRiskLevel } from 'src/helpers/riskLevel';
+import {
+  RiskLevel,
+  SensorData,
+  SocketSensorData,
+} from 'src/typings/data-types';
 import { playAudio } from 'src/helpers/audioAlertDispatcher';
-import { RiskLevel } from 'src/components/models';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
+import { useSocketStore } from 'src/stores//socket';
+import { useDatabaseStore } from './database';
+import { useVolumeStore } from './volume';
+import { useSurveyStore } from 'src/stores/survey';
 
 const deserializeSensorData = (sensorDataString: string) => {
   // Parse the JSON string
@@ -33,6 +38,25 @@ const findOutdoorSensorIndex = (sensorData: Array<SensorData>) => {
   return outsideIndex;
 };
 
+// Return the riskLevel for a given core temperature
+const getRiskLevel = (coreTemperature: number | undefined) => {
+  if (!coreTemperature) {
+    console.error(
+      'Unable to calculate risk level (core temperature undefined)'
+    );
+    return undefined;
+  } else if (coreTemperature >= 38) {
+    return RiskLevel.HIGH;
+  } else if (coreTemperature >= 37.7) {
+    return RiskLevel.MEDIUM;
+  } else if (coreTemperature < 37.7) {
+    return RiskLevel.LOW;
+  } else {
+    console.error('Unable to calculate risk level (unknown error)');
+    return undefined;
+  }
+};
+
 export const useDataSensorStore = defineStore('dataSensor', {
   persist: {
     serializer: {
@@ -42,7 +66,6 @@ export const useDataSensorStore = defineStore('dataSensor', {
   },
 
   state: () => ({
-    isConnected: false,
     alertSensor: null as SensorData | null,
     allSensorData: [
       {
@@ -116,9 +139,6 @@ export const useDataSensorStore = defineStore('dataSensor', {
 
   actions: {
     setup() {
-      console.log('Setting up socket...');
-      const socket = io('ws://localhost:5001');
-
       this.allSensorData = [
         {
           id: 1,
@@ -166,19 +186,17 @@ export const useDataSensorStore = defineStore('dataSensor', {
       //   this.alertSensor = this.allSensorData[1];
       // }, 11000);
 
-      // Callbacks for socket
-      socket.on('connect', () => {
-        this.isConnected = true;
-        console.log('Connected:', socket.id);
-      });
-
-      socket.on('disconnect', () => {
-        this.isConnected = false;
-        console.log('Disconnected:', socket.id);
-      });
+      // Load stores
+      const databaseStore = useDatabaseStore();
+      const volumeStore = useVolumeStore();
+      // Setup socket store if it is not yet ready
+      const socketStore = useSocketStore();
+      if (!socketStore.isConnected) {
+        socketStore.initialize();
+      }
 
       // Callback to update sensor data when applicable
-      socket.on('data', (data) => {
+      socketStore.onSensorData(async (data: SocketSensorData) => {
         console.log('Received:');
         console.log(data);
 
@@ -197,7 +215,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         const temperature = parseFloat(data.temperature);
         const humidity = parseFloat(data.humidity);
 
-        // Check
+        // Check numbers are correctly parsed
         if (isNaN(id) || isNaN(temperature) || isNaN(humidity)) {
           // Error:
           console.error('Error parsing strings to numbers');
@@ -213,7 +231,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         );
         if (i < 0) {
           // Could not find index
-          console.error('Wrong sensor id:', id);
+          console.log('Wrong sensor id:', id);
           return;
         }
 
@@ -223,12 +241,34 @@ export const useDataSensorStore = defineStore('dataSensor', {
         sensorData.humidity = humidity;
         sensorData.lastSeen = new Date(Date.now());
 
+        // Calculate core temperature
+        const predictedCoreTemperature =
+          await socketStore.calculatePredictedCoreTemperature(sensorData);
+
+        // Calculate risk level
+        const newRiskLevel = getRiskLevel(predictedCoreTemperature);
         const oldRiskLevel = sensorData.riskLevel;
-        sensorData.riskLevel = undefined; // While we calculate new value
-        const newRiskLevel = getRiskLevel(sensorData);
         sensorData.riskLevel = newRiskLevel;
-        if (oldRiskLevel && newRiskLevel && newRiskLevel > oldRiskLevel) {
-          // Risk level has gone up
+
+        // Send sensor data to database
+        databaseStore.postDocument('sensor', {
+          sensorId: sensorData.id,
+          sensorLocation: sensorData.name,
+          temperature: sensorData.temperature,
+          humidity: sensorData.humidity,
+        });
+
+        // Display alert if risk level has gone up on indoor sensor
+        if (
+          oldRiskLevel &&
+          newRiskLevel &&
+          newRiskLevel > oldRiskLevel &&
+          !isOutdoorSensor(sensorData)
+        ) {
+          // Add to alerts count
+          const surveyStore = useSurveyStore();
+          surveyStore.incrementAlertCount();
+          // Display alert
           this.alertSensor = { ...sensorData }; // Shallow copy
           // Get audio type preferences
           const dataPreferencesStore = useDataPreferencesStore();
@@ -238,6 +278,12 @@ export const useDataSensorStore = defineStore('dataSensor', {
             newRiskLevel,
             this.alertSensor
           );
+          // Send alert data to database
+          databaseStore.postDocument('alert', {
+            riskLevel: newRiskLevel,
+            volumePercent: volumeStore.volumePercent,
+            dismissMethod: null,
+          });
         }
       });
     },

@@ -15,6 +15,10 @@ export const bindOnScreenKeyboard: Directive = {
     };
     const handleBlur = () => {
       useKeyboardStore().unbindKeyboard();
+      // Emit data to parent when blurred
+      if (binding.value.emitModelValue) {
+        binding.value.emitModelValue();
+      }
     };
     inputEl.addEventListener('focus', handleFocus);
     inputEl.addEventListener('blur', handleBlur);

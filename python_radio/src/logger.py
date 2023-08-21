@@ -1,32 +1,60 @@
-import csv
-import datetime
+import logging
 import os
 
 class Logger:
 
-  @staticmethod
-  def log_radio_data(radio_data, rssi):
-    id = radio_data.get("id", "Missing ID")
-    temp = radio_data.get("temperature", "Missing Temperature")
-    humidity = radio_data.get("humidity", "Missing Humidity")
-    print("Radio data.. id: {0}, temp: {1}, RH: {2}, RSSI: {3}".format(id, temp, humidity, rssi))
+    # Create a named logger instance
+    _logger = logging.getLogger('my_application')
 
-    os.makedirs('logs', exist_ok=True)
-    with open('logs/radio_data.csv', 'a', newline='') as datafile:
-      data_writer = csv.writer(datafile)
-      # Write header if the file is empty
-      if datafile.tell() == 0:
-        data_writer.writerow(['Time', 'ID', 'Temperature', 'Humidity', 'RSSI'])
-      data_writer.writerow([datetime.datetime.now(), id, temp, humidity, rssi])
+    @staticmethod
+    def shutdown():
+        logging.shutdown()
 
-  @staticmethod
-  def error(msg):
-    print(msg)
+    @staticmethod
+    def setup():
+        # Clear any previously added handlers
+        Logger._logger.handlers = []
 
-    os.makedirs('logs', exist_ok=True)
-    with open('logs/radio_errors.csv', 'a', newline='') as errorfile:
-      error_writer = csv.writer(errorfile)
-      # Write header if the file is empty
-      if errorfile.tell() == 0:
-        error_writer.writerow(['Time', 'Error'])
-      error_writer.writerow([datetime.datetime.now(), msg])
+        # Set the logging level
+        Logger._logger.setLevel(logging.DEBUG)
+
+        # Create handlers
+        log_directory = "logs"
+        if not os.path.exists(log_directory):
+            os.makedirs(log_directory)
+        file_handler = logging.FileHandler(os.path.join(log_directory, "radio_data.log"), mode='a')
+        stream_handler = logging.StreamHandler()
+
+        # Create a formatter and attach to handlers
+        formatter = logging.Formatter(
+            fmt='%(asctime)s %(levelname)-8s %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        file_handler.setFormatter(formatter)
+        stream_handler.setFormatter(formatter)
+
+        # Attach handlers to the logger
+        Logger._logger.addHandler(file_handler)
+        Logger._logger.addHandler(stream_handler)
+
+    @staticmethod
+    def log_radio_data(radio_data, rssi):
+        id = radio_data.get("id", "Missing ID")
+        temp = radio_data.get("temperature", "Missing Temperature")
+        humidity = radio_data.get("humidity", "Missing Humidity")
+        log_message = "Radio received... id: {0}, temp: {1}, RH: {2}, RSSI: {3}".format(id, temp, humidity, rssi)
+
+        # Use the named logger instance to log the message
+        Logger._logger.info(log_message)
+
+    @staticmethod
+    def error(msg):
+        # Use the named logger instance to log the error
+        Logger._logger.error(msg)
+
+# Setup logger
+Logger.setup()
+
+# Sample usage
+# Logger.log_radio_data({"id": "123", "temperature": "22.5", "humidity": "50.2"}, "-70dBm")
+# Logger.error("Sample Error Message")

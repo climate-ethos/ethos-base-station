@@ -13,6 +13,7 @@
         {{ sensor.name ? sensor.name : 'Undefined' }}
         {{ sensor.id ? '' : '(ID Undefined)' }}
         <span v-if="isOffline">(Offline)</span>
+        <span v-if="isCalculating">(Calculating)</span>
       </div>
     </q-card-section>
 
@@ -52,7 +53,7 @@ import {
   onUnmounted,
   inject,
 } from 'vue';
-import { SensorData, RiskLevel } from 'components/models';
+import { SensorData, RiskLevel } from 'src/typings/data-types';
 import { playTextToSpeech } from 'src/helpers/audioAlertDispatcher';
 import { shouldUseFan } from 'src/helpers/fanAndWindowUse';
 
@@ -96,6 +97,14 @@ export default defineComponent({
       return false;
     });
 
+    // Whether the risk level is currently being calculated
+    let isCalculating = computed(() => {
+      if (props.sensor.temperature && !props.sensor.riskLevel) {
+        return true;
+      }
+      return false;
+    });
+
     // Check whether the sensor name or id is undefined
     let isUndefined = computed(() => {
       return !props.sensor.id || !props.sensor.name;
@@ -113,6 +122,8 @@ export default defineComponent({
       } else if (isOffline.value) {
         // Sensor is offline
         return 'bg-grey text-grey-8';
+      } else if (isCalculating.value) {
+        return 'bg-grey text-white';
       }
       // Check risk level
       switch (props.sensor.riskLevel) {
@@ -191,6 +202,7 @@ export default defineComponent({
       isDisplayFanWarning,
       isUndefined,
       isOffline,
+      isCalculating,
       backgroundColor,
       formattedLastSeen,
       emoticonStyle,

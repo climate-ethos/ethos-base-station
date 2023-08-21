@@ -39,6 +39,7 @@ import { useDataUserStore } from 'src/stores/dataUser';
 import { useVolumeStore } from 'src/stores/volume';
 import { useRouter } from 'vue-router';
 import { defineComponent, ref } from 'vue';
+import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 
 export default defineComponent({
   setup() {
@@ -46,11 +47,13 @@ export default defineComponent({
     const router = useRouter();
     const dataUserStore = useDataUserStore();
     const dataSensorStore = useDataSensorStore();
+    const dataPreferencesStore = useDataPreferencesStore();
     const volumeStore = useVolumeStore();
     const resetData = () => {
       volumeStore.$reset();
       dataUserStore.$reset();
       dataSensorStore.$reset();
+      dataPreferencesStore.$reset();
       dataSensorStore.setup();
       router.push('/');
     };

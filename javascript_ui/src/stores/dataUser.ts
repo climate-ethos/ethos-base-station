@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { UserData } from '../components/models';
+import { UserData } from 'src/typings/data-types';
 
 export const useDataUserStore = defineStore('dataUser', {
   persist: true,
@@ -12,6 +12,7 @@ export const useDataUserStore = defineStore('dataUser', {
     ageYears: undefined,
     heightCm: undefined,
     weightKg: undefined,
+    sex: undefined,
   }),
 
   getters: {
@@ -24,7 +25,8 @@ export const useDataUserStore = defineStore('dataUser', {
         !state.longitude ||
         !state.ageYears ||
         !state.heightCm ||
-        !state.weightKg
+        !state.weightKg ||
+        !state.sex
       );
     },
   },

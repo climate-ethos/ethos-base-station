@@ -21,7 +21,7 @@ import { defineComponent } from 'vue';
 import { useDataSensorStore } from 'src/stores/dataSensor';
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'MainPage',
   components: { CardSensor, CardForecast },
   setup() {
     const sortedSensorData = useDataSensorStore().getSortedSensorData;

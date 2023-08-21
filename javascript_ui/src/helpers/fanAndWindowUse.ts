@@ -1,4 +1,4 @@
-import { SensorData } from 'src/components/models';
+import { SensorData } from 'src/typings/data-types';
 
 export const shouldUseFan = (
   sensor: SensorData

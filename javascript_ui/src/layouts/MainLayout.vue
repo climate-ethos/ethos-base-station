@@ -2,6 +2,7 @@
   <q-layout view="lHh Lpr lFf" class="bg-blue-grey-2">
     <!-- Register Modals -->
     <ModalNoConnection />
+    <ModalSurvey />
     <ModalVolume v-model="isShowVolumeModal" />
     <ModalHeatAlert @open-cooling-modal="isShowCoolingModal = true" />
     <ModalCoolingInterventions v-model="isShowCoolingModal" />
@@ -25,7 +26,8 @@
           class="q-ml-md fontsize-16"
         />
 
-        <BaseCurrentTime class="q-ml-lg fontsize-20" />
+        <BaseCurrentTime class="fontsize-20" />
+        <BaseNetworkConnection />
 
         <q-toolbar-title></q-toolbar-title>
 
@@ -83,6 +85,7 @@ import { defineComponent, ref, computed, provide } from 'vue';
 import { useKeyboardStore } from 'src/stores/keyboard';
 import { useVolumeStore } from 'src/stores/volume';
 
+import BaseNetworkConnection from 'src/components/BaseNetworkConnection.vue';
 import BaseCurrentTime from 'components/BaseCurrentTime.vue';
 import ModalNoConnection from 'components/ModalNoConnection.vue';
 import ModalCoolingInterventions from 'components/ModalCoolingInterventions.vue';
@@ -91,6 +94,7 @@ import ModalHelp from 'src/components/ModalHelp.vue';
 import ModalHeatAlert from 'src/components/ModalHeatAlert.vue';
 import ModalVolume from 'src/components/ModalVolume.vue';
 import ModalFanInfo from 'src/components/ModalFanInfo.vue';
+import ModalSurvey from 'src/components/ModalSurvey.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -103,6 +107,8 @@ export default defineComponent({
     BaseCurrentTime,
     ModalVolume,
     ModalFanInfo,
+    BaseNetworkConnection,
+    ModalSurvey,
   },
   setup() {
     const keyboardStore = useKeyboardStore();

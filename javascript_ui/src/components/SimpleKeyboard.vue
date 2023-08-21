@@ -58,7 +58,12 @@ export default defineComponent({
     watch(keyboardStore, () => {
       if (keyboardStore.keyboardType === 'text') {
         keyboard?.setOptions({
-          layoutName: 'default',
+          // Check to see if the length of string is 0 and set shift
+          // This will capitalize the keyboard for the first letter
+          layoutName:
+            keyboardStore.keyboardValue?.value.length == 0
+              ? 'shift'
+              : 'default',
         });
       }
       if (keyboardStore.keyboardType === 'number') {

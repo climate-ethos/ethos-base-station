@@ -41,19 +41,24 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useDataSensorStore } from 'stores/dataSensor';
-import { RiskLevel } from './models';
+import { RiskLevel } from 'src/typings/data-types';
+import { AlertDatabaseStructure } from 'src/typings/database-types';
+import { useVolumeStore } from 'src/stores/volume';
+import { useDatabaseStore } from 'src/stores/database';
 
 export default defineComponent({
   name: 'ModalHeatAlert',
   components: {},
   setup(props, { emit }) {
-    const store = useDataSensorStore();
+    const dataSensorStore = useDataSensorStore();
+    const volumeStore = useVolumeStore();
+    const databaseStore = useDatabaseStore();
 
-    const alertSensor = computed(() => store.alertSensor);
-    const showModal = computed(() => store.alertSensor !== null);
+    const alertSensor = computed(() => dataSensorStore.alertSensor);
+    const showModal = computed(() => dataSensorStore.alertSensor !== null);
 
     const flashClass = computed(() => {
-      switch (store.alertSensor?.riskLevel) {
+      switch (dataSensorStore.alertSensor?.riskLevel) {
         case RiskLevel.MEDIUM:
           return 'flash-yellow';
         case RiskLevel.HIGH:
@@ -64,7 +69,7 @@ export default defineComponent({
     });
 
     const riskLevelText = computed(() => {
-      switch (store.alertSensor?.riskLevel) {
+      switch (dataSensorStore.alertSensor?.riskLevel) {
         case RiskLevel.LOW:
           return 'LOW';
         case RiskLevel.MEDIUM:
@@ -76,23 +81,31 @@ export default defineComponent({
       }
     });
 
+    const dismissModalAndSendToDatabase = (
+      dismissMethod: AlertDatabaseStructure['dismissMethod']
+    ) => {
+      // Send alert data to database
+      databaseStore.postDocument('alert', {
+        riskLevel: dataSensorStore.alertSensor?.riskLevel,
+        volumePercent: volumeStore.volumePercent,
+        dismissMethod: dismissMethod,
+      });
+      // Dismiss modal
+      dataSensorStore.alertSensor = null;
+    };
+
     const notLocatedAt = () => {
-      // TODO: Record action
-      store.alertSensor = null;
-      console.log('Not located at ' + alertSensor.value?.name);
+      dismissModalAndSendToDatabase('not here');
     };
 
     const coolDown = () => {
-      // TODO: Record action
-      store.alertSensor = null;
+      dismissModalAndSendToDatabase('cooling strategies');
+      // Open cooling modal
       emit('open-cooling-modal');
-      console.log('Cooling down...');
     };
 
     const dismiss = () => {
-      // TODO: Record action
-      // Dismiss the alert
-      store.alertSensor = null;
+      dismissModalAndSendToDatabase('dismiss');
     };
 
     return {

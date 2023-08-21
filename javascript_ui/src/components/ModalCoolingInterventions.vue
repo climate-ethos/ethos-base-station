@@ -21,7 +21,7 @@
 import { defineComponent, ref, Ref, toRefs, computed } from 'vue';
 import CoolingInterventionList from './CoolingInterventionList.vue';
 import CoolingInterventionInfo from './CoolingInterventionInfo.vue';
-import { CoolingStrategy } from './models';
+import { CoolingStrategy } from 'src/typings/data-types';
 
 export default defineComponent({
   name: 'ModalCoolingInterventions',

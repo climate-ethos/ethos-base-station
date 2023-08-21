@@ -1,7 +1,7 @@
 # RUN JS TESTS
 cd javascript_ui
 echo "-----\nTesting Javascript UI:\n-----"
-npm run test:unit:ci
+yarn test:unit:ci
 cd ..
 
 # RUN PYTHON TESTS
