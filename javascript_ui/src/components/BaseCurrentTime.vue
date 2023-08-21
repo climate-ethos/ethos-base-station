@@ -11,7 +11,7 @@ import { ref, onMounted } from 'vue';
 import { useDataSensorStore } from 'src/stores/dataSensor';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import { playAudio } from 'src/helpers/audioAlertDispatcher';
-import { RiskLevel } from './models';
+import { RiskLevel } from 'src/typings/data-types';
 
 export default {
   setup() {

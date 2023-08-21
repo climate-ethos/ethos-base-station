@@ -15,7 +15,7 @@
       <div class="full-width">
         <q-card-section class="q-pa-sm">
           <div class="fontsize-22 text-bold">
-            <span> Ipswich - </span>
+            <span> {{ forecastStore.stationName }} - </span>
             <span>Weather Station</span>
           </div>
         </q-card-section>
