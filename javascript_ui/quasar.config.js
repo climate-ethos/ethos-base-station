@@ -68,12 +68,7 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      extendViteConf(viteConf) {
-        viteConf.define = {
-          ...viteConf.define,
-          global: 'window',
-        };
-      },
+      // extendViteConf(viteConf) {},
       // viteVuePluginOptions: {},
 
       // vitePlugins: [
@@ -184,6 +179,9 @@ module.exports = configure(function (/* ctx */) {
         // protocol: 'myapp://path',
         // Windows only
         // win32metadata: { ... }
+        // Build for Raspberry Pi
+        platform: 'linux',
+        arch: 'armv7l',
       },
 
       builder: {

@@ -8,6 +8,7 @@
             <q-tab name="user-data" icon="person" label="User Data" />
             <q-tab name="sensors" icon="thermostat" label="Sensors" />
             <q-tab name="preferences" icon="assignment" label="Preferences" />
+            <q-tab name="debug" icon="bug_report" label="Debug Info" />
             <q-tab name="reset" icon="warning" label="Reset App" />
             <q-tab name="quit" icon="power_settings_new" label="Quit" />
           </q-tabs>
@@ -46,6 +47,14 @@
               </base-scroll-area>
             </q-tab-panel>
 
+            <q-tab-panel name="debug" class="q-pa-none">
+              <base-scroll-area>
+                <div class="q-ma-lg">
+                  <SettingsDebug />
+                </div>
+              </base-scroll-area>
+            </q-tab-panel>
+
             <q-tab-panel name="reset" class="q-pa-none">
               <base-scroll-area>
                 <div class="q-ma-lg">
@@ -78,6 +87,7 @@ import SettingsQuit from 'src/components/SettingsQuit.vue';
 import BaseScrollArea from 'src/components/BaseScrollArea.vue';
 
 import { defineComponent, ref } from 'vue';
+import SettingsDebug from 'src/components/SettingsDebug.vue';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -89,6 +99,7 @@ export default defineComponent({
     SettingsUserData,
     SettingsQuit,
     BaseScrollArea,
+    SettingsDebug,
   },
   setup() {
     let isShowSettings = ref(false);

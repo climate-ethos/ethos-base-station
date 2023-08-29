@@ -1,5 +1,5 @@
 import jos3
-from typing import TypedDict, Literal
+from typing import TypedDict, Literal, Union
 from logger import Logger
 
 
@@ -12,7 +12,7 @@ class RiskLevelData(TypedDict):
   Ta: float
   RH: float
 
-def calculate_predicted_core_temperature(data: RiskLevelData) -> (None | float):
+def calculate_predicted_core_temperature(data: RiskLevelData) -> Union[None, float]:
   print('Calculating core temp...')
   # Extract types
   heightM = data.get('heightM')

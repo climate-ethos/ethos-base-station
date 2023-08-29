@@ -14,7 +14,16 @@ import {
 export const useDatabaseStore = defineStore({
   id: 'database',
   state: () => ({
+    // Database variable
     db: null as null | InstanceType<typeof PouchDB>,
+    // The status of the remote CouchDB instance
+    replicationStatus: 'initial' as
+      | 'initial'
+      | 'active'
+      | 'paused'
+      | 'denied'
+      | 'complete'
+      | 'error',
   }),
   actions: {
     /**
@@ -42,15 +51,36 @@ export const useDatabaseStore = defineStore({
       }
       // 3. Sets up a database called user_${id}
       this.db = new PouchDB(databaseName);
-      this.db.info().then(function (info) {
-        console.log('Connected to local PouchDB instance:', info);
-      });
       // 4. Sets up replication on a remote database
       if (this.db) {
-        this.db.replicate.to(`${databaseUrl}/${databaseName}`, {
-          live: true,
-          retry: true,
-        });
+        const replication = this.db.replicate.to(
+          `${databaseUrl}/${databaseName}`,
+          {
+            live: true,
+            retry: true,
+          }
+        );
+        // Replication status callbacks
+        replication
+          .on('paused', (err) => {
+            if (err) {
+              this.replicationStatus = 'error';
+            } else {
+              this.replicationStatus = 'paused';
+            }
+          })
+          .on('active', () => {
+            this.replicationStatus = 'active';
+          })
+          .on('denied', () => {
+            this.replicationStatus = 'denied';
+          })
+          .on('complete', () => {
+            this.replicationStatus = 'complete';
+          })
+          .on('error', () => {
+            this.replicationStatus = 'error';
+          });
       }
     },
 
@@ -95,6 +125,22 @@ export const useDatabaseStore = defineStore({
       } catch (error) {
         console.error('Failed to post document:', error);
         throw error;
+      }
+    },
+    /**
+     * Function to retrieve the current database info
+     * @returns Error string or database info
+     */
+    async fetchDatabaseInfo() {
+      if (!this.db) {
+        return 'Database not initialised';
+      }
+      try {
+        const info = await this.db.info();
+        return info;
+      } catch (e) {
+        console.error(e);
+        return 'Unknown error getting db info';
       }
     },
   },
