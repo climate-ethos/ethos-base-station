@@ -28,13 +28,15 @@ export default {
     };
 
     const showDemoAlert = () => {
-      console.log('Showing alert');
-      dataSensorStore.alertSensor = dataSensorStore.allSensorData[1];
-      playAudio(
-        dataPreferencesStore.audioType,
-        RiskLevel.MEDIUM,
-        dataSensorStore.alertSensor
-      );
+      console.log('Showing alert in 5 seconds');
+      setTimeout(() => {
+        dataSensorStore.alertSensor = dataSensorStore.allSensorData[1];
+        playAudio(
+          dataPreferencesStore.audioType,
+          RiskLevel.MEDIUM,
+          dataSensorStore.alertSensor
+        );
+      }, 5000);
     };
 
     onMounted(() => {
