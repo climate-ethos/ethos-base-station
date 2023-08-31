@@ -6,7 +6,11 @@ import {
   findOutdoorSensorIndex,
   getRiskLevel,
 } from 'src/helpers/dataSensor';
-import { SensorData, SocketSensorData } from 'src/typings/data-types';
+import {
+  SensorData,
+  SocketSensorData,
+  RiskLevel,
+} from 'src/typings/data-types';
 import { playAudio } from 'src/helpers/audioAlertDispatcher';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import { useSocketStore } from 'src/stores//socket';
