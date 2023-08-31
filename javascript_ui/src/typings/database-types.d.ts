@@ -3,7 +3,7 @@ import { AudioType, RiskLevel } from 'src/typings/data-types';
 export interface BaseDatabaseStructure {
   type: 'sensor' | 'weather' | 'preferences' | 'survey' | 'alert';
   time: Date;
-  userId: number;
+  userId: string;
 }
 
 export interface SensorDatabaseStructure {

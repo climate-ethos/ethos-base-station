@@ -11,8 +11,8 @@ import { useDataSensorStore } from 'stores/dataSensor';
 import { useForecastStore } from 'stores/forecast';
 import { useDataPreferencesStore } from './stores/dataPreferences';
 import { useDatabaseStore } from './stores/database';
-import { useDataUserStore } from './stores/dataUser';
 import { useSurveyStore } from './stores/survey';
+import { useDateTimeStore } from './stores/dateTime';
 
 export default defineComponent({
   name: 'App',
@@ -33,13 +33,16 @@ export default defineComponent({
     const surveyStore = useSurveyStore();
     surveyStore.setup();
 
+    // Start updating time
+    const dateTimeStore = useDateTimeStore();
+    dateTimeStore.startInterval();
+
+    // Initialize database
     const databaseStore = useDatabaseStore();
     databaseStore.initializeDatabase();
-
-    const dataUserStore = useDataUserStore();
     // Update database link when user id changes
     watch(
-      () => dataUserStore.id,
+      () => process.env.USER_ID,
       (newId, oldId) => {
         if (newId && newId !== oldId) {
           databaseStore.initializeDatabase();

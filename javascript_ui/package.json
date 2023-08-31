@@ -12,7 +12,10 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "test:serve": "quasar dev --debug",
     "test:unit": "vitest",
+    "test:e2e": "yarn playwright test --ui",
+    "test:e2e:ci": "yarn playwright test",
     "test:unit:ci": "vitest run"
   },
   "dependencies": {
@@ -35,6 +38,7 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.37.1",
     "@quasar/app-vite": "^1.2.1",
     "@quasar/quasar-app-extension-testing": "^2.1.0",
     "@quasar/quasar-app-extension-testing-unit-vitest": "^0.3.0",

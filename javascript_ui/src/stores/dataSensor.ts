@@ -1,61 +1,18 @@
 import { defineStore } from 'pinia';
 import {
-  RiskLevel,
-  SensorData,
-  SocketSensorData,
-} from 'src/typings/data-types';
+  deserializeSensorData,
+  isOfflineSensor,
+  isOutdoorSensor,
+  findOutdoorSensorIndex,
+  getRiskLevel,
+} from 'src/helpers/dataSensor';
+import { SensorData, SocketSensorData } from 'src/typings/data-types';
 import { playAudio } from 'src/helpers/audioAlertDispatcher';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import { useSocketStore } from 'src/stores//socket';
 import { useDatabaseStore } from './database';
 import { useVolumeStore } from './volume';
 import { useSurveyStore } from 'src/stores/survey';
-
-const deserializeSensorData = (sensorDataString: string) => {
-  // Parse the JSON string
-  const state = JSON.parse(sensorDataString);
-  state.allSensorData.forEach((dataSensor: SensorData) => {
-    // Parse the date (previously lost with JSON.stringify())
-    dataSensor.lastSeen = dataSensor.lastSeen
-      ? new Date(dataSensor.lastSeen)
-      : undefined;
-  });
-  // Return parsed state
-  return state;
-};
-
-export const isOutdoorSensor = (sensor: SensorData) => {
-  return sensor.name?.toLowerCase().includes('out');
-};
-
-const findOutdoorSensorIndex = (sensorData: Array<SensorData>) => {
-  const outsideIndex = sensorData.findIndex((el) => {
-    if (isOutdoorSensor(el)) {
-      return true;
-    }
-    return false;
-  });
-  return outsideIndex;
-};
-
-// Return the riskLevel for a given core temperature
-const getRiskLevel = (coreTemperature: number | undefined) => {
-  if (!coreTemperature) {
-    console.error(
-      'Unable to calculate risk level (core temperature undefined)'
-    );
-    return undefined;
-  } else if (coreTemperature >= 38) {
-    return RiskLevel.HIGH;
-  } else if (coreTemperature >= 37.7) {
-    return RiskLevel.MEDIUM;
-  } else if (coreTemperature < 37.7) {
-    return RiskLevel.LOW;
-  } else {
-    console.error('Unable to calculate risk level (unknown error)');
-    return undefined;
-  }
-};
 
 export const useDataSensorStore = defineStore('dataSensor', {
   persist: {
@@ -113,6 +70,35 @@ export const useDataSensorStore = defineStore('dataSensor', {
         }
       }
       return false;
+    },
+    // Return the coolest sensor/room
+    getCoolestSensor: (state) => {
+      const currentTime = Date.now();
+      // Filter out sensors that are either outdoors or not currently online
+      const indoorOnlineSensors = state.allSensorData.filter((sensor) => {
+        return (
+          !isOutdoorSensor(sensor) && !isOfflineSensor(sensor, currentTime)
+        );
+      });
+
+      // Return null if there are no valid indoor sensors
+      if (indoorOnlineSensors.length === 0) {
+        return null;
+      }
+
+      // Determine the coolest sensor by comparing the temperature property
+      let coolestSensor = indoorOnlineSensors[0];
+      for (const sensor of indoorOnlineSensors) {
+        if (
+          sensor.temperature &&
+          coolestSensor.temperature &&
+          sensor.temperature < coolestSensor.temperature
+        ) {
+          coolestSensor = sensor;
+        }
+      }
+
+      return coolestSensor;
     },
     // Return outdoor sensor values
     getOutdoorSensor: (state) => {

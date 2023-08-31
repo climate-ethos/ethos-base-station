@@ -1,11 +1,12 @@
 <template>
   <div class="text-h6 q-mb-md">User Data</div>
   <!-- Inputs below -->
-  <input-keyboard
-    v-model.number="dataUserStore.id"
-    :customRule="checkId"
-    type="number"
-    label="User ID (number)"
+  <q-input
+    v-model="userId"
+    label="User ID (check that it matches sticker)"
+    class="q-pb-lg"
+    filled
+    disable
   />
 
   <input-keyboard
@@ -47,7 +48,7 @@
 
 <script lang="ts">
 import { useDataUserStore } from 'src/stores/dataUser';
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 import postcodeArrayString from 'assets/australian_postcodes.js';
 import InputKeyboard from './InputKeyboard.vue';
@@ -58,6 +59,7 @@ export default defineComponent({
   },
   setup() {
     const dataUserStore = useDataUserStore();
+    const userId = computed(() => process.env.USER_ID);
 
     const sexOptions = [
       { label: 'Female', value: 'female' },
@@ -102,14 +104,6 @@ export default defineComponent({
       return false;
     };
 
-    const checkId = (id: number) => {
-      if (id && id > 0) {
-        dataUserStore.id = id;
-        return true;
-      }
-      return 'Please enter an ID';
-    };
-
     const checkAge = (age: number) => {
       if (age > 0 && age < 200) {
         dataUserStore.ageYears = age;
@@ -136,9 +130,9 @@ export default defineComponent({
 
     return {
       dataUserStore,
+      userId,
       sexOptions,
       checkPostcode,
-      checkId,
       checkAge,
       checkHeight,
       checkWeight,

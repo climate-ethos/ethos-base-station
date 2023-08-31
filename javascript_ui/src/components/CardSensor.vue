@@ -44,15 +44,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  ref,
-  computed,
-  onMounted,
-  onUnmounted,
-  inject,
-} from 'vue';
+import { defineComponent, PropType, computed, inject } from 'vue';
 import { SensorData, RiskLevel } from 'src/typings/data-types';
 import { playTextToSpeech } from 'src/helpers/audioAlertDispatcher';
 import { shouldUseFan } from 'src/helpers/fanAndWindowUse';
@@ -67,25 +59,6 @@ export default defineComponent({
   },
   setup(props) {
     const isShowFanModel = inject('isShowFanModal');
-    // The current time/date
-    let currentTime = ref(Date.now());
-    // An interval which handles updating the currentTime
-    let updateCurrentTimeInterval: NodeJS.Timeout | undefined = undefined;
-
-    // The function which updates the currentTime
-    let updateCurrentTime = () => {
-      currentTime.value = Date.now();
-    };
-
-    // Update currentTime every 5 seconds
-    onMounted(() => {
-      updateCurrentTimeInterval = setInterval(updateCurrentTime, 5000);
-    });
-
-    // Clear the interval when unmounted
-    onUnmounted(() => {
-      clearInterval(updateCurrentTimeInterval);
-    });
 
     // Whether we should display 'DON'T USE FAN' at bottom of component
     const isDisplayFanWarning = computed(

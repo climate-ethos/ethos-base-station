@@ -34,3 +34,11 @@ yarn-error.log*
 
 # Environment files
 .env
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Playwright screenshots and output
+test/playwright/screenshots/
+test/playwright/output/
+test/playwright/playwright-report/

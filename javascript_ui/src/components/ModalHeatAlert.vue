@@ -12,6 +12,9 @@
         <div class="fontsize-20 text-bold q-mt-md">
           Your risk level is estimated to be: {{ riskLevelText }}
         </div>
+        <div v-if="coolestRoom" class="fontsize-20 text-bold q-mt-md">
+          The safest room in the house for you is currently: {{ coolestRoom }}
+        </div>
       </q-card-section>
 
       <q-card-actions align="right" class="q-mb-lg">
@@ -55,6 +58,7 @@ export default defineComponent({
     const databaseStore = useDatabaseStore();
 
     const alertSensor = computed(() => dataSensorStore.alertSensor);
+    const coolestRoom = computed(() => dataSensorStore.getCoolestSensor?.name);
     const showModal = computed(() => dataSensorStore.alertSensor !== null);
 
     const flashClass = computed(() => {
@@ -110,6 +114,7 @@ export default defineComponent({
 
     return {
       alertSensor,
+      coolestRoom,
       showModal,
       riskLevelText,
       flashClass,

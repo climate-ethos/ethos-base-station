@@ -1,10 +1,16 @@
 # Start docker (for CouchDB)
-docker-compose up & # Ensure that process does not block
+docker-compose up > /dev/null 2>&1 & # redirect all output away from console and stop blocking
 
-# Open quasar program in new window
-cd javascript_ui
-yarn start & # Ensure that process does not block
+# Run python
+cd python_radio
+# Use dot as alias for 'source'
+. ./env/bin/activate
+python3 src/main.py > /dev/null 2>&1 & # redirect all output away from console and stop blocking
+python_pid=$! # Store PID of the last background process
 cd ..
+
+# Give time for everything to start up
+echo "Starting tests..."
 
 # Function to wait for CouchDB to start
 wait_for_couchdb() {
@@ -26,11 +32,11 @@ curl -X PUT http://localhost:5984/_users/org.couchdb.user:999 \
      -u admin:password \
      -d '{"name": "999", "password": "12345", "roles": [], "type": "user"}'
 
-# Run python
-cd python_radio
-# Use dot as alias for 'source'
-. ./env/bin/activate
-python3 src/main.py
+# Run tests
+cd javascript_ui
+yarn test:e2e:ci
+cd ..
 
-# Clear docker instance
-docker-compose down
+# After tests, shut down processes
+kill $python_pid # Kill Python process
+docker-compose down # Bring down docker container and reset database

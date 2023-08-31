@@ -19,7 +19,8 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { shouldUseFan } from 'src/helpers/fanAndWindowUse';
-import { useDataSensorStore, isOutdoorSensor } from 'src/stores/dataSensor';
+import { useDataSensorStore } from 'src/stores/dataSensor';
+import { isOutdoorSensor } from 'src/helpers/dataSensor';
 import { QTableProps } from 'quasar';
 
 export default defineComponent({

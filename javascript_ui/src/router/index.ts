@@ -51,7 +51,9 @@ export default route(function (/* { store, ssrContext } */) {
       // Avoid an infinite redirect
       to.path !== initializePath &&
       // Allow navigation to settings
-      to.path !== settingsPath
+      to.path !== settingsPath &&
+      // Is running in electron (i.e. not in test mode)
+      process.env.MODE == 'electron'
     ) {
       // redirect the user to the initialize page
       return initializePath;

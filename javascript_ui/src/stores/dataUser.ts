@@ -5,7 +5,6 @@ export const useDataUserStore = defineStore('dataUser', {
   persist: true,
 
   state: (): UserData => ({
-    id: undefined,
     postcode: undefined,
     latitude: undefined,
     longitude: undefined,
@@ -19,7 +18,6 @@ export const useDataUserStore = defineStore('dataUser', {
     containsUndefined(state) {
       // Inverse (!) has to be used to return boolean
       return (
-        !state.id ||
         !state.postcode ||
         !state.latitude ||
         !state.longitude ||

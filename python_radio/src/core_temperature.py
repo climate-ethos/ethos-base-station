@@ -27,6 +27,11 @@ def calculate_predicted_core_temperature(data: RiskLevelData) -> Union[None, flo
     Logger.error('Error calculating core temp: missing parameters')
     return None
 
+  # This needs to be done as the JOS model seems to work best at
+  # exact decades (e.g., 50, 60, 70) up to the age of 70 years old
+  ageYears = ageYears // 10 * 10 # Round down age to nearest decade
+  ageYears = min(ageYears, 70) # Cap age to 70 years old
+
   model = jos3.JOS3(height=heightM, weight=weightKg, age=ageYears, sex=sex)
   model.Ta = Ta
   model.RH = RH
