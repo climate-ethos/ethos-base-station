@@ -33,37 +33,57 @@ const generateTextToSpeech = (
 
 const playAudioTone = (riskLevel: RiskLevel): Promise<void> => {
   const volumeStore = useVolumeStore();
-  return new Promise((resolve) => {
-    let audio = new Audio('medium-priority-alert.mp3');
-    if (riskLevel === RiskLevel.HIGH) {
-      audio = new Audio('high-priority-alert.mp3');
-    }
-    audio.volume = volumeStore.volumePercent;
-    audio.onended = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      let audio = new Audio('medium-priority-alert.mp3');
+      if (riskLevel === RiskLevel.HIGH) {
+        audio = new Audio('high-priority-alert.mp3');
+      }
+      audio.volume = volumeStore.volumePercent;
+      audio.onended = () => {
+        currentAudio = null;
+        resolve();
+      };
+      currentAudio = audio;
+      audio.play().catch((error) => {
+        currentAudio = null;
+        console.error('Error playing audio:', error);
+        reject(error);
+      });
+    } catch (error) {
       currentAudio = null;
-      resolve();
-    };
-    currentAudio = audio;
-    audio.play();
+      console.error(error);
+      reject(error);
+    }
   });
 };
 
 export const playTextToSpeech = (text: string): Promise<void> => {
   const volumeStore = useVolumeStore();
-  return new Promise(async (resolve) => {
-    const voices = getSpeechSynthesisVoices();
-    const utter = new SpeechSynthesisUtterance();
-    // Select a local voice (in this case Karen with en-AU lang)
-    utter.voice = voices[0];
-    utter.text = text;
-    utter.volume = volumeStore.volumePercent;
-    utter.rate = 0.9;
-    utter.onend = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      const voices = getSpeechSynthesisVoices();
+      const utter = new SpeechSynthesisUtterance();
+      if (voices && voices.length > 0) {
+        // Select a local voice (in this case Karen with en-AU lang)
+        utter.voice = voices[0];
+      } else {
+        console.warn('No voices found. Proceeding without setting voice.');
+      }
+      utter.text = text;
+      utter.volume = volumeStore.volumePercent;
+      utter.rate = 0.9;
+      utter.onend = () => {
+        currentUtterance = null;
+        resolve();
+      };
+      speechSynthesis.speak(utter);
+      currentUtterance = utter;
+    } catch (error) {
       currentUtterance = null;
-      resolve();
-    };
-    speechSynthesis.speak(utter);
-    currentUtterance = utter;
+      console.error('Error in playTextToSpeech:', error);
+      reject(error);
+    }
   });
 };
 
@@ -91,6 +111,6 @@ export const playAudio = (
       return playTextToSpeech(alertText);
     default:
       console.error('Unable to find correct audio type');
-      return Promise.reject();
+      return Promise.reject(new Error('Unable to find correct audio type'));
   }
 };
