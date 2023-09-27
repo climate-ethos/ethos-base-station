@@ -10,8 +10,21 @@ let currentUtterance: SpeechSynthesisUtterance | null = null;
  * @returns Array with voice options available
  */
 export const getSpeechSynthesisVoices = () => {
+  navigator.mediaDevices
+    .enumerateDevices()
+    .then((devices) => {
+      devices.forEach((device) => {
+        if (device.kind === 'audioinput' || device.kind === 'audiooutput') {
+          console.log(device.label, device.deviceId, device.kind);
+        }
+      });
+    })
+    .catch((error) => {
+      console.error('Error accessing media devices.', error);
+    });
   window.speechSynthesis.onvoiceschanged = (e) => {
     console.log('Voices loaded:', e);
+    console.log('Voice list:', window.speechSynthesis.getVoices());
   };
   return window.speechSynthesis.getVoices();
 };
