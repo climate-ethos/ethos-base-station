@@ -34,9 +34,9 @@ const generateTextToSpeech = (
 const playAudioTone = (riskLevel: RiskLevel): Promise<void> => {
   const volumeStore = useVolumeStore();
   return new Promise((resolve) => {
-    let audio = new Audio('/medium-priority-alert.mp3');
+    let audio = new Audio('medium-priority-alert.mp3');
     if (riskLevel === RiskLevel.HIGH) {
-      audio = new Audio('/high-priority-alert.mp3');
+      audio = new Audio('high-priority-alert.mp3');
     }
     audio.volume = volumeStore.volumePercent;
     audio.onended = () => {
