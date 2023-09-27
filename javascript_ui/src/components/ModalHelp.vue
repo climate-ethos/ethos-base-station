@@ -5,6 +5,7 @@
         <div class="row items-center">
           <div>Help</div>
           <q-space />
+          <div class="q-mr-md text-subtitle1">v{{ version }}</div>
           <q-btn icon="close" color="primary" v-close-popup>Close</q-btn>
         </div>
       </template>
@@ -141,6 +142,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, computed } from 'vue';
+import { version } from '../../package.json';
 import CardContact from './CardContact.vue';
 import BaseModalScroll from './BaseModalScroll.vue';
 
@@ -168,6 +170,7 @@ export default defineComponent({
 
     return {
       showModal,
+      version,
     };
   },
 });

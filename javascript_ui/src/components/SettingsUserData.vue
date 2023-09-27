@@ -1,43 +1,91 @@
 <template>
   <div class="text-h6 q-mb-md">User Data</div>
-  <!-- Inputs below -->
-  <q-input
-    v-model="userId"
-    label="User ID (check that it matches sticker)"
-    class="q-pb-lg"
-    filled
-    disable
+  <!-- User ID -->
+  <input-keyboard
+    v-model.number="dataUserStore.id"
+    :customRule="dataUserStore.checkId"
+    type="number"
+    label="User ID"
   />
 
+  <!-- User DB password -->
+  <input-keyboard
+    v-model="dataUserStore.password"
+    :customRule="dataUserStore.checkPassword"
+    type="text"
+    label="User Password"
+  />
+
+  <!-- Database connection status -->
+  <div class="text q-mb-lg">
+    Database connection status:
+    <template v-if="databaseStore.replicationStatus === 'initial'">
+      <q-spinner color="primary" size="lg" :thickness="10" />
+    </template>
+    <template
+      v-else-if="
+        databaseStore.replicationErrorMessage &&
+        databaseStore.replicationErrorMessage.length > 0
+      "
+    >
+      <q-icon name="cancel" color="negative" size="lg" />
+    </template>
+    <template v-else>
+      <q-icon name="check_circle" color="positive" size="lg" />
+    </template>
+    <!-- Refresh button -->
+    <q-btn
+      label="refresh"
+      class="q-ml-md"
+      @click="databaseStore.initializeDatabase()"
+      color="primary"
+    />
+    <!-- Error message -->
+    <div
+      class="text-bold"
+      v-if="
+        databaseStore.replicationErrorMessage &&
+        databaseStore.replicationErrorMessage.length > 0
+      "
+    >
+      Error: {{ databaseStore.replicationErrorMessage }}
+    </div>
+  </div>
+
+  <!-- Postcode -->
   <input-keyboard
     v-model.number="dataUserStore.postcode"
-    :customRule="checkPostcode"
+    :customRule="dataUserStore.checkPostcode"
     :hint="`Lat: ${dataUserStore.latitude}, Lon: ${dataUserStore.longitude}`"
     type="number"
     label="Postcode"
   />
 
+  <!-- Age -->
   <input-keyboard
     v-model.number="dataUserStore.ageYears"
-    :customRule="checkAge"
+    :customRule="dataUserStore.checkAge"
     type="number"
     label="Age (years)"
   />
 
+  <!-- Height -->
   <input-keyboard
     v-model.number="dataUserStore.heightCm"
-    :customRule="checkHeight"
+    :customRule="dataUserStore.checkHeight"
     type="number"
     label="Height (cm)"
   />
 
+  <!-- Weight -->
   <input-keyboard
     v-model.number="dataUserStore.weightKg"
-    :customRule="checkWeight"
+    :customRule="dataUserStore.checkWeight"
     type="number"
     label="Weight (kg)"
   />
 
+  <!-- Sex -->
   <div class="q-mt-lg text-bold">What is your birth sex?</div>
   <q-option-group
     :options="sexOptions"
@@ -48,9 +96,8 @@
 
 <script lang="ts">
 import { useDataUserStore } from 'src/stores/dataUser';
+import { useDatabaseStore } from 'src/stores/database';
 import { computed, defineComponent } from 'vue';
-
-import postcodeArrayString from 'assets/australian_postcodes.js';
 import InputKeyboard from './InputKeyboard.vue';
 
 export default defineComponent({
@@ -59,7 +106,9 @@ export default defineComponent({
   },
   setup() {
     const dataUserStore = useDataUserStore();
-    const userId = computed(() => process.env.USER_ID);
+    const databaseStore = useDatabaseStore();
+
+    const userId = computed(() => dataUserStore.id);
 
     const sexOptions = [
       { label: 'Female', value: 'female' },
@@ -67,75 +116,11 @@ export default defineComponent({
       { label: 'Intersex/Prefer not to say', value: 'other' },
     ];
 
-    const checkPostcode = (postcode: number): boolean | string => {
-      // Queensland postcodes range from 4000-5000
-      if (postcode < 4000 || postcode >= 5000) {
-        return 'Please enter a QLD postcode (4000-4999)';
-      }
-      // ❗ The below function causes side effects and sets the latitude/longitude
-      const foundLatLon = findAndSetPostcodeLatLon(postcode);
-      if (!foundLatLon) {
-        return 'Postcode lat/lon not found';
-      }
-      // Everything looks ok
-      return true;
-    };
-
-    /**
-     * Lookup and set the latitude and longitude for a certain postcode
-     * ❗ Side effect: will also change the lat/lon in the dataUserStore
-     * @returns true if lat/lon are found, otherwise false
-     */
-    const findAndSetPostcodeLatLon = (postcode: number): boolean => {
-      // Lookup postcode latitude and longitude
-      const postcodeArray = JSON.parse(postcodeArrayString);
-      let postcodeString = postcode.toString();
-      // Loop through all postcodes and find correct one
-      for (let area of postcodeArray) {
-        // Postcode found
-        if (area.postcode === postcodeString) {
-          // Set postcode, latitude and longitude
-          dataUserStore.latitude = area.lat;
-          dataUserStore.longitude = area.long;
-          return true;
-        }
-      }
-      // No postcode found
-      return false;
-    };
-
-    const checkAge = (age: number) => {
-      if (age > 0 && age < 200) {
-        dataUserStore.ageYears = age;
-        return true;
-      }
-      return 'Invalid age value (1-199 years)';
-    };
-
-    const checkHeight = (height: number) => {
-      if (height > 0 && height < 400) {
-        dataUserStore.heightCm = height;
-        return true;
-      }
-      return 'Invalid height value (1-399cm)';
-    };
-
-    const checkWeight = (weight: number) => {
-      if (weight > 0 && weight < 400) {
-        dataUserStore.weightKg = weight;
-        return true;
-      }
-      return 'Invalid weight value (1-399kg)';
-    };
-
     return {
       dataUserStore,
+      databaseStore,
       userId,
       sexOptions,
-      checkPostcode,
-      checkAge,
-      checkHeight,
-      checkWeight,
     };
   },
 });

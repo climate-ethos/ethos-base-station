@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia';
+import { SurveyDatabaseStructure } from 'src/typings/database-types';
+import { useDatabaseStore } from './database';
 
 export const useSurveyStore = defineStore('survey', {
   persist: true,
@@ -11,14 +13,18 @@ export const useSurveyStore = defineStore('survey', {
     isShowSurveyModal: false,
     // User answers to survey
     surveyAnswers: {
-      wasHome: undefined as undefined | boolean,
-      coolingStrategiesUsed: [] as Array<string>,
-      howEffective: undefined as undefined | number,
-    },
+      wasHome: undefined,
+      coolingStrategiesUsed: [],
+      howEffective: undefined,
+    } as SurveyDatabaseStructure,
   }),
   actions: {
     incrementAlertCount() {
       this.alertsSinceLastSurvey++;
+    },
+    postSurveyAnswers() {
+      const databaseStore = useDatabaseStore();
+      databaseStore.postDocument('survey', this.surveyAnswers);
     },
     setup() {
       const checkAndDisplaySurvey = () => {

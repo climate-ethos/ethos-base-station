@@ -81,7 +81,7 @@ export default defineComponent({
      * Function which will check if the data type is valid and then
      * emit 'update:modelValue' to indicate that the data has changed
      */
-    const emitModelValue = () => {
+    const emitModelValue = async () => {
       let emitValue;
       // Cast value to correct type
       if (props.type === 'number') {
@@ -92,20 +92,26 @@ export default defineComponent({
         emitValue = reactiveValue.value;
       }
       // Check if valid
-      const validCheck: true | string = props.customRule(emitValue);
-      if (validCheck === true) {
-        // Is valid, clear error
-        error.value = false;
-        errorMessage.value = '';
-        // Emit new value to parent
-        emit('update:modelValue', emitValue);
-      } else if (typeof validCheck === 'string') {
-        // Not valid, throw error
+      try {
+        const validCheck: true | string = await props.customRule(emitValue);
+        if (validCheck === true) {
+          // Is valid, clear error
+          error.value = false;
+          errorMessage.value = '';
+          // Emit new value to parent
+          emit('update:modelValue', emitValue);
+        } else if (typeof validCheck === 'string') {
+          // Not valid, throw error
+          error.value = true;
+          errorMessage.value = validCheck;
+        } else {
+          // Something went wrong
+          console.error('validCheck is not a valid type:', typeof validCheck);
+        }
+      } catch (err) {
+        console.error('Error during customRule validation:', err);
         error.value = true;
-        errorMessage.value = validCheck;
-      } else {
-        // Something went wrong
-        console.error('validCheck is not a valid type:', typeof validCheck);
+        errorMessage.value = 'An error occurred during validation.';
       }
     };
 

@@ -47,7 +47,7 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Line as LineChart } from 'vue-chartjs';
-import { useForecastStore } from 'src/stores/forecast';
+import { useWeatherStore } from 'src/stores/weather';
 import { ChartOptions } from 'chart.js';
 ChartJS.register(
   Filler,
@@ -67,14 +67,14 @@ export default defineComponent({
   setup() {
     const loaded = ref(false);
     const activeIndex = ref(0); // first day is always selected
-    const forecastStore = useForecastStore();
+    const weatherStore = useWeatherStore();
 
     // Getting the day of the week
     const forecastTempsWithDay = computed(() => {
-      if (!forecastStore.forecastTemps) return [];
+      if (!weatherStore.forecastTemps) return [];
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       // Append day of week name onto forecast data
-      return forecastStore.forecastTemps.map((forecast) => ({
+      return weatherStore.forecastTemps.map((forecast) => ({
         ...forecast,
         dayOfWeek: dayNames[forecast.date.getDay()],
       }));
@@ -122,18 +122,18 @@ export default defineComponent({
 
     const chartData = computed(() => {
       // Check if weather data is available yet
-      if (!forecastStore.forecastTemps) {
+      if (!weatherStore.forecastTemps) {
         return {
           labels: [],
           datasets: [],
         };
       }
       // Keys are the time e.g. '11pm'
-      let keys = forecastStore.forecastTemps.map((forecastPoint) => {
+      let keys = weatherStore.forecastTemps.map((forecastPoint) => {
         return dateToAmPm(forecastPoint.date);
       });
       // Values are the temperatures
-      let values = forecastStore.forecastTemps.map((forecastPoint) => {
+      let values = weatherStore.forecastTemps.map((forecastPoint) => {
         return forecastPoint.temperature;
       });
       return {
@@ -161,8 +161,8 @@ export default defineComponent({
       // Find max and min temperature
       let minTemperature = 10;
       let maxTemperature = 45;
-      if (forecastStore.forecastTemps) {
-        let temperatures = forecastStore.forecastTemps.map(
+      if (weatherStore.forecastTemps) {
+        let temperatures = weatherStore.forecastTemps.map(
           (tempObj) => tempObj.temperature
         );
         minTemperature = Math.min(...temperatures);

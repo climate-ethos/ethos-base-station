@@ -20,6 +20,7 @@
     <div class="debug-section">
       <div class="text-subtitle2">Replication Status:</div>
       <div>{{ databaseStore.replicationStatus }}</div>
+      <div>{{ databaseStore.replicationErrorMessage }}</div>
     </div>
   </div>
 </template>

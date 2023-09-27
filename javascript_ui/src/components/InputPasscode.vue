@@ -107,7 +107,7 @@ export default defineComponent({
 
     const checkPasscode = () => {
       // Passcode is correct
-      if (passcode.value == process.env.SETTINGSPASSCODE) {
+      if (passcode.value == process.env.SETTINGS_PASSCODE) {
         isIncorrectPasscode.value = false;
         // Submit 'success' event to indicate passcode submitted successfully
         emit('success');

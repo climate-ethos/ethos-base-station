@@ -1,6 +1,10 @@
 import { app, BrowserWindow, nativeTheme } from 'electron';
 import path from 'path';
 import os from 'os';
+import PowerSaveBlockerController from './PowerSaveBlockerController';
+
+// Controller which handles logic to prevent device screen sleep during day
+const powerSaveBlockerController = new PowerSaveBlockerController();
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -54,11 +58,18 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = undefined;
   });
+
+  // Setup handling to prevent screen turning off/sleeping
+  // this only applies from 5am-9pm
+  powerSaveBlockerController.start();
 }
 
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
+  // Clear handling preventing screen turning off
+  powerSaveBlockerController.stop();
+
   if (platform !== 'darwin') {
     app.quit();
   }

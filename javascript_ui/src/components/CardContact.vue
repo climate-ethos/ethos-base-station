@@ -23,8 +23,8 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   setup() {
-    let email = process.env.CONTACTEMAIL;
-    let phone = process.env.CONTACTPHONE;
+    let email = process.env.CONTACT_EMAIL;
+    let phone = process.env.CONTACT_PHONE;
     return { email, phone };
   },
 });

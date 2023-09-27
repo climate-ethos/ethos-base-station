@@ -1,4 +1,3 @@
-<!-- ModalNoConnection.vue -->
 <template>
   <q-dialog v-model="showModal" full-width full-height persistent>
     <CoolingInterventionList

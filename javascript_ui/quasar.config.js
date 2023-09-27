@@ -180,8 +180,9 @@ module.exports = configure(function (/* ctx */) {
         // Windows only
         // win32metadata: { ... }
         // Build for Raspberry Pi
-        platform: 'linux',
-        arch: 'armv7l',
+        // platform: 'linux',
+        // arch: 'armv7l', // 32 bit
+        // arch: 'arm64', // 64 bit
       },
 
       builder: {

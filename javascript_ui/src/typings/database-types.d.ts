@@ -3,7 +3,7 @@ import { AudioType, RiskLevel } from 'src/typings/data-types';
 export interface BaseDatabaseStructure {
   type: 'sensor' | 'weather' | 'preferences' | 'survey' | 'alert';
   time: Date;
-  userId: string;
+  userId: number;
 }
 
 export interface SensorDatabaseStructure {
@@ -11,6 +11,7 @@ export interface SensorDatabaseStructure {
   sensorId: number | undefined;
   temperature: number | undefined;
   humidity: number | undefined;
+  coreTemperature: number | undefined;
 }
 
 export interface WeatherDatabaseStructure {
@@ -32,8 +33,9 @@ export interface PreferencesDatabaseStructure {
 }
 
 export interface SurveyDatabaseStructure {
-  todo: null;
-  // TODO: Fill in rest once questions finalized
+  wasHome: undefined | boolean;
+  coolingStrategiesUsed: Array<string>;
+  howEffective: undefined | number;
 }
 
 export interface AlertDatabaseStructure {

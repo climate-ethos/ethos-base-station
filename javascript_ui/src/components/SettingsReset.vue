@@ -1,3 +1,4 @@
+<!-- src/components/SettingsReset.vue -->
 <template>
   <div class="text-h6 q-mb-md">Reset Data</div>
   <!-- Inputs below -->
@@ -40,6 +41,7 @@ import { useVolumeStore } from 'src/stores/volume';
 import { useRouter } from 'vue-router';
 import { defineComponent, ref } from 'vue';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
+import { useDatabaseStore } from 'src/stores/database';
 
 export default defineComponent({
   setup() {
@@ -49,12 +51,18 @@ export default defineComponent({
     const dataSensorStore = useDataSensorStore();
     const dataPreferencesStore = useDataPreferencesStore();
     const volumeStore = useVolumeStore();
-    const resetData = () => {
+    const databaseStore = useDatabaseStore();
+    const resetData = async () => {
+      // Clear pinia stores
       volumeStore.$reset();
       dataUserStore.$reset();
       dataSensorStore.$reset();
       dataPreferencesStore.$reset();
       dataSensorStore.setup();
+      // Destroy database and clear data
+      await databaseStore.destroyDatabase();
+      databaseStore.initializeDatabase();
+      // Go back to home
       router.push('/');
     };
     return { isShowWarning, resetData };

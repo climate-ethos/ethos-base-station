@@ -11,6 +11,7 @@ export interface SensorData {
   temperature: number | undefined;
   humidity: number | undefined;
   lastSeen: Date | undefined;
+  coreTemperature: number | undefined;
   riskLevel: RiskLevel | undefined;
 }
 
@@ -22,6 +23,8 @@ export enum RiskLevel {
 
 // User data
 export interface UserData {
+  id: undefined | number;
+  password: undefined | string;
   postcode: undefined | number;
   latitude: undefined | number;
   longitude: undefined | number;

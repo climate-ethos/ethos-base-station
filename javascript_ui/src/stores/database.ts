@@ -1,6 +1,8 @@
 // src/stores/database.ts
 import { defineStore } from 'pinia';
+import { useDataUserStore } from './dataUser';
 import { usernameToDbName } from 'src/helpers/database';
+import { replicate } from 'pouchdb';
 import PouchDB from 'pouchdb-browser';
 import {
   AlertDatabaseStructure,
@@ -11,11 +13,22 @@ import {
   WeatherDatabaseStructure,
 } from 'src/typings/database-types';
 
+interface ReplicationError {
+  error?: string;
+  message?: string;
+  name?: string;
+  reason?: string;
+  result?: object;
+  stack?: string;
+  status?: number;
+}
+
 export const useDatabaseStore = defineStore({
   id: 'database',
   state: () => ({
     // Database variable
     db: null as null | InstanceType<typeof PouchDB>,
+    replicationHandler: null as null | ReturnType<typeof replicate>,
     // The status of the remote CouchDB instance
     replicationStatus: 'initial' as
       | 'initial'
@@ -24,6 +37,7 @@ export const useDatabaseStore = defineStore({
       | 'denied'
       | 'complete'
       | 'error',
+    replicationErrorMessage: undefined as undefined | string,
   }),
   actions: {
     /**
@@ -35,20 +49,23 @@ export const useDatabaseStore = defineStore({
      * 5. Sets up replication on a remote database called user_${id}
      */
     initializeDatabase() {
+      const dataUserStore = useDataUserStore();
+
       console.log('Initializing database...');
       // 1. Checks if user ID and password exists
-      if (!process.env.USER_ID || !process.env.USER_PASSWORD) {
+      if (!dataUserStore.id || !dataUserStore.password) {
         console.error(
-          'Database Error: User ID or password not defined, check .env file'
+          'Database Error: User ID or password not defined, is it defined in the Pinia store?'
         );
         return;
       }
       // 2. Gets the correct database name and remote url
-      const databaseName = usernameToDbName(process.env.USER_ID);
+      const databaseName = usernameToDbName(dataUserStore.id);
       const databaseUrl =
         process.env.NODE_ENV === 'production'
-          ? `https://${process.env.USER_ID}:${process.env.USER_PASSWORD}@${process.env.COUCH_DB_URL}`
-          : `http://${process.env.USER_ID}:${process.env.USER_PASSWORD}@localhost:5984`;
+          ? `https://${dataUserStore.id}:${dataUserStore.password}@${process.env.COUCH_DB_URL}`
+          : `http://${dataUserStore.id}:${dataUserStore.password}@localhost:5984`;
+      console.log(databaseUrl);
       // 3. If an existing database exists, closes it
       if (this.db) {
         this.db.close();
@@ -57,7 +74,7 @@ export const useDatabaseStore = defineStore({
       this.db = new PouchDB(databaseName);
       // 5. Sets up replication on a remote database
       if (this.db) {
-        const replication = this.db.replicate.to(
+        this.replicationHandler = this.db.replicate.to(
           `${databaseUrl}/${databaseName}`,
           {
             live: true,
@@ -65,31 +82,37 @@ export const useDatabaseStore = defineStore({
           }
         );
         // Replication status callbacks
-        replication
-          .on('paused', (err) => {
+        this.replicationHandler
+          .on('error', (err: ReplicationError) => {
+            console.error('database replication error:', err);
+            this.replicationErrorMessage = err.message;
+            this.replicationStatus = 'error';
+          })
+          .on('denied', (err: ReplicationError) => {
+            console.log('database replication denied:', err);
+            this.replicationErrorMessage = err.message;
+            this.replicationStatus = 'denied';
+          })
+          .on('paused', (err: ReplicationError) => {
             if (err) {
-              console.log('database replication error:', err);
+              console.error('database replication paused, error:', err);
+              this.replicationErrorMessage = err.message;
               this.replicationStatus = 'error';
             } else {
               console.log('database replication paused');
+              this.replicationErrorMessage = undefined;
               this.replicationStatus = 'paused';
             }
           })
           .on('active', () => {
             console.log('database replication active');
+            this.replicationErrorMessage = undefined;
             this.replicationStatus = 'active';
-          })
-          .on('denied', () => {
-            console.log('database replication denied');
-            this.replicationStatus = 'denied';
           })
           .on('complete', () => {
             console.log('database replication complete');
+            this.replicationErrorMessage = undefined;
             this.replicationStatus = 'complete';
-          })
-          .on('error', () => {
-            console.log('database replication error');
-            this.replicationStatus = 'error';
           });
       }
     },
@@ -110,21 +133,21 @@ export const useDatabaseStore = defineStore({
         | SurveyDatabaseStructure
         | AlertDatabaseStructure
     ) {
+      const dataUserStore = useDataUserStore();
+
       // 1. Check that everything is initialised and ready
-      if (!this.db || !process.env.USER_ID) {
+      if (!this.db || !dataUserStore.id) {
         console.error(
           'Trying to post data before database is initialized or no user ID.'
         );
-        throw new Error(
-          'Trying to post data before database is initialized or no user ID.'
-        );
+        return;
       }
 
       // 2. Construct the data which will be sent to the database
       const baseData: BaseDatabaseStructure = {
         type: type,
         time: new Date(Date.now()),
-        userId: process.env.USER_ID,
+        userId: dataUserStore.id,
       };
       const sentData = { ...baseData, ...data };
 
@@ -133,11 +156,9 @@ export const useDatabaseStore = defineStore({
         const response = await this.db.post(sentData);
         if (!response.ok) {
           console.error('Database response indicates error has occurred');
-          throw new Error('Database response indicates error has occurred');
         }
       } catch (error) {
         console.error('Failed to post document:', error);
-        throw error;
       }
     },
     /**
@@ -154,6 +175,26 @@ export const useDatabaseStore = defineStore({
       } catch (e) {
         console.error(e);
         return 'Unknown error getting db info';
+      }
+    },
+    /**
+     * Destroy the database and clear all memory
+     * WARNING: This will delete any data stored in DB
+     */
+    async destroyDatabase() {
+      // Check and stop replication if it exists
+      if (this.replicationHandler) {
+        this.replicationHandler.cancel();
+      }
+
+      if (this.db) {
+        try {
+          await this.db.destroy();
+          console.log('Database successfully destroyed');
+          this.db = null;
+        } catch (error) {
+          console.error('Error destroying the database:', error);
+        }
       }
     },
   },

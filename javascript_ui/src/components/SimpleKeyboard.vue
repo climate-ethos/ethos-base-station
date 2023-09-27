@@ -55,23 +55,26 @@ export default defineComponent({
     });
 
     // Watch for keyboard changing state between text and numerical input
-    watch(keyboardStore, () => {
-      if (keyboardStore.keyboardType === 'text') {
-        keyboard?.setOptions({
-          // Check to see if the length of string is 0 and set shift
-          // This will capitalize the keyboard for the first letter
-          layoutName:
-            keyboardStore.keyboardValue?.value.length == 0
-              ? 'shift'
-              : 'default',
-        });
+    watch(
+      () => keyboardStore.keyboardType,
+      () => {
+        if (keyboardStore.keyboardType === 'text') {
+          keyboard?.setOptions({
+            // Check to see if the length of string is 0 and set shift
+            // This will capitalize the keyboard for the first letter
+            layoutName:
+              keyboardStore.keyboardValue?.value.length == 0
+                ? 'shift'
+                : 'default',
+          });
+        }
+        if (keyboardStore.keyboardType === 'number') {
+          keyboard?.setOptions({
+            layoutName: 'numbersFixed',
+          });
+        }
       }
-      if (keyboardStore.keyboardType === 'number') {
-        keyboard?.setOptions({
-          layoutName: 'numbersFixed',
-        });
-      }
-    });
+    );
 
     // Dispatcher to handle key press from keyboard
     const onKeyPress = (button: string) => {

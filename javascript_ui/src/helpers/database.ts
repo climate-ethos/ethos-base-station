@@ -14,9 +14,13 @@ function stringToHex(input: string) {
 /**
  * Find the correct database name for a given user id
  * https://docs.couchdb.org/en/stable/config/couch-peruser.html
- * @param id The user ID
+ * @param id The user ID (will be converted to string if number)
  * @returns The database name (e.g. userdb-3f)
  */
-export function usernameToDbName(id: string) {
+export function usernameToDbName(id: string | number) {
+  // Ensure that id is always a string
+  if (typeof id === 'number') {
+    id = id.toString();
+  }
   return 'userdb-' + stringToHex(id);
 }

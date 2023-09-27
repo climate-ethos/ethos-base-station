@@ -1,7 +1,7 @@
 <!-- Detailed modal -->
 <template>
   <q-dialog
-    v-model="forecastStore.isShowDetailedForecast"
+    v-model="weatherStore.isShowDetailedForecast"
     full-width
     :persistent="true"
   >
@@ -9,8 +9,8 @@
       <q-card-section>
         <div class="row justify-between">
           <div class="text-bold fontsize-20">
-            <span v-if="forecastStore.stationName"
-              >Detailed Forecast - {{ forecastStore.stationName }}</span
+            <span v-if="weatherStore.stationName"
+              >Detailed Forecast - {{ weatherStore.stationName }}</span
             >
           </div>
           <q-btn icon="close" color="primary" v-close-popup>close</q-btn>
@@ -18,9 +18,9 @@
       </q-card-section>
       <q-separator dark />
       <q-card-section class="q-pt-s">
-        <div class="text-h3">{{ forecastStore.currentTemp?.toFixed(1) }}°C</div>
+        <div class="text-h3">{{ weatherStore.currentTemp?.toFixed(1) }}°C</div>
         <div class="fontsize-18">
-          Humidity: {{ forecastStore.currentHumidity }}% RH
+          Humidity: {{ weatherStore.currentHumidity }}% RH
         </div>
       </q-card-section>
 
@@ -34,16 +34,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { useForecastStore } from 'stores/forecast';
+import { useWeatherStore } from 'stores/weather';
 import LineGraph from './LineGraph.vue';
 
 export default defineComponent({
   name: 'ModalDetailedForecast',
   components: { LineGraph },
   setup() {
-    const forecastStore = useForecastStore();
+    const weatherStore = useWeatherStore();
     return {
-      forecastStore,
+      weatherStore,
     };
   },
 });
