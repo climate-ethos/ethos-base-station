@@ -3,6 +3,9 @@ import path from 'path';
 import os from 'os';
 import PowerSaveBlockerController from './PowerSaveBlockerController';
 
+// Enable speech synthesis flag
+app.commandLine.appendSwitch('enable-speech-dispatcher');
+
 // Controller which handles logic to prevent device screen sleep during day
 const powerSaveBlockerController = new PowerSaveBlockerController();
 
