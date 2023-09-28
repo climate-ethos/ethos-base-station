@@ -23,7 +23,8 @@ interface ResponsiveVoice {
 }
 
 // Declare responsiveVoice which is defined in index.html
-declare const responsiveVoice: ResponsiveVoice;
+declare const responsiveVoice: ResponsiveVoice | undefined;
+
 // Manual resolver to allow resolving promise when tts is canceled
 let resolveTextToSpeech: (() => void) | null = null;
 
@@ -77,7 +78,11 @@ export const playTextToSpeech = (text: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     resolveTextToSpeech = resolve;
     try {
-      console.log(responsiveVoice);
+      if (!responsiveVoice) {
+        const error = 'ResponsiveVoice not defined';
+        console.error(error);
+        throw new Error(error);
+      }
       responsiveVoice.speak(text, 'UK English Female', {
         rate: 0.9,
         volume: volumeStore.volumePercent,
@@ -109,7 +114,9 @@ export const stopAudio = () => {
     resolveTextToSpeech = null;
   }
   // Cancel any ongoing text-to-speech
-  responsiveVoice.cancel();
+  if (responsiveVoice) {
+    responsiveVoice.cancel();
+  }
 };
 
 export const playAudio = async (
