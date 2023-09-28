@@ -5,8 +5,6 @@
 <script lang="ts">
 import { defineComponent, watch } from 'vue';
 
-import { getSpeechSynthesisVoices } from './helpers/audioAlertDispatcher';
-
 import { useDataSensorStore } from 'stores/dataSensor';
 import { useWeatherStore } from 'stores/weather';
 import { useDataPreferencesStore } from './stores/dataPreferences';
@@ -19,9 +17,6 @@ export default defineComponent({
   name: 'App',
   // Setup store connections here
   setup() {
-    // Note: This needs to be called to initialize the list of voices available
-    getSpeechSynthesisVoices();
-
     // Setup stores
     const dataSensorStore = useDataSensorStore();
     dataSensorStore.setup();

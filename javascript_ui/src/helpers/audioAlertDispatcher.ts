@@ -2,32 +2,30 @@ import { AudioType, RiskLevel, SensorData } from 'src/typings/data-types';
 import { useVolumeStore } from 'src/stores/volume';
 
 let currentAudio: HTMLAudioElement | null = null;
-let currentUtterance: SpeechSynthesisUtterance | null = null;
 
-/**
- * Note: This function needs to be called at initialization as the
- * first time it is called the array of voice options will be empty
- * @returns Array with voice options available
- */
-export const getSpeechSynthesisVoices = () => {
-  navigator.mediaDevices
-    .enumerateDevices()
-    .then((devices) => {
-      devices.forEach((device) => {
-        if (device.kind === 'audioinput' || device.kind === 'audiooutput') {
-          console.log(device.label, device.deviceId, device.kind);
-        }
-      });
-    })
-    .catch((error) => {
-      console.error('Error accessing media devices.', error);
-    });
-  window.speechSynthesis.onvoiceschanged = (e) => {
-    console.log('Voices loaded:', e);
-    console.log('Voice list:', window.speechSynthesis.getVoices());
-  };
-  return window.speechSynthesis.getVoices();
+type ResponsiveVoiceOptions = {
+  rate?: number;
+  pitch?: number;
+  volume?: number;
+  onend?: () => void;
+  onerror?: (error: unknown) => void;
+  onpause?: () => void;
+  onresume?: () => void;
 };
+
+interface ResponsiveVoice {
+  speak: (
+    text: string,
+    voice?: string,
+    options?: ResponsiveVoiceOptions
+  ) => void;
+  cancel: () => void;
+}
+
+// Declare responsiveVoice which is defined in index.html
+declare const responsiveVoice: ResponsiveVoice;
+// Manual resolver to allow resolving promise when tts is canceled
+let resolveTextToSpeech: (() => void) | null = null;
 
 const generateTextToSpeech = (
   riskLevel: RiskLevel,
@@ -77,41 +75,23 @@ const playAudioTone = (riskLevel: RiskLevel): Promise<void> => {
 export const playTextToSpeech = (text: string): Promise<void> => {
   const volumeStore = useVolumeStore();
   return new Promise((resolve, reject) => {
-    // Check for speech synthesis existence
-    if (!('SpeechSynthesisUtterance' in window)) {
-      const error = new Error(
-        'SpeechSynthesisUtterance is not supported in this browser'
-      );
-      console.error(error);
-      throw error;
-    }
-    // Try to generate speech
+    resolveTextToSpeech = resolve;
     try {
-      const voices = getSpeechSynthesisVoices();
-      const utter = new SpeechSynthesisUtterance();
-      console.log(voices);
-      if (voices && voices.length > 0) {
-        // Select a local voice (in this case Karen with en-AU lang)
-        utter.voice = voices[0];
-      } else {
-        console.warn('No voices found. Proceeding without setting voice.');
-      }
-      utter.text = text;
-      utter.volume = volumeStore.volumePercent;
-      utter.rate = 0.9;
-      utter.onend = () => {
-        currentUtterance = null;
-        resolve();
-      };
-      utter.onerror = (errorEvent) => {
-        currentUtterance = null;
-        console.error('Error during speech synthesis:', errorEvent.error);
-        reject(errorEvent.error);
-      };
-      currentUtterance = utter;
-      speechSynthesis.speak(utter);
+      console.log(responsiveVoice);
+      responsiveVoice.speak(text, 'UK English Female', {
+        rate: 0.9,
+        volume: volumeStore.volumePercent,
+        onend: () => {
+          resolveTextToSpeech = null;
+          resolve();
+        },
+        onerror: (error) => {
+          resolveTextToSpeech = null;
+          console.error('Error in playTextToSpeech:', error);
+          reject(error);
+        },
+      });
     } catch (error) {
-      currentUtterance = null;
       console.error('Error in playTextToSpeech:', error);
       reject(error);
     }
@@ -123,12 +103,16 @@ export const stopAudio = () => {
     currentAudio.pause();
     currentAudio.dispatchEvent(new Event('ended'));
   }
-  if (currentUtterance) {
-    speechSynthesis.cancel();
+  // Manually resolve promise
+  if (resolveTextToSpeech) {
+    resolveTextToSpeech();
+    resolveTextToSpeech = null;
   }
+  // Cancel any ongoing text-to-speech
+  responsiveVoice.cancel();
 };
 
-export const playAudio = (
+export const playAudio = async (
   audioType: AudioType,
   riskLevel: RiskLevel,
   sensorData?: SensorData
@@ -136,12 +120,21 @@ export const playAudio = (
   stopAudio(); // Stop any currently playing audio before starting new one
   switch (audioType) {
     case AudioType.TONE:
-      return playAudioTone(riskLevel);
+      return await playAudioTone(riskLevel);
     case AudioType.TTS:
       const alertText = generateTextToSpeech(riskLevel, sensorData);
-      return playTextToSpeech(alertText);
+      try {
+        // Attempt to play text-to-speech
+        await playTextToSpeech(alertText);
+        return;
+      } catch {
+        // If an error is thrown, catch it and play an audio tone instead
+        // This should allow alerts to work, even offline
+        await playAudioTone(riskLevel);
+        return;
+      }
     default:
       console.error('Unable to find correct audio type');
-      return Promise.reject(new Error('Unable to find correct audio type'));
+      throw new Error('Unable to find correct audio type');
   }
 };

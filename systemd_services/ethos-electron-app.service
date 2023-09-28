@@ -4,7 +4,7 @@ Description=Ethos Electron App
 [Service]
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-Environment=XDG_RUNTIME_DIR=/run/user/1001
+Environment=XDG_RUNTIME_DIR=/run/user/1001 #1001 is the ID of the user (check with `id -u`)
 ExecStart="/home/pi/ethos-raspberry-pi/javascript_ui/dist/electron/Packaged/Ethos Heat Monitor-linux-arm64/Ethos Heat Monitor"
 Restart=always
 RestartSec=10s

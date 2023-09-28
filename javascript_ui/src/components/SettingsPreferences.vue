@@ -207,17 +207,17 @@ export default defineComponent({
         if (isPlayingMedium[row.value]) {
           stopAudio();
         } else {
-          isPlayingMedium[row.value] = !isPlayingMedium[row.value];
+          isPlayingMedium[row.value] = true;
           await playAudio(row.value, riskLevel);
-          isPlayingMedium[row.value] = !isPlayingMedium[row.value];
+          isPlayingMedium[row.value] = false;
         }
       } else if (riskLevel === RiskLevel.HIGH) {
         if (isPlayingHigh[row.value]) {
           stopAudio();
         } else {
-          isPlayingHigh[row.value] = !isPlayingHigh[row.value];
+          isPlayingHigh[row.value] = true;
           await playAudio(row.value, riskLevel);
-          isPlayingHigh[row.value] = !isPlayingHigh[row.value];
+          isPlayingHigh[row.value] = false;
         }
       }
     };
