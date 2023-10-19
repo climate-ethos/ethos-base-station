@@ -50,6 +50,7 @@ test.describe('settings', () => {
       .getByRole('radio');
     await ttsRadio.click();
     expect(await ttsRadio.isChecked()).toBe(true);
+    await takeScreenshot(page, 'dataPreferences-3.png');
 
     // Select that don't have access to air conditioning
     const tableCell = page
@@ -98,4 +99,51 @@ test.describe('settings', () => {
     // Database should now be reset
     expect(await fetchRecentDocumentsOfType('preferences')).toHaveLength(0);
   });
+});
+
+test.describe('Weather', () => {
+  test.beforeEach(async ({ page }) => {
+    // Navigate to settings page
+    await page.goto(settingsUrl);
+
+    // Type in passcode and click submit
+    const settingsPasscode = process.env.SETTINGS_PASSCODE || '';
+    for (const digit of settingsPasscode) {
+      await page.getByRole('button', { name: digit }).click();
+    }
+    await page.getByRole('button', { name: 'submit' }).click();
+
+    // Setup the database
+    await setupDatabase(page);
+
+    await takeScreenshot(page, 'dataPreferences-0.png');
+  });
+
+  test('weather data is showing', async ({ page }) => {
+    // check if on the settings page
+    await expect(page).toHaveURL(settingsUrl);
+    // create an openWeather map promise
+
+    await page.getByLabel('postcode').click();
+    // Enter 4215 Southport postcode
+    await page.locator('div').filter({ hasText: /^4$/ }).click();
+    await page.locator('div').filter({ hasText: /^2$/ }).click();
+    await page.locator('div').filter({ hasText: /^1$/ }).click();
+    await page.locator('div').filter({ hasText: /^5$/ }).click();
+    await page.getByText('personUser Data').click();
+    await page.waitForTimeout(1000);
+
+    // Navigate home which will trigger posting to database
+    await page.getByRole('link', { name: 'go back to home' }).click();
+    // await page.waitForTimeout(1000);
+
+    // navigate back to main page
+    // check if location is set and weather data is showing
+    // wait til there's a response from openweathermap request
+    await openWeatherMapResponse;
+    await expect(page.getByText('SouthPort')).toBeVisible();
+    await takeScreenshot(page, 'dataPreferences-4.png');
+  });
+
+  // check that weather data is posted to couchdb as type "weather"
 });
