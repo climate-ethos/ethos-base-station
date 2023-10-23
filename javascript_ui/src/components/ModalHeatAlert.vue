@@ -22,8 +22,7 @@
           >
             If your home will continue to heat up and you don't have anyway to
             cool it (e.g. air conditioning), we would suggest trying to find
-            somewhere cooler to go to that you can get to safely (without
-            exposing yourself to hot outside conditions).
+            somewhere cooler to go to that you can get to safely.
           </div>
           <div v-if="coolestRoom" class="fontsize-20 text-bold q-mt-md">
             The safest area for you is currently: {{ coolestRoom }}
