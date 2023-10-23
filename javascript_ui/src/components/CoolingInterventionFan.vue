@@ -29,9 +29,9 @@ export default defineComponent({
 
     const columns: QTableProps['columns'] = [
       {
-        name: 'name',
+        name: 'location',
         label: '',
-        field: 'name',
+        field: 'location',
         align: 'center',
       },
       {
