@@ -31,36 +31,44 @@ export const useDataSensorStore = defineStore('dataSensor', {
     allSensorData: [
       {
         id: undefined,
-        name: undefined,
+        location: undefined,
         temperature: undefined,
         humidity: undefined,
+        voltage: undefined,
+        rssi: undefined,
         lastSeen: undefined,
         coreTemperature: undefined,
         riskLevel: undefined,
       },
       {
         id: undefined,
-        name: undefined,
+        location: undefined,
         temperature: undefined,
         humidity: undefined,
+        voltage: undefined,
+        rssi: undefined,
         lastSeen: undefined,
         coreTemperature: undefined,
         riskLevel: undefined,
       },
       {
         id: undefined,
-        name: undefined,
+        location: undefined,
         temperature: undefined,
         humidity: undefined,
+        voltage: undefined,
+        rssi: undefined,
         lastSeen: undefined,
         coreTemperature: undefined,
         riskLevel: undefined,
       },
       {
         id: undefined,
-        name: undefined,
+        location: undefined,
         temperature: undefined,
         humidity: undefined,
+        voltage: undefined,
+        rssi: undefined,
         lastSeen: undefined,
         coreTemperature: undefined,
         riskLevel: undefined,
@@ -73,7 +81,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
     containsUndefined: (state) => {
       for (const sensor of state.allSensorData) {
         // If no sensor ID or sensor name
-        if (!sensor.id || !sensor.name) {
+        if (!sensor.id || !sensor.location) {
           return true;
         }
       }
@@ -208,20 +216,8 @@ export const useDataSensorStore = defineStore('dataSensor', {
           return;
         }
 
-        // Parse strings to numbers
-        const id = parseInt(data.id);
-        const temperature = parseFloat(data.temperature);
-        const humidity = parseFloat(data.humidity);
-
-        // Check numbers are correctly parsed
-        if (isNaN(id) || isNaN(temperature) || isNaN(humidity)) {
-          // Error:
-          console.error('Error parsing strings to numbers');
-          console.log('ID:', data.id);
-          console.log('Temperature:', data.temperature);
-          console.log('Humidity:', data.humidity);
-          return;
-        }
+        // Unpack data
+        const { id, temperature, humidity, voltage, rssi } = data;
 
         // Check it exists in the array
         const i = this.allSensorData.findIndex(
@@ -233,14 +229,15 @@ export const useDataSensorStore = defineStore('dataSensor', {
           return;
         }
 
-        // Update array values
+        // Update sensor data
         const sensorData = this.allSensorData[i];
         sensorData.temperature = temperature;
         sensorData.humidity = humidity;
+        sensorData.voltage = voltage;
+        sensorData.rssi = rssi;
         sensorData.lastSeen = new Date(Date.now());
         sensorData.coreTemperature =
           await socketStore.calculatePredictedCoreTemperature(sensorData);
-
         // Calculate risk level
         const newRiskLevel = getRiskLevel(sensorData.coreTemperature);
         const oldRiskLevel = sensorData.riskLevel;
@@ -249,9 +246,11 @@ export const useDataSensorStore = defineStore('dataSensor', {
         // Send sensor data to database
         databaseStore.postDocument('sensor', {
           sensorId: sensorData.id,
-          sensorLocation: sensorData.name,
+          sensorLocation: sensorData.location,
           temperature: sensorData.temperature,
           humidity: sensorData.humidity,
+          voltage: sensorData.voltage,
+          rssi: sensorData.rssi,
           coreTemperature: sensorData.coreTemperature,
         });
 

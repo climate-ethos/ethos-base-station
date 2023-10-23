@@ -87,9 +87,11 @@ describe('Data Sensor Store', () => {
     dataSensorStore.allSensorData[0].id = 1;
     // Define Mock Data
     const mockData: SocketSensorData = {
-      id: '1',
-      temperature: '20',
-      humidity: '60',
+      id: 1,
+      temperature: 20.3,
+      humidity: 60.8,
+      voltage: 3.7,
+      rssi: -70.3,
     };
     invokeEventCallback(socket, 'data', mockData);
     // Find sensor and check data is correctly set
@@ -98,8 +100,10 @@ describe('Data Sensor Store', () => {
     );
     expect(sensor).toBeDefined();
     if (sensor) {
-      expect(sensor.temperature).toBe(20);
-      expect(sensor.humidity).toBe(60);
+      expect(sensor.temperature).toBe(20.3);
+      expect(sensor.humidity).toBe(60.8);
+      expect(sensor.voltage).toBe(3.7);
+      expect(sensor.rssi).toBe(-70.3);
     }
   });
 });

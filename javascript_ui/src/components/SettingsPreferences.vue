@@ -17,6 +17,19 @@
           :val="props.row.value"
         />
         {{ props.row.label }}
+        <!-- Show status of TTS with reload button if offline -->
+        <template
+          v-if="props.row.value === AudioType.TTS && !isTextToSpeechAvailable"
+        >
+          (Offline)
+          <div>
+            <q-btn
+              label="Reload"
+              color="primary"
+              @click.stop="$router.go(0)"
+            ></q-btn>
+          </div>
+        </template>
       </q-td>
     </template>
     <template v-slot:body-cell-medium-priority="props">
@@ -135,11 +148,22 @@
 
 <script lang="ts">
 import { QTableProps } from 'quasar';
-import { playAudio, stopAudio } from 'src/helpers/audioAlertDispatcher';
+import {
+  playAudio,
+  stopAudio,
+  isResponsiveVoiceDefined,
+} from 'src/helpers/audioAlertDispatcher';
 import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import InputKeyboard from './InputKeyboard.vue';
-import { computed, defineComponent, onBeforeUnmount, reactive } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+} from 'vue';
 import { AudioType, RiskLevel } from 'src/typings/data-types';
 
 interface TableOptions {
@@ -151,6 +175,11 @@ export default defineComponent({
   components: { InputKeyboard },
   setup() {
     const dataPreferencesStore = useDataPreferencesStore();
+    const isTextToSpeechAvailable = ref(false);
+
+    onMounted(() => {
+      isTextToSpeechAvailable.value = isResponsiveVoiceDefined();
+    });
 
     onBeforeUnmount(() => {
       dataPreferencesStore.postToDatabase();
@@ -297,6 +326,8 @@ export default defineComponent({
 
     return {
       coolingStrategies,
+      AudioType,
+      isTextToSpeechAvailable,
       RiskLevel,
       dataPreferencesStore,
       audioOptions,

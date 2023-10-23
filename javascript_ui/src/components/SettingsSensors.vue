@@ -8,7 +8,7 @@
       <div class="col">
         <q-select
           outlined
-          v-model="sensor.name"
+          v-model="sensor.location"
           :options="roomTypes"
           class="q-mb-md"
           label="Location"

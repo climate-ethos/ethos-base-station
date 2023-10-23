@@ -26,6 +26,13 @@ if [ -d "dist_backup" ]; then
 fi
 
 # Make built electron app executable
-# chmod +x "dist/electron/Packaged/Ethos Heat Monitor-linux-armv7l/Ethos Heat Monitor"
 chmod +x "dist/electron/Packaged/Ethos Heat Monitor-linux-arm64/Ethos Heat Monitor"
+cd ..
+
+# Install python libraries
+cd python_radio
+python3 -m venv ./env
+# Use dot as alias for 'source'
+. ./env/bin/activate
+pip3 install -r requirements.txt
 cd ..

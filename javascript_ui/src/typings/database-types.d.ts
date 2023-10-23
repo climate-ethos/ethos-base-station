@@ -11,6 +11,8 @@ export interface SensorDatabaseStructure {
   sensorId: number | undefined;
   temperature: number | undefined;
   humidity: number | undefined;
+  voltage: number | undefined;
+  rssi: number | undefined;
   coreTemperature: number | undefined;
 }
 

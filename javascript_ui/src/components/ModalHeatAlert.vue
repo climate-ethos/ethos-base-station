@@ -1,42 +1,56 @@
 <!-- ModalHeatAlert.vue -->
 <template>
   <q-dialog v-model="showModal" full-width persistent>
-    <q-card :class="flashClass">
-      <q-card-section v-if="alertSensor">
-        <div class="fontsize-30 text-bold">Heat Alert</div>
-        <div class="fontsize-20">
-          The <b>{{ alertSensor.name }}</b> has recorded temperature readings
-          which indicate that your body may be beginning to overheat if you are
-          located in that area.
-        </div>
-        <div class="fontsize-20 text-bold q-mt-md">
-          Your risk level is estimated to be: {{ riskLevelText }}
-        </div>
-        <div v-if="coolestRoom" class="fontsize-20 text-bold q-mt-md">
-          The safest room in the house for you is currently: {{ coolestRoom }}
-        </div>
-      </q-card-section>
+    <q-card :class="flashClass" class="q-pa-xl">
+      <div class="bg-white">
+        <q-card-section v-if="alertSensor">
+          <div class="fontsize-20">
+            The <b>{{ alertSensor.location }}</b> has recorded temperature
+            readings which indicate that your body temperature may be beginning
+            to
+            {{
+              alertSensor.riskLevel === RiskLevel.HIGH ? 'overheat' : 'increase'
+            }}
+            if you are located in that area.
+          </div>
+          <div class="fontsize-20 text-bold q-mt-md">
+            Your risk level is estimated to be: {{ riskLevelText }}
+          </div>
+          <div
+            class="fontsize-20 q-mt-md"
+            v-if="alertSensor.riskLevel === RiskLevel.HIGH"
+          >
+            If your home will continue to heat up and you don't have anyway to
+            cool it (e.g. air conditioning), we would suggest trying to find
+            somewhere cooler to go to that you can get to safely (without
+            exposing yourself to hot outside conditions).
+          </div>
+          <div v-if="coolestRoom" class="fontsize-20 text-bold q-mt-md">
+            The safest area for you is currently: {{ coolestRoom }}
+          </div>
+        </q-card-section>
 
-      <q-card-actions align="right" class="q-mb-lg">
-        <q-btn
-          :label="`I am not located at ${alertSensor?.name}`"
-          class="fontsize-15 q-mr-lg"
-          color="warning"
-          @click="notLocatedAt"
-        />
-        <q-btn
-          label="Help me cool down"
-          class="fontsize-15 q-mr-lg"
-          color="primary"
-          @click="coolDown"
-        />
-        <q-btn
-          label="Dismiss"
-          class="fontsize-15 q-mr-lg"
-          color="negative"
-          @click="dismiss"
-        />
-      </q-card-actions>
+        <q-card-actions align="right">
+          <q-btn
+            :label="`I am not located at ${alertSensor?.location}`"
+            class="fontsize-15 q-mr-lg"
+            color="warning"
+            @click="notLocatedAt"
+          />
+          <q-btn
+            label="Help me cool down"
+            class="fontsize-15 q-mr-lg"
+            color="primary"
+            @click="coolDown"
+          />
+          <q-btn
+            label="Dismiss"
+            class="fontsize-15 q-mr-lg"
+            color="negative"
+            @click="dismiss"
+          />
+        </q-card-actions>
+      </div>
     </q-card>
   </q-dialog>
 </template>
@@ -58,7 +72,9 @@ export default defineComponent({
     const databaseStore = useDatabaseStore();
 
     const alertSensor = computed(() => dataSensorStore.alertSensor);
-    const coolestRoom = computed(() => dataSensorStore.getCoolestSensor?.name);
+    const coolestRoom = computed(
+      () => dataSensorStore.getCoolestSensor?.location
+    );
     const showModal = computed(() => dataSensorStore.alertSensor !== null);
 
     const flashClass = computed(() => {
@@ -114,6 +130,7 @@ export default defineComponent({
 
     return {
       alertSensor,
+      RiskLevel,
       coolestRoom,
       showModal,
       riskLevelText,
@@ -135,11 +152,11 @@ export default defineComponent({
   0%,
   50%,
   100% {
-    background-color: white;
+    background-color: #fcd56a;
   }
   25%,
   75% {
-    background-color: #ffe291;
+    background-color: $warning;
   }
 }
 
@@ -151,11 +168,11 @@ export default defineComponent({
   0%,
   50%,
   100% {
-    background-color: white;
+    background-color: #db4a4a;
   }
   25%,
   75% {
-    background-color: #b35959;
+    background-color: $negative;
   }
 }
 

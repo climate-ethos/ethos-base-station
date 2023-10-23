@@ -28,6 +28,11 @@ declare const responsiveVoice: ResponsiveVoice | undefined;
 // Manual resolver to allow resolving promise when tts is canceled
 let resolveTextToSpeech: (() => void) | null = null;
 
+// Function to check if text whether responsive voice is available
+export const isResponsiveVoiceDefined = () => {
+  return typeof responsiveVoice !== 'undefined';
+};
+
 const generateTextToSpeech = (
   riskLevel: RiskLevel,
   sensorData?: SensorData
@@ -37,11 +42,11 @@ const generateTextToSpeech = (
       return 'There is a low priority alert';
     case RiskLevel.MEDIUM:
       return sensorData
-        ? `Your system indicates a medium level heat alert at: ${sensorData.name}`
+        ? `Your system indicates a medium level heat alert at: ${sensorData.location}`
         : 'Your system indicates a medium level heat alert';
     case RiskLevel.HIGH:
       return sensorData
-        ? `Your system indicates a high level heat alert at: ${sensorData.name}`
+        ? `Your system indicates a high level heat alert at: ${sensorData.location}`
         : 'Your system indicates a high level heat alert';
   }
 };
@@ -78,7 +83,7 @@ export const playTextToSpeech = (text: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     resolveTextToSpeech = resolve;
     try {
-      if (!responsiveVoice) {
+      if (typeof responsiveVoice === 'undefined') {
         const error = 'ResponsiveVoice not defined';
         console.error(error);
         throw new Error(error);
@@ -114,7 +119,7 @@ export const stopAudio = () => {
     resolveTextToSpeech = null;
   }
   // Cancel any ongoing text-to-speech
-  if (responsiveVoice) {
+  if (typeof responsiveVoice !== 'undefined' && responsiveVoice) {
     responsiveVoice.cancel();
   }
 };

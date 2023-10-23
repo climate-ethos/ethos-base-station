@@ -24,7 +24,7 @@ export const deserializeSensorData = (sensorDataString: string) => {
  * @returns {boolean} True if the sensor is an outdoor sensor, false otherwise.
  */
 export const isOutdoorSensor = (sensor: SensorData) => {
-  return sensor.name?.toLowerCase().includes('out');
+  return sensor.location?.toLowerCase().includes('out');
 };
 
 /**

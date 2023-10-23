@@ -1,4 +1,7 @@
 <template>
+  <!-- Register component which mimics sleep behaviour -->
+  <BaseDimmer />
+  <!-- Main router view -->
   <router-view />
 </template>
 
@@ -12,27 +15,25 @@ import { useDatabaseStore } from './stores/database';
 import { useSurveyStore } from './stores/survey';
 import { useDateTimeStore } from './stores/dateTime';
 import { useDataUserStore } from './stores/dataUser';
+import BaseDimmer from './components/BaseDimmer.vue';
 
 export default defineComponent({
   name: 'App',
+  components: { BaseDimmer },
   // Setup store connections here
   setup() {
     // Setup stores
     const dataSensorStore = useDataSensorStore();
     dataSensorStore.setup();
-
     const dataPreferencesStore = useDataPreferencesStore();
     dataPreferencesStore.updateCoolingStrategyOptions();
-
     const weatherStore = useWeatherStore();
     weatherStore.setup();
     const surveyStore = useSurveyStore();
     surveyStore.setup();
-
     // Start updating time
     const dateTimeStore = useDateTimeStore();
     dateTimeStore.startInterval();
-
     // Initialize database
     const databaseStore = useDatabaseStore();
     databaseStore.initializeDatabase();
@@ -47,19 +48,16 @@ export default defineComponent({
         if (oldValues) {
           [oldId, oldPassword] = oldValues;
         }
-
         if (!newId || !newPassword) {
           console.warn('Database user ID or Password not defined');
           return;
         }
-
         if (newId !== oldId || newPassword !== oldPassword) {
           databaseStore.initializeDatabase();
         }
       },
       { immediate: true }
     );
-
     /**
      * Add touch/click feedback to the screen.
      * Every time a user presses the screen, an animated circle will appear in that location.
@@ -70,7 +68,6 @@ export default defineComponent({
       effect.style.top = `${event.clientY - 25}px`; // offset by half the height/width to center the effect
       effect.style.left = `${event.clientX - 25}px`;
       document.body.appendChild(effect);
-
       setTimeout(() => {
         document.body.removeChild(effect);
       }, 1000); // remove after 1 second

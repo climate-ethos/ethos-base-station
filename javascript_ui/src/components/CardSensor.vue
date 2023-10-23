@@ -10,7 +10,7 @@
 
     <q-card-section class="q-pa-sm">
       <div class="fontsize-22 text-bold">
-        {{ sensor.name ? sensor.name : 'Undefined' }}
+        {{ sensor.location ? sensor.location : 'Undefined' }}
         {{ sensor.id ? '' : '(ID Undefined)' }}
         <span v-if="isOffline">(Offline)</span>
         <span v-if="isCalculating">(Calculating)</span>
@@ -20,8 +20,12 @@
     <q-separator />
 
     <q-card-section class="q-pa-sm">
-      <div class="fontsize-36 text-bold">{{ sensor.temperature }}°C</div>
-      <div class="fontsize-30 text-bold">{{ sensor.humidity }}% RH</div>
+      <div v-if="sensor.temperature" class="fontsize-36 text-bold">
+        {{ sensor.temperature.toFixed(1) }}°C
+      </div>
+      <div v-if="sensor.humidity" class="fontsize-30 text-bold">
+        {{ sensor.humidity.toFixed(1) }}% RH
+      </div>
       <div class="fontsize-14 text-italic">
         {{ formattedLastSeen }}
       </div>
@@ -80,7 +84,7 @@ export default defineComponent({
 
     // Check whether the sensor name or id is undefined
     let isUndefined = computed(() => {
-      return !props.sensor.id || !props.sensor.name;
+      return !props.sensor.id || !props.sensor.location;
     });
 
     // Calculate what background color to use for the form card
@@ -135,7 +139,7 @@ export default defineComponent({
     let formattedLastSeen = computed(() => {
       const lastSeen = props.sensor.lastSeen;
       if (!lastSeen) {
-        return 'Never';
+        return 'Have never received data';
       }
 
       let strTime = lastSeen.toLocaleTimeString('en-US', {
@@ -161,10 +165,12 @@ export default defineComponent({
     };
 
     const readSensorData = () => {
-      const text = `The ${props.sensor.name} is ${
+      const text = `The ${props.sensor.location} is ${
         props.sensor.temperature
+          ? props.sensor.temperature.toFixed(1)
+          : 'undefined'
       } degrees celsius, with a relative humidity of ${
-        props.sensor.humidity
+        props.sensor.humidity ? props.sensor.humidity.toFixed(1) : 'undefined'
       }%. Your risk level in this room is ${readRiskLevel()}`;
 
       playTextToSpeech(text);

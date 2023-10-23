@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 User=pi
+WorkingDirectory=/home/pi/ethos-raspberry-pi/python_radio/
 ExecStart=/home/pi/ethos-raspberry-pi/python_radio/env/bin/python3 /home/pi/ethos-raspberry-pi/python_radio/src/main.py production
 Restart=always
 RestartSec=10s

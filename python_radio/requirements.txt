@@ -21,8 +21,10 @@ idna==3.4
 jos3==0.5.0
 multidict==6.0.4
 numpy==1.25.2
+pycryptodome==3.19.0
 pyftdi==0.54.0
 pyserial==3.5
+python-dotenv==1.0.0
 python-engineio==4.3.4
 python-socketio==5.7.2
 pyusb==1.2.1

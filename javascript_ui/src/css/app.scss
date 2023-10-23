@@ -115,22 +115,6 @@ body {
   width: 16px; /* thumbStyle width */
 }
 
-// Styling for scroll indicators at top and bottom of table when content is there
-.scroll-indicator-top,
-.scroll-indicator-bottom {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.scroll-indicator-bottom {
-  bottom: 10px;
-}
-
-.scroll-indicator-top {
-  top: 60px;
-}
-
 .q-table__top,
 .q-table__bottom,
 thead tr:first-child th {
