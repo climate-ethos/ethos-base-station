@@ -23,14 +23,8 @@ class Logger:
         # Set the logging level
         Logger._logger.setLevel(logging.DEBUG)
 
-        # Get the directory of the current script
-        script_directory = os.path.dirname(os.path.realpath(__file__))
         # Go up one level to get to `python_radio`
-        parent_directory = os.path.dirname(script_directory)
-        # Add directory of logs file
-        log_directory = os.path.join(parent_directory, "logs")
-        if not os.path.exists(log_directory):
-            os.makedirs(log_directory)
+        log_directory = os.path.expanduser('~/Desktop')
         # Create handlers
         file_handler = logging.FileHandler(os.path.join(log_directory, "radio_data.log"), mode='a')
         stream_handler = logging.StreamHandler()
