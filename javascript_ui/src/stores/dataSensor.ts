@@ -136,52 +136,46 @@ export const useDataSensorStore = defineStore('dataSensor', {
 
   actions: {
     setup() {
-      this.allSensorData = [
-        {
-          id: 1,
-          location: 'Kitchen',
-          temperature: 33.1,
-          humidity: 45.9,
-          lastSeen: new Date(Date.now() - 34 * 1000),
-          riskLevel: RiskLevel.LOW,
-          coreTemperature: 37.3,
-          voltage: 4.2,
-          rssi: -84,
-        },
-        {
-          id: 2,
-          location: 'Living Room',
-          temperature: 35.4,
-          humidity: 51.2,
-          lastSeen: new Date(Date.now() - 520 * 1000),
-          riskLevel: RiskLevel.MEDIUM,
-          coreTemperature: 37.3,
-          voltage: 4.2,
-          rssi: -84,
-        },
-        {
-          id: 3,
-          location: 'Bedroom',
-          temperature: 29.2,
-          humidity: 49.7,
-          lastSeen: new Date(Date.now() - 185 * 1000),
-          riskLevel: RiskLevel.LOW,
-          coreTemperature: 37.3,
-          voltage: 4.2,
-          rssi: -84,
-        },
-        {
-          id: 4,
-          location: 'Outside',
-          temperature: 38.5,
-          humidity: 56.3,
-          lastSeen: new Date(Date.now() - 120 * 1000),
-          riskLevel: RiskLevel.HIGH,
-          coreTemperature: 37.3,
-          voltage: 4.2,
-          rssi: -84,
-        },
-      ];
+      this.allSensorData[0] = {
+        ...this.allSensorData[0],
+        temperature: 33.1,
+        humidity: 45.9,
+        lastSeen: new Date(Date.now() - 34 * 1000),
+        riskLevel: RiskLevel.LOW,
+        coreTemperature: 37.3,
+        voltage: 4.2,
+        rssi: -84,
+      };
+      this.allSensorData[1] = {
+        ...this.allSensorData[1],
+        temperature: 35.4,
+        humidity: 51.2,
+        lastSeen: new Date(Date.now() - 520 * 1000),
+        riskLevel: RiskLevel.MEDIUM,
+        coreTemperature: 37.3,
+        voltage: 4.2,
+        rssi: -84,
+      };
+      this.allSensorData[2] = {
+        ...this.allSensorData[2],
+        temperature: 29.2,
+        humidity: 49.7,
+        lastSeen: new Date(Date.now() - 185 * 1000),
+        riskLevel: RiskLevel.LOW,
+        coreTemperature: 37.3,
+        voltage: 4.2,
+        rssi: -84,
+      };
+      this.allSensorData[3] = {
+        ...this.allSensorData[3],
+        temperature: 38.5,
+        humidity: 56.3,
+        lastSeen: new Date(Date.now() - 120 * 1000),
+        riskLevel: RiskLevel.HIGH,
+        coreTemperature: 37.3,
+        voltage: 4.2,
+        rssi: -84,
+      };
 
       // Load stores
       const databaseStore = useDatabaseStore();
