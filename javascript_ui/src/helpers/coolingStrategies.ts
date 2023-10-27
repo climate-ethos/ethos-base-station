@@ -220,8 +220,8 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     },
   },
   windows: {
-    name: 'Open/close windows/blinds',
-    shortName: 'open/close windows/blinds',
+    name: 'Open/close windows/blinds/curtains',
+    shortName: 'open/close windows/blinds/curtains',
     icon: 'roller_shades',
     effectiveness: 0.6,
     group: 'Air ventilation',
