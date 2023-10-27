@@ -144,7 +144,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         riskLevel: RiskLevel.LOW,
         coreTemperature: 37.3,
         voltage: 4.2,
-        rssi: -84,
+        rssi: -70,
       };
       this.allSensorData[1] = {
         ...this.allSensorData[1],
@@ -174,7 +174,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         riskLevel: RiskLevel.HIGH,
         coreTemperature: 37.3,
         voltage: 4.2,
-        rssi: -84,
+        rssi: -104,
       };
 
       // Load stores
