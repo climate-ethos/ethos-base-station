@@ -29,13 +29,13 @@
 
         <h4>Buttons</h4>
         <p>
-          There are three buttons located at the top of the screen:
+          There are three touch buttons located at the top of the screen:
           <strong>cool down</strong>, <strong>app help</strong> and
           <strong>volume</strong>.
         </p>
         <ul>
           <li>
-            <strong>Cool down</strong>: Click this button if you need to cool
+            <strong>Cool Down</strong>: Touch this button if you need to cool
             down and want to view a list of cooling strategies.
           </li>
           <li>
@@ -43,8 +43,8 @@
             you are now :)
           </li>
           <li>
-            <strong>Volume</strong>: Use the - and + buttons to adjust volume
-            (or mute) depending on preferences
+            <strong>Volume</strong>: Use the - and + touch buttons to adjust
+            volume (or mute) depending on preferences
           </li>
         </ul>
 
@@ -67,18 +67,18 @@
         <ul>
           <li>
             <strong class="text-positive">Low Risk</strong>: Our algorithm
-            estimates that your core temperature will be in a normal range by
+            estimates that your core temperature should be in a normal range by
             staying in this room.
           </li>
           <li>
             <strong class="text-warning">Medium Risk</strong>: Our algorithm
-            estimates that your core temperature will be above 37.7°C by staying
-            in this room.
+            estimates that your core temperature may be elevated by staying in
+            this room.
           </li>
           <li>
             <strong class="text-negative">High Risk</strong>: Our algorithm
-            estimates that your core temperature will be above 38.0°C by staying
-            in this room and it may not be safe.
+            estimates that your core temperature may be unsafely elevated by
+            staying in this room and it may not be safe.
           </li>
         </ul>
         <p>Each sensor card in the app displays the following information:</p>

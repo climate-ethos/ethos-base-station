@@ -26,7 +26,6 @@ if [ $LOCAL != $REMOTE ]; then
 
     # Restart services
     sudo systemctl restart ethos-electron-app.service
-    # TODO: This fails for some reason
     sudo systemctl restart ethos-python-server.service
 else
     echo "No updates found."

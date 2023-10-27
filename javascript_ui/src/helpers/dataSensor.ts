@@ -70,11 +70,11 @@ export const getRiskLevel = (coreTemperature: number | undefined) => {
       'Unable to calculate risk level (core temperature undefined)'
     );
     return undefined;
-  } else if (coreTemperature >= 38) {
+  } else if (coreTemperature >= 37.9) {
     return RiskLevel.HIGH;
-  } else if (coreTemperature >= 37.7) {
+  } else if (coreTemperature >= 37.8) {
     return RiskLevel.MEDIUM;
-  } else if (coreTemperature < 37.7) {
+  } else if (coreTemperature < 37.8) {
     return RiskLevel.LOW;
   } else {
     console.error('Unable to calculate risk level (unknown error)');

@@ -36,7 +36,7 @@ def calculate_predicted_core_temperature(data: RiskLevelData) -> Union[None, flo
   model.Ta = Ta
   model.RH = RH
   model.Va = 0.1
-  model.PAR = 1.5
+  model.PAR = 1.6
   model.simulate(180)
 
   final_core_temp = model.dict_results()['TcrPelvis'][-1]

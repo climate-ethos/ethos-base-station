@@ -29,6 +29,7 @@ echo "Setting up cron job for auto-updating..."
 echo "WARNING: This will overwrite any existing cron jobs!"
 # Update will occur randomly between 2-3am
 echo "0 2 * * * /home/pi/ethos-raspberry-pi/pi_check_update.sh" > /tmp/mycron
+echo "0 5 * * * DISPLAY=:0 xset dpms force on" >> /tmp/mycron
 crontab /tmp/mycron
 rm /tmp/mycron
 

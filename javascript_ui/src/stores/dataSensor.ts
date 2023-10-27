@@ -11,13 +11,9 @@ import {
   SocketSensorData,
   RiskLevel,
 } from 'src/typings/data-types';
-import { playAudio } from 'src/helpers/audioAlertDispatcher';
-import { useDataPreferencesStore } from 'src/stores/dataPreferences';
-import { useSocketStore } from 'src/stores//socket';
-import { useDatabaseStore } from './database';
-import { useVolumeStore } from './volume';
-import { useSurveyStore } from 'src/stores/survey';
-
+import { useSocketStore } from 'src/stores/socket';
+import { useDatabaseStore } from 'src/stores/database';
+import { useDataAlertsStore } from './dataAlerts';
 export const useDataSensorStore = defineStore('dataSensor', {
   persist: {
     serializer: {
@@ -27,11 +23,21 @@ export const useDataSensorStore = defineStore('dataSensor', {
   },
 
   state: () => ({
-    alertSensor: null as SensorData | null,
     allSensorData: [
       {
         id: undefined,
-        location: undefined,
+        location: 'Main bedroom',
+        temperature: undefined,
+        humidity: undefined,
+        voltage: undefined,
+        rssi: undefined,
+        lastSeen: undefined,
+        coreTemperature: undefined,
+        riskLevel: undefined,
+      },
+      {
+        id: undefined,
+        location: 'Living room',
         temperature: undefined,
         humidity: undefined,
         voltage: undefined,
@@ -53,18 +59,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
       },
       {
         id: undefined,
-        location: undefined,
-        temperature: undefined,
-        humidity: undefined,
-        voltage: undefined,
-        rssi: undefined,
-        lastSeen: undefined,
-        coreTemperature: undefined,
-        riskLevel: undefined,
-      },
-      {
-        id: undefined,
-        location: undefined,
+        location: 'Outside',
         temperature: undefined,
         humidity: undefined,
         voltage: undefined,
@@ -202,7 +197,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
 
       // Load stores
       const databaseStore = useDatabaseStore();
-      const volumeStore = useVolumeStore();
+      const dataAlertsStore = useDataAlertsStore();
       // Setup socket store if it is not yet ready
       const socketStore = useSocketStore();
       if (!socketStore.isConnected) {
@@ -246,10 +241,8 @@ export const useDataSensorStore = defineStore('dataSensor', {
         sensorData.lastSeen = new Date(Date.now());
         sensorData.coreTemperature =
           await socketStore.calculatePredictedCoreTemperature(sensorData);
-        // Calculate risk level
-        const newRiskLevel = getRiskLevel(sensorData.coreTemperature);
-        const oldRiskLevel = sensorData.riskLevel;
-        sensorData.riskLevel = newRiskLevel;
+        const oldRiskLevel = sensorData.riskLevel; // Save old risk level
+        sensorData.riskLevel = getRiskLevel(sensorData.coreTemperature);
 
         // Send sensor data to database
         databaseStore.postDocument('sensor', {
@@ -262,33 +255,8 @@ export const useDataSensorStore = defineStore('dataSensor', {
           coreTemperature: sensorData.coreTemperature,
         });
 
-        // Display alert if risk level has gone up on indoor sensor
-        if (
-          oldRiskLevel &&
-          newRiskLevel &&
-          newRiskLevel > oldRiskLevel &&
-          !isOutdoorSensor(sensorData)
-        ) {
-          // Add to alerts count
-          const surveyStore = useSurveyStore();
-          surveyStore.incrementAlertCount();
-          // Display alert
-          this.alertSensor = { ...sensorData }; // Shallow copy
-          // Get audio type preferences
-          const dataPreferencesStore = useDataPreferencesStore();
-          // Send alert sound
-          playAudio(
-            dataPreferencesStore.audioType,
-            newRiskLevel,
-            this.alertSensor
-          );
-          // Send alert data to database
-          databaseStore.postDocument('alert', {
-            riskLevel: newRiskLevel,
-            volumePercent: volumeStore.volumePercent,
-            dismissMethod: null,
-          });
-        }
+        // Check whether to send alert and alert if necessary
+        dataAlertsStore.handleAlertLogic(sensorData, oldRiskLevel);
       });
     },
   },

@@ -9,20 +9,21 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Air ventilation',
     extraInfo: {
       bestUse: [
-        'Position the fan to create optimal airflow in the room.',
+        'Position the fan to maximise the airflow across your body.',
         'Adjust the fan speed according to your comfort level.',
-        'Use an oscillating fan to circulate air more evenly in the room.',
         'Clean the fan blades and vents regularly to maintain efficiency.',
-        'Combine the fan with other cooling methods, such as open windows or air conditioning.',
+        'Combine the fan with other cooling methods, such as self dousing  or air conditioning.',
         'Using a window fan to pull in cool air from outside or push hot air out.',
         'Placing a bowl of ice or a wet towel in front of the fan to create a cooler breeze.',
+        'Increase your water intake with fan use, typically 1 extra glass of water per hour of use as fans can increase dehydration',
       ],
       whenUse: [
         "During the day when it's too hot outside, and opening windows would let in hot air.",
         'When humidity levels are high, as a fan can help evaporate sweat, making you feel cooler.',
+        'If you are concerned about energy costs, as fans use up to 50 times less electricity than air-conditioning.',
       ],
       whenNotUse: [
-        'In extremely high temperature levels, as a fan may not provide much cooling effect and may actually make things worse by blowing hot air on you.',
+        'In high temperature levels, do not use above 38 degrees Celsius if over 65 years old (37 degrees if on medications that impact sweating). In these hot conditions as a fan may make heat stress worse by blowing hot air on you.',
       ],
     },
   },
@@ -34,10 +35,9 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Water immersion',
     extraInfo: {
       bestUse: [
-        'Fill a basin or tub with cool or cold water, depending on your tolerance and desired cooling effect.',
-        'Submerge your body in th water for 10-20 minutes at a time.',
+        'Fill a basin or tub with cool tap water (do not add ice).',
+        'Submerge your body in th water for 8-15 minutes at a time.',
         'Wiggle your fingers and toes occasionally to improve circulation and enhance the cooling effect.',
-        'Combine with other cooling methods, such as a fan, for better results.',
       ],
       whenUse: [
         'When you need an effective way to cool down your body.',
@@ -47,7 +47,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
       whenNotUse: [
         'When you have open wounds or infections on your hands or feet, as it may worsen the condition.',
         'If you feel like you are not mobile enough to get in and out of a bath',
-        "In cases of severe cold intolerance or conditions like Raynaud's phenomenon, as it may cause discomfort or trigger symptoms.",
+        "In cases of cold intolerance or conditions like Raynaud's phenomenon, as it may cause discomfort or trigger symptoms.",
         'When there is a risk of water contamination or poor hygiene in the immersion area.',
       ],
     },
@@ -56,15 +56,14 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     name: 'Sit down quietly',
     shortName: 'sitting quietly',
     icon: 'self_improvement',
-    effectiveness: 0.6,
+    effectiveness: 0.8,
     group: 'Activity based',
     extraInfo: {
       bestUse: [
         'Find a cool, shaded, or well-ventilated area to sit down.',
         'Choose a comfortable chair or surface that allows you to relax and rest.',
-        'Close your eyes and take slow, deep breaths, focusing on exhaling slowly to promote relaxation.',
         'Loosen any tight clothing and remove unnecessary layers to allow your body to cool down more efficiently.',
-        'Combine sitting down quietly with other cooling methods, such as a fan, air conditioning, or drinking cool fluids.',
+        'Combine sitting down quietly with other cooling methods, such as a fan, air conditioning, or drinking fluids.',
       ],
       whenUse: [
         'After physical exertion or exposure to heat, to allow your body to recover and regulate its temperature.',
@@ -85,22 +84,20 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Other water',
     extraInfo: {
       bestUse: [
-        'Drinking fluids containing electrolytes, such as sports drinks, coconut water, or diluted fruit juice, to replace lost minerals and help maintain proper hydration levels.',
         'Avoid consuming large amounts of caffeine or alcohol, as they can dehydrate you and increase your body temperature.',
-        'Sip on your cool beverage slowly, allowing your body to gradually adjust to the temperature change.',
+        'Drink your preferred water temperature in order to maximise your consumption and palatability',
         'Using an insulated water bottle to keep your fluids cold for a longer period of time.',
-        'Keep a reusable water bottle with you and refill it with cold water frequently to maintain a steady supply of cool fluids.',
-        'Adding ice cubes or crushed ice to your drink to make it cooler and more refreshing.',
-        'Pairing cool fluids with other cooling strategies, such as using a fan or air conditioning, to maximize their effectiveness.',
         "Monitoring your fluid intake to ensure you're drinking enough throughout the day, especially in hot weather or during physical activities.",
+        'If it helps increase palatability and overall fluid consumption consider adding lemon, cucumber, or cordial',
       ],
       whenUse: [
         'Throughout the day, to maintain proper hydration levels and prevent heat-related illnesses.',
         'Before, during, and after physical activities, especially in hot environments, to replenish fluids lost through sweating.',
-        'When feeling overheated, to help lower your body temperature more effectively.',
+        'Cool fluids will help lower body temperatures if you have not already started sweating.',
       ],
       whenNotUse: [
-        'Drinking too much water too quickly, as it can lead to hyponatremia, a potentially dangerous condition caused by low sodium levels.',
+        'Cool fluids will not help in lowering body temperatures if you have already started sweating, however the hydration is still critical to maintain blood volume and replace lost sweat.',
+        'When on medically prescribed fluid restrictions, seek medical advice for your personal needs in the heat.',
       ],
     },
   },
@@ -112,15 +109,11 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Clothing related',
     extraInfo: {
       bestUse: [
-        'Soak a towel or cloth in cold water, wring it out slightly, so it remains damp but not dripping wet.',
-        'Drape the wet towel over your head, neck, shoulders, or other areas where you feel hot.',
+        'Soak a towel or clothing in icy water, wring it out slightly, so it remains damp but not dripping wet.',
+        'Drape the cold wet towel over your head, neck, and shoulders for around 2 minutes and repeat every 10 minutes.',
         'Re-wet the towel as needed to maintain its cooling effect when it starts to dry out or warm up.',
-        'Use a breathable, lightweight fabric like cotton for the towel to maximize the evaporative cooling effect.',
+        'Use a breathable, lightweight fabric like cotton for the towel to maximise the evaporative cooling effect.',
         'Combine the wet towel method with other cooling strategies, such as fans or air conditioning, for better results.',
-        'Using cold or icy water to soak the towel, enhancing the initial cooling effect.',
-        'Placing the wet towel in front of a fan or air conditioner, to increase the evaporative cooling effect.',
-        'Using a towel size that is suitable for the body part you are trying to cool, maximizing contact with the skin.',
-        'Regularly re-wetting the towel to maintain its cooling effect over a longer period.',
       ],
       whenUse: [
         'When you need a quick, convenient, and low-cost way to cool down.',
@@ -128,7 +121,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
         'As a means to recover from heat exposure or reduce the risk of heat-related illnesses.',
       ],
       whenNotUse: [
-        'Be careful of any drips coming off clothing and any slips that may result.',
+        'Be careful of any drips coming off towel/clothing and any slips that may result.',
         'When you have open wounds, skin infections, or rashes, as the wet towel may exacerbate the condition or cause discomfort.',
         'When the humidity is very high, as the evaporative cooling effect of the wet towel might be reduced.',
       ],
@@ -145,11 +138,10 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
         'Remove or loosen any tight-fitting clothing that may restrict airflow or trap heat.',
         'Wear lightweight, breathable fabrics, such as cotton or linen, to allow for better air circulation and moisture absorption.',
         'Choose light-coloured clothing to reflect sunlight and reduce heat absorption.',
-        'Wear moisture-wicking materials to help evaporate sweat and keep your body cooler.',
         'Combine removing unnecessary clothing with other cooling methods, such as using a fan or drinking cool fluids.',
       ],
       whenUse: [
-        'During hot weather, to maximize airflow around your body and prevent overheating.',
+        'During hot weather, to maximise airflow around your body and prevent overheating.',
         'When engaging in physical activities, to allow for better evaporation of sweat and prevent heat-related illnesses.',
         'When feeling overheated or experiencing symptoms of heat exhaustion, to help lower your body temperature more effectively.',
       ],
@@ -159,20 +151,21 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
       ],
     },
   },
-  misting: {
-    name: 'Misting',
-    shortName: 'misting',
+  dousing: {
+    name: 'Self dousing',
+    shortName: 'dousing',
     icon: 'water',
     effectiveness: 0.6,
     group: 'Other water',
     extraInfo: {
       bestUse: [
-        'Use a spray bottle filled with cool water and mist yourself periodically.',
-        'Spray water on your face, neck, and pulse points for a quick cool-down.',
+        'Use a spray bottle or sponge to mist/wet you skin and/or clothing, repeating every 5-10 mins.',
+        'Wet water on your face, arms, legs, and even clothing to cool-down.',
         'Combine with a fan for enhanced cooling as the water evaporates.',
       ],
       whenUse: [
-        'When you feel hot and sweaty and need quick relief.',
+        'When you feel hot and sweaty, effective in conditions up to 47 degrees Celsius.',
+        'Can be used during a power outage.',
         'After spending time in a hot environment to lower your body temperature.',
       ],
       whenNotUse: [
@@ -189,9 +182,9 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Activity based',
     extraInfo: {
       bestUse: [
-        'Apply an ice pack to pulse points, such as your wrists, neck, elbows, groin, ankles, and behind the knees.',
-        'Use a cloth or towel between your skin and the ice pack to prevent frostbite.',
-        'Rotate the ice pack to different pulse points for consistent cooling.',
+        'Apply an ice pack to hands, feet, neck, and/or torso.',
+        'Use a cloth or towel between your skin and the ice pack to prevent skin damage.',
+        'Rotate the ice pack to different areas for consistent cooling.',
       ],
       whenUse: [
         'When you are overheated and need to cool down quickly.',
@@ -199,7 +192,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
       ],
       whenNotUse: [
         'If you have certain medical conditions such as poor circulation or nerve damage.',
-        'When using it directly on bare skin for extended periods as it may lead to frostbite.',
+        'When using it directly on bare skin for extended periods as it may lead to skin damage.',
       ],
     },
   },
@@ -213,12 +206,12 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
       bestUse: [
         'Keep the air conditioning at a comfortable temperature, usually between 23-25 degrees Celsius.',
         "Maintain your air conditioning system regularly to ensure it's working efficiently.",
-        'Combine with a Fan to help move cool air over your body',
+        'By combining with a fan to increase airflow over the body, you will perceive an air-conditioned room set to 27 degrees Celsius the same as a still room at 23 degree Celsius.',
         'Close doors and windows to keep the cool air inside.',
       ],
       whenUse: [
         'When it is extremely hot outside, and other cooling methods are not effective.',
-        'During the hottest parts of the day to keep indoor temperatures comfortable.',
+        'During the hottest parts of the day to keep indoor temperatures comfortable and safe.',
       ],
       whenNotUse: [
         'When the weather outside is cooler than inside, it might be more energy-efficient to open windows or use fans instead.',
@@ -243,8 +236,8 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
         'When the outside temperature is lower than the inside temperature.',
       ],
       whenNotUse: [
-        "During the hottest parts of the day, it's better to keep windows and blinds closed to prevent hot air from coming in.",
-        'When outdoor allergen levels are high, as open windows may lead to increased allergy symptoms.',
+        "During the hottest parts of the day if outside is hotter than inside your home, it's better to keep windows and blinds closed to prevent hot air from coming in.",
+        'When outdoor allergen or smoke levels are high, as open windows may lead to increased respiratory irritation.',
       ],
     },
   },
@@ -256,17 +249,16 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Other water',
     extraInfo: {
       bestUse: [
-        'Begin with lukewarm water and gradually decrease the temperature to a level that is cool, but not uncomfortably cold.',
+        'Begin with lukewarm water and gradually decrease the temperature to a level that is cool and refreshing.',
         'Use a shower head with different settings that allow you to control the water flow and coverage.',
-        'Focus the cool water on your pulse points, such as the inside of your wrists, neck, and inner elbows, for a more effective cooling effect.',
-        'Try to keep your cold showers to around 5-10 minutes at a time to avoid overcooling.',
+        'Focus the cool water all over your body to maximise cool water coverage.',
       ],
       whenUse: [
         'After physical activities, to rapidly cool down and refresh your body.',
-        'During hot weather, as a cold shower can effectively lower body temperature and alleviate discomfort from heat.',
+        'During hot weather, as a cold shower can lower body temperature and alleviate discomfort from heat.',
       ],
       whenNotUse: [
-        'If you have certain health conditions, like heart disease or cold-induced asthma, as the sudden cold can lead to an exacerbation of symptoms.',
+        'If you have concerns around slips and falls in the shower.',
         'When you are feeling chilled or if the environmental temperature is very low, as this could lower your body temperature excessively.',
       ],
     },
@@ -279,11 +271,10 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Water immersion',
     extraInfo: {
       bestUse: [
-        'Immerse your hands and forearms in cool water for about 10-15 minutes.',
-        'Use a large bowl or basin filled with cool water, and sit comfortably while immersing your arms.',
-        'Wiggle your fingers every so often to increase circulation and the cooling effect.',
-        'Combine with other methods such as a foot bath, misting and using a fan.',
-        'Dry your hands and forearms thoroughly after the bath to prevent skin issues.',
+        'Immerse your hands and forearms in cool water for about 10-15 minutes at a time.',
+        'Use a large bowl, bucket, or basin filled with cool water with or without ice (5-25 degrees Celsius), and sit comfortably while immersing your hands and forearms.',
+        'Wiggle your arms and fingers every so often to increase circulation and the cooling effect of the water.',
+        'Combine with other methods such as a foot immersion bath.',
       ],
       whenUse: [
         'When you need a quick and easy method to cool down.',
@@ -303,10 +294,10 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Water immersion',
     extraInfo: {
       bestUse: [
-        'Immerse your feet and lower part of your legs in cool water.',
-        'Wiggle your toes every so often to increase circulation and the cooling effect.',
-        'Combine with other methods such as a hand/forearm bath, misting and using a fan.',
-        'Sit comfortably and relax while your feet are in the bath, ensuring they are thoroughly dried afterwards.',
+        'Immerse your hands and forearms in cool water for about 10-15 minutes at a time.',
+        'Use a large bowl, bucket, or basin filled with cool water with or without ice (5-25 degrees Celsius), and sit comfortably while immersing your hands and forearms.',
+        'Wiggle your feet and toes every so often to increase circulation and the cooling effect of the water.',
+        'Combine with other methods such as a arm immersion bath.',
       ],
       whenUse: [
         'After a long day of standing or walking, especially in hot weather.',
@@ -316,7 +307,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
         'If you have open wounds, skin infections, or other foot conditions, as a foot bath may exacerbate these conditions.',
         'If you have circulatory problems or diabetes, consult with your healthcare provider before using a foot bath for cooling.',
         'If moving a tub of water will be too heavy.',
-        'If there is a risk of slipping from having wet feet.',
+        'If there is a concern of slipping from having wet feet.',
       ],
     },
   },

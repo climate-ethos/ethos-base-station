@@ -100,11 +100,11 @@ export const useDataUserStore = defineStore('dataUser', {
     },
 
     checkHeight(height: number) {
-      if (height > 0 && height < 400) {
+      if (height > 0 && height < 300) {
         this.heightCm = height;
         return true;
       }
-      return 'Invalid height value (1-399cm)';
+      return 'Invalid height value (1-299cm)';
     },
 
     checkWeight(weight: number) {

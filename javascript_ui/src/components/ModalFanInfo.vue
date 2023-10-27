@@ -23,6 +23,10 @@
           convection oven, where hot air circulates to cook food.
         </p>
         <p class="text">
+          This is why when temperatures get above 37-38 degrees Celsius (i.e.
+          body temperature), it is generally not recommended to use fans.
+        </p>
+        <p class="text">
           Heat stress can trigger a range of physiological responses as your
           body tries to maintain its normal temperature. These can include:
         </p>

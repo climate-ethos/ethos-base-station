@@ -42,11 +42,11 @@ const generateTextToSpeech = (
       return 'There is a low priority alert';
     case RiskLevel.MEDIUM:
       return sensorData
-        ? `Your system indicates a medium level heat alert at: ${sensorData.location}`
+        ? `Your system indicates that your risk level is medium inside: ${sensorData.location}`
         : 'Your system indicates a medium level heat alert';
     case RiskLevel.HIGH:
       return sensorData
-        ? `Your system indicates a high level heat alert at: ${sensorData.location}`
+        ? `Your system indicates that your risk level is high inside: ${sensorData.location}`
         : 'Your system indicates a high level heat alert';
   }
 };

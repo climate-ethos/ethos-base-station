@@ -5,6 +5,7 @@
     <ModalSurvey />
     <ModalVolume v-model="isShowVolumeModal" />
     <ModalHeatAlert @open-cooling-modal="isShowCoolingModal = true" />
+    <ModalRoomSelection />
     <ModalCoolingInterventions v-model="isShowCoolingModal" />
     <ModalHelp v-model="isShowHelpModal" />
     <ModalFanInfo v-model="isShowFanModal" />
@@ -15,7 +16,7 @@
           v-if="$route.path !== '/settings'"
           src="ethos.svg"
           height="50"
-          @click="showSettingsButton"
+          @click="showSettingsButtonHandler.handlePress()"
         />
         <q-btn
           v-if="$route.path !== '/' && $route.path !== '/initialize'"
@@ -84,6 +85,7 @@ import { defineComponent, ref, computed, provide } from 'vue';
 
 import { useKeyboardStore } from 'src/stores/keyboard';
 import { useVolumeStore } from 'src/stores/volume';
+import RepeatedPressHandler from 'src/helpers/RepeatedPressHandler';
 
 import BaseNetworkConnection from 'src/components/BaseNetworkConnection.vue';
 import BaseCurrentTime from 'components/BaseCurrentTime.vue';
@@ -95,6 +97,7 @@ import ModalHeatAlert from 'src/components/ModalHeatAlert.vue';
 import ModalVolume from 'src/components/ModalVolume.vue';
 import ModalFanInfo from 'src/components/ModalFanInfo.vue';
 import ModalSurvey from 'src/components/ModalSurvey.vue';
+import ModalRoomSelection from 'src/components/ModalRoomSelection.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -109,6 +112,7 @@ export default defineComponent({
     ModalFanInfo,
     BaseNetworkConnection,
     ModalSurvey,
+    ModalRoomSelection,
   },
   setup() {
     const keyboardStore = useKeyboardStore();
@@ -120,9 +124,6 @@ export default defineComponent({
     let isShowFanModal = ref(false);
     // Provide to allow descendent ancestors to modify
     provide('isShowFanModal', isShowFanModal);
-
-    let timeoutShowSettingsButton: null | number = null;
-    let showSettingsPressedCount = 0;
 
     // Determine volume icon based on volume
     let volumeIcon = computed(() => {
@@ -138,24 +139,9 @@ export default defineComponent({
     });
 
     // Function to show settings button if activated multiple times in quick succession
-    let showSettingsButton = () => {
-      // Increment pressed count
-      showSettingsPressedCount++;
-      // Check if the threshold has been met to show the settings button
-      if (showSettingsPressedCount >= 7) {
-        showSettingsPressedCount = 0;
-        isShowSettingsButton.value = true;
-        return;
-      }
-      // Clear the timeout (if it exists)
-      if (timeoutShowSettingsButton) {
-        clearTimeout(timeoutShowSettingsButton);
-      }
-      // Set another timeout that resets logo pressed count when it expires
-      timeoutShowSettingsButton = window.setTimeout(() => {
-        showSettingsPressedCount = 0;
-      }, 3000);
-    };
+    let showSettingsButtonHandler = new RepeatedPressHandler(7, () => {
+      isShowSettingsButton.value = true;
+    });
 
     let hideSettingsButton = () => {
       isShowSettingsButton.value = false;
@@ -169,7 +155,7 @@ export default defineComponent({
       isShowCoolingModal,
       isShowHelpModal,
       isShowFanModal,
-      showSettingsButton,
+      showSettingsButtonHandler,
       hideSettingsButton,
     };
   },

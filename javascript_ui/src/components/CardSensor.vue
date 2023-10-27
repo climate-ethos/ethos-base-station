@@ -26,8 +26,13 @@
       <div v-if="sensor.humidity" class="fontsize-30 text-bold">
         {{ sensor.humidity.toFixed(1) }}% RH
       </div>
-      <div class="fontsize-14 text-italic">
-        {{ formattedLastSeen }}
+      <div>
+        <span class="fontsize-14 text-italic">{{ formattedLastSeen }}</span>
+        <q-icon
+          class="q-mr-md float-right"
+          size="md"
+          :name="signalStrengthIcon"
+        />
       </div>
     </q-card-section>
 
@@ -38,7 +43,7 @@
         <div class="fontsize-22 text-bold">DONT USE FAN</div>
         <q-btn
           icon="question_mark"
-          @click="isShowFanModel = true"
+          @click.stop="isShowFanModel = true"
           class="q-mr-md absolute-right"
           color="warning"
         />
@@ -85,6 +90,18 @@ export default defineComponent({
     // Check whether the sensor name or id is undefined
     let isUndefined = computed(() => {
       return !props.sensor.id || !props.sensor.location;
+    });
+
+    const signalStrengthIcon = computed(() => {
+      if (!props.sensor.rssi) {
+        return '';
+      } else if (props.sensor.rssi > -80) {
+        return 'signal_cellular_alt';
+      } else if (props.sensor.rssi > -95) {
+        return 'signal_cellular_alt_2_bar';
+      } else {
+        return 'signal_cellular_alt_1_bar';
+      }
     });
 
     // Calculate what background color to use for the form card
@@ -182,6 +199,7 @@ export default defineComponent({
       isUndefined,
       isOffline,
       isCalculating,
+      signalStrengthIcon,
       backgroundColor,
       formattedLastSeen,
       emoticonStyle,

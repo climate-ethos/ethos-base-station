@@ -23,10 +23,17 @@
         >
           (Offline)
           <div>
+            <q-spinner
+              v-if="isTextToSpeechAvailable === undefined"
+              color="primary"
+              size="2em"
+              :thickness="10"
+            />
             <q-btn
+              v-else
               label="Reload"
               color="primary"
-              @click.stop="$router.go(0)"
+              @click.stop="reloadResponsiveVoice()"
             ></q-btn>
           </div>
         </template>
@@ -157,6 +164,7 @@ import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import InputKeyboard from './InputKeyboard.vue';
 import {
+  Ref,
   computed,
   defineComponent,
   onBeforeUnmount,
@@ -175,7 +183,7 @@ export default defineComponent({
   components: { InputKeyboard },
   setup() {
     const dataPreferencesStore = useDataPreferencesStore();
-    const isTextToSpeechAvailable = ref(false);
+    const isTextToSpeechAvailable: Ref<boolean | undefined> = ref(false);
 
     onMounted(() => {
       isTextToSpeechAvailable.value = isResponsiveVoiceDefined();
@@ -256,6 +264,42 @@ export default defineComponent({
       dataPreferencesStore.audioType = row.value;
     };
 
+    const reloadResponsiveVoice = () => {
+      // Set the status as undefined to trigger spinner
+      isTextToSpeechAvailable.value = undefined;
+
+      // Get the existing script element
+      const existingScript = document.querySelector(
+        'script[src^="https://code.responsivevoice.org/responsivevoice.js"]'
+      );
+
+      // If the script exists, remove it from the document
+      if (existingScript) {
+        existingScript.remove();
+      }
+
+      // Create a new script element
+      const newScript = document.createElement('script');
+      newScript.src =
+        'https://code.responsivevoice.org/responsivevoice.js?key=' +
+        process.env.RESPONSIVE_VOICE_API_KEY;
+
+      // Event listener for successful script load
+      newScript.addEventListener('load', () => {
+        console.log('Responsive voice loaded');
+        isTextToSpeechAvailable.value = isResponsiveVoiceDefined();
+      });
+
+      // Event listener for script load failure
+      newScript.addEventListener('error', (err) => {
+        console.error('Failed to load ResponsiveVoice script:', err);
+        isTextToSpeechAvailable.value = isResponsiveVoiceDefined();
+      });
+
+      // Load script
+      document.body.appendChild(newScript);
+    };
+
     const coolingStrategyColumns: QTableProps['columns'] = [
       {
         name: 'name',
@@ -334,6 +378,7 @@ export default defineComponent({
       audioColumns,
       playDemoAudio,
       rowClick,
+      reloadResponsiveVoice,
       isPlayingMedium,
       isPlayingHigh,
       coolingStrategyColumns,
