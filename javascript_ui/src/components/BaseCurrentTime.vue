@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import { useDateTimeStore } from 'src/stores/dateTime';
+import { useDataAlertsStore } from 'src/stores/dataAlerts';
 import { useDataSensorStore } from 'src/stores/dataSensor';
 import { playAudio } from 'src/helpers/audioAlertDispatcher';
 import { RiskLevel } from 'src/typings/data-types';
@@ -16,6 +17,7 @@ import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 export default {
   setup() {
     const dateTimeStore = useDateTimeStore();
+    const dataAlertsStore = useDataAlertsStore();
     const dataSensorStore = useDataSensorStore();
     const dataPreferencesStore = useDataPreferencesStore();
     const timeString = computed(() =>
@@ -28,11 +30,11 @@ export default {
     const showDemoAlert = () => {
       console.log('Showing alert in 5 seconds');
       setTimeout(() => {
-        dataSensorStore.alertSensor = dataSensorStore.allSensorData[1];
+        dataAlertsStore.alertRiskLevel = RiskLevel.MEDIUM;
         playAudio(
           dataPreferencesStore.audioType,
           RiskLevel.MEDIUM,
-          dataSensorStore.alertSensor
+          dataSensorStore.allSensorData[1]
         );
       }, 5000);
     };

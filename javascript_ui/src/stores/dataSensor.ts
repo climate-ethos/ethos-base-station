@@ -183,18 +183,6 @@ export const useDataSensorStore = defineStore('dataSensor', {
         },
       ];
 
-      // Code to allow popup of alert text after 10s
-      // setTimeout(() => {
-      //   this.allSensorData[1].temperature = 37.4;
-      //   this.allSensorData[1].humidity = 53.7;
-      //   this.allSensorData[1].lastSeen = new Date(Date.now());
-      //   this.allSensorData[1].riskLevel = RiskLevel.HIGH;
-      // }, 10000);
-
-      // setTimeout(() => {
-      //   this.alertSensor = this.allSensorData[1];
-      // }, 11000);
-
       // Load stores
       const databaseStore = useDatabaseStore();
       const dataAlertsStore = useDataAlertsStore();
