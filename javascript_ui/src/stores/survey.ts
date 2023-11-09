@@ -11,6 +11,8 @@ export const useSurveyStore = defineStore('survey', {
     alertsInLastTimePeriod: 0,
     // Whether to show the survey modal
     isShowSurveyModal: false,
+    // When survey is shown
+    surveyDisplayDateString: null as null | string,
     // User answers to survey
     surveyAnswers: {
       wasHome: undefined,
@@ -26,25 +28,34 @@ export const useSurveyStore = defineStore('survey', {
       const databaseStore = useDatabaseStore();
       databaseStore.postDocument('survey', this.surveyAnswers);
     },
+    checkAndDisplaySurvey() {
+      const currentDate = new Date();
+      const currentHour = currentDate.getHours();
+      if (currentHour === 19 && this.alertsSinceLastSurvey > 0) {
+        console.log('Showing survey...');
+        // Update when string for when survey sent
+        this.surveyDisplayDateString = currentDate.toLocaleDateString();
+        /**
+         * Note: Not sure why set timeout is needed here but otherwise
+         * string does not display on survey
+         */
+        setTimeout(() => {
+          this.surveyDisplayDateString = currentDate.toLocaleDateString();
+        }, 10);
+        // Store number of alerts
+        const alertsInLastTimePeriod = this.alertsSinceLastSurvey;
+        // Reset store (including count)
+        this.$reset();
+        // Set the number of alerts in last time period
+        this.alertsInLastTimePeriod = alertsInLastTimePeriod;
+        // Show modal
+        this.isShowSurveyModal = true;
+      }
+    },
     setup() {
-      const checkAndDisplaySurvey = () => {
-        const currentHour = new Date().getHours();
-        if (currentHour === 19 && this.alertsSinceLastSurvey > 0) {
-          console.log('Showing survey...');
-          // Store number of alerts
-          const alertsInLastTimePeriod = this.alertsSinceLastSurvey;
-          // Reset store (including count)
-          this.$reset();
-          // Set the number of alerts in last time period
-          this.alertsInLastTimePeriod = alertsInLastTimePeriod;
-          // Show modal
-          this.isShowSurveyModal = true;
-        }
-      };
-
+      this.checkAndDisplaySurvey();
       // Check every 5 minutes for surveys
-      checkAndDisplaySurvey();
-      setInterval(checkAndDisplaySurvey, 5 * 60 * 1000);
+      setInterval(this.checkAndDisplaySurvey, 5 * 60 * 1000);
     },
   },
 });

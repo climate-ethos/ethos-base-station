@@ -21,7 +21,12 @@
         </p>
 
         <!-- Survey Questions -->
-        <div class="q-mt-lg text-bold">Were you home today?</div>
+        <div class="q-mt-lg text-bold">
+          Were you home today?
+          <span>
+            (survey sent on the: {{ surveyStore.surveyDisplayDateString }})
+          </span>
+        </div>
         <q-option-group
           :options="wasHomeOptions"
           type="radio"
@@ -39,14 +44,19 @@
             v-model="surveyStore.surveyAnswers.coolingStrategiesUsed"
           />
 
-          <div class="q-mt-lg text-bold">
-            How effective do you feel the cooling strategies used were?
-          </div>
-          <q-option-group
-            :options="howEffectiveOptions"
-            type="radio"
-            v-model="surveyStore.surveyAnswers.howEffective"
-          />
+          <!-- Only ask how effective if they did cool themselves -->
+          <template
+            v-if="surveyStore.surveyAnswers.coolingStrategiesUsed.length > 0"
+          >
+            <div class="q-mt-lg text-bold">
+              How effective do you feel the cooling strategies used were?
+            </div>
+            <q-option-group
+              :options="howEffectiveOptions"
+              type="radio"
+              v-model="surveyStore.surveyAnswers.howEffective"
+            />
+          </template>
         </template>
 
         <q-btn
@@ -55,6 +65,7 @@
           size="xl"
           class="q-mt-lg full-width"
           v-close-popup
+          :disabled="!isSurveyComplete"
         />
       </template>
     </BaseModalScroll>
@@ -62,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import BaseModalScroll from './BaseModalScroll.vue';
 import { useSurveyStore } from 'src/stores/survey';
 import { coolingStrategies } from 'src/helpers/coolingStrategies';
@@ -95,12 +106,28 @@ export default defineComponent({
       { label: 'Extremely effective', value: 5 },
     ];
 
+    // Whether the survey is complete
+    const isSurveyComplete = computed(() => {
+      if (surveyStore.surveyAnswers.wasHome === undefined) {
+        return false; // "Were you home today?" question not answered.
+      } else if (surveyStore.surveyAnswers.wasHome === true) {
+        if (
+          surveyStore.surveyAnswers.coolingStrategiesUsed.length > 0 &&
+          surveyStore.surveyAnswers.howEffective === undefined
+        ) {
+          return false; // User cooled themselves but didn't indicate how effective
+        }
+      }
+      return true; // All questions answered.
+    });
+
     return {
       surveyStore,
       onHide,
       wasHomeOptions,
       coolingStrategiesUsedOptions,
       howEffectiveOptions,
+      isSurveyComplete,
     };
   },
 });

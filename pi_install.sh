@@ -35,7 +35,8 @@ rm /tmp/mycron
 
 echo "Modifying sudoers to allow systemctl commands without a password..."
 # Create a temporary sudoers file with the entry
-echo "pi ALL=(ALL) NOPASSWD: /bin/systemctl restart ethos-electron-app.service, /bin/systemctl restart ethos-python-server.service" > /tmp/sudoers_temp
+# This allows systemctl restart with no sudo, as well as setting date
+echo "pi ALL=(ALL) NOPASSWD: /bin/systemctl restart ethos-electron-app.service, /bin/systemctl restart ethos-python-server.service, /bin/date" > /tmp/sudoers_temp
 # Check the temporary sudoers file for syntax errors, and append it to the main sudoers file if it's okay
 sudo visudo -cf /tmp/sudoers_temp
 if [ $? -eq 0 ]; then

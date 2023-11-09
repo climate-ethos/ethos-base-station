@@ -27,11 +27,27 @@
  *   }
  * }
  */
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import { app } from '@electron/remote';
 
 contextBridge.exposeInMainWorld('myElectronAPI', {
   quit() {
     app.quit();
+  },
+  send: (channel, data) => {
+    const validChannels = ['set-system-time'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  on: (channel, func) => {
+    const validChannels = ['set-system-time-response'];
+    if (validChannels.includes(channel)) {
+      // Use a wrapper to call the passed function
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
+    }
+  },
+  removeAllListeners: (channel) => {
+    ipcRenderer.removeAllListeners(channel);
   },
 });

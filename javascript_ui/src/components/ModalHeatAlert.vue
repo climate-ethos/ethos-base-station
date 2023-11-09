@@ -15,8 +15,9 @@
             }}
             if you remain in that area.
           </div>
-          <div class="fontsize-20 text-bold q-mt-md">
-            Your risk level is estimated to be: {{ riskLevelText }}
+          <div class="fontsize-20 q-mt-md">
+            Your risk level is estimated to be:
+            <span class="fontsize-20 text-bold">{{ riskLevelText }}</span>
           </div>
           <div
             class="fontsize-20 q-mt-md"
@@ -25,8 +26,9 @@
             Please consider cooling the space with air conditioning or making
             your way to a cooler location if safe (e.g., shops, library).
           </div>
-          <div v-if="coolestRoomString" class="fontsize-20 text-bold q-mt-md">
-            The lowest risk area for you is currently: {{ coolestRoomString }}
+          <div v-if="coolestRoomString" class="fontsize-20 q-mt-md">
+            The lowest risk area for you is currently:
+            <span class="fontsize-20 text-bold">{{ coolestRoomString }}</span>
           </div>
         </q-card-section>
 
@@ -78,10 +80,11 @@ export default defineComponent({
     const coolestRoomString = computed(() => {
       const location = dataSensorStore.getCoolestSensor?.location;
       const riskLevel = dataSensorStore.getCoolestSensor?.riskLevel;
+      const riskLevelText = getRiskLevelText(riskLevel);
       if (!location || !riskLevel) {
         return undefined;
       }
-      return `${location} (risk level: ${riskLevel})`;
+      return `${location} (risk level: ${riskLevelText})`;
     });
 
     // Whether to show the modal
@@ -143,9 +146,8 @@ export default defineComponent({
       }
     });
 
-    // Risk level text
-    const riskLevelText = computed(() => {
-      switch (dataAlertsStore.alertRiskLevel) {
+    const getRiskLevelText = (riskLevel: RiskLevel | undefined) => {
+      switch (riskLevel) {
         case RiskLevel.LOW:
           return 'LOW';
         case RiskLevel.MEDIUM:
@@ -155,7 +157,12 @@ export default defineComponent({
         default:
           return 'unknown';
       }
-    });
+    };
+
+    // Risk level text
+    const riskLevelText = computed(() =>
+      getRiskLevelText(dataAlertsStore.alertRiskLevel)
+    );
 
     // Send data to database when modal dismissed
     const dismissModalAndSendToDatabase = (

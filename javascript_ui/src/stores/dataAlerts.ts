@@ -109,7 +109,7 @@ export const useDataAlertsStore = defineStore('dataAlerts', {
 
       // Display alert
       surveyStore.incrementAlertCount();
-      this.alertRiskLevel = RiskLevel.LOW;
+      this.alertRiskLevel = sensorData.riskLevel;
 
       // Update last alert time
       this.lastAlerts[sensorData.riskLevel] = currentTime;

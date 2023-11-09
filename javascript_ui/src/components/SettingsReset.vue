@@ -42,19 +42,25 @@ import { useRouter } from 'vue-router';
 import { defineComponent, ref } from 'vue';
 import { useDataPreferencesStore } from 'src/stores/dataPreferences';
 import { useDatabaseStore } from 'src/stores/database';
+import { useDataAlertsStore } from 'src/stores/dataAlerts';
+import { useWeatherStore } from 'src/stores/weather';
 
 export default defineComponent({
   setup() {
     const isShowWarning = ref(false);
     const router = useRouter();
+    const dataAlertsStore = useDataAlertsStore();
     const dataUserStore = useDataUserStore();
     const dataSensorStore = useDataSensorStore();
     const dataPreferencesStore = useDataPreferencesStore();
     const volumeStore = useVolumeStore();
     const databaseStore = useDatabaseStore();
+    const weatherStore = useWeatherStore();
     const resetData = async () => {
       // Clear pinia stores
       volumeStore.$reset();
+      weatherStore.$reset();
+      dataAlertsStore.$reset();
       dataUserStore.$reset();
       dataSensorStore.$reset();
       dataPreferencesStore.$reset();

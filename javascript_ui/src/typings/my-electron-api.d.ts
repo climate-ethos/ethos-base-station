@@ -5,6 +5,9 @@ declare module 'my-electron-api' {
     interface Window {
       myElectronAPI?: {
         quit: () => void;
+        send: (channel: string, data: any) => void;
+        on: (channel: string, func: (...args: any[]) => void) => void;
+        removeAllListeners: (channel: string) => void;
       };
     }
   }

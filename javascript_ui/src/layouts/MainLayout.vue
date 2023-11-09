@@ -3,6 +3,7 @@
     <!-- Register Modals -->
     <ModalNoConnection />
     <ModalSurvey />
+    <ModalChangeDateTime v-model="isShowChangeDateTimeModal" />
     <ModalVolume v-model="isShowVolumeModal" />
     <ModalHeatAlert @open-cooling-modal="isShowCoolingModal = true" />
     <ModalRoomSelection />
@@ -27,7 +28,9 @@
           class="q-ml-md fontsize-16"
         />
 
-        <BaseCurrentTime class="fontsize-20" />
+        <div @click="showChangeDateTimeModalHandler.handlePress()">
+          <BaseCurrentTime class="fontsize-20" />
+        </div>
         <BaseNetworkConnection />
 
         <q-toolbar-title></q-toolbar-title>
@@ -98,6 +101,7 @@ import ModalVolume from 'src/components/ModalVolume.vue';
 import ModalFanInfo from 'src/components/ModalFanInfo.vue';
 import ModalSurvey from 'src/components/ModalSurvey.vue';
 import ModalRoomSelection from 'src/components/ModalRoomSelection.vue';
+import ModalChangeDateTime from 'src/components/ModalChangeDateTime.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -113,12 +117,14 @@ export default defineComponent({
     BaseNetworkConnection,
     ModalSurvey,
     ModalRoomSelection,
+    ModalChangeDateTime,
   },
   setup() {
     const keyboardStore = useKeyboardStore();
     const volumeStore = useVolumeStore();
     let isShowSettingsButton = ref(false);
     let isShowVolumeModal = ref(false);
+    let isShowChangeDateTimeModal = ref(false);
     let isShowCoolingModal = ref(false);
     let isShowHelpModal = ref(false);
     let isShowFanModal = ref(false);
@@ -147,6 +153,11 @@ export default defineComponent({
       isShowSettingsButton.value = false;
     };
 
+    // Function to show date time modal if activated multiple times in quick succession
+    let showChangeDateTimeModalHandler = new RepeatedPressHandler(7, () => {
+      isShowChangeDateTimeModal.value = true;
+    });
+
     return {
       keyboardStore,
       volumeIcon,
@@ -157,6 +168,8 @@ export default defineComponent({
       isShowFanModal,
       showSettingsButtonHandler,
       hideSettingsButton,
+      isShowChangeDateTimeModal,
+      showChangeDateTimeModalHandler,
     };
   },
 });
