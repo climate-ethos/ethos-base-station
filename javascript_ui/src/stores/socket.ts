@@ -21,7 +21,7 @@ interface ServerToClientEvents {
   data: (data: SocketSensorData) => void;
 }
 interface ClientToServerEvents {
-  calculatePredictedCoreTemperature: (
+  calculateChangeCoreTemperature: (
     data: SocketEnvironmentalConditions,
     callback: (response: number) => void
   ) => void;
@@ -66,7 +66,7 @@ export const useSocketStore = defineStore('socket', {
      * @param sensorData The current sensorData
      * @returns The predicted core temperature for an individual after 3 hours
      */
-    calculatePredictedCoreTemperature(
+    calculateChangeCoreTemperature(
       sensorData: SensorData
     ): Promise<number | undefined> {
       return new Promise((resolve) => {
@@ -105,13 +105,9 @@ export const useSocketStore = defineStore('socket', {
           RH: sensorData.humidity,
         };
         // Resolve the response from the server (which should be core temperature)
-        this.socket.emit(
-          'calculatePredictedCoreTemperature',
-          data,
-          (response) => {
-            resolve(response);
-          }
-        );
+        this.socket.emit('calculateChangeCoreTemperature', data, (response) => {
+          resolve(response);
+        });
       });
     },
   },

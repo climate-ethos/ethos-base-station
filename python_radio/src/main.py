@@ -6,7 +6,7 @@ import threading
 # For stopping execution when shutting down
 import signal
 
-from core_temperature import RiskLevelData, calculate_predicted_core_temperature
+from core_temperature import RiskLevelData, calculate_change_core_temperature
 
 try:
   import board
@@ -42,8 +42,8 @@ def disconnect(sid):
 
 # Take in RiskLevelData and return core temperature
 @sio.event
-async def calculatePredictedCoreTemperature(sid, data: RiskLevelData):
-  return calculate_predicted_core_temperature(data)
+async def calculateChangeCoreTemperature(sid, data: RiskLevelData):
+  return calculate_change_core_temperature(data)
 
 # Function to shutdown the process when termination signal received
 async def shutdown_server(loop):

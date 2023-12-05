@@ -5,6 +5,8 @@
         <div class="row items-center">
           <div>Help</div>
           <q-space />
+          <img src="griffith.svg" height="40" class="q-mr-lg" />
+          <img src="ethos.svg" height="50" class="q-mr-lg" />
           <div class="q-mr-md text-subtitle1">v{{ version }}</div>
           <q-btn icon="close" color="primary" v-close-popup>Close</q-btn>
         </div>

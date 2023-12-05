@@ -109,9 +109,10 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     group: 'Clothing related',
     extraInfo: {
       bestUse: [
-        'Soak a towel or clothing in icy water, wring it out slightly, so it remains damp but not dripping wet.',
+        'Soak a towel or clothing in cool or icy water, wring it out, so it remains damp but not dripping wet.',
+        'Wear clothes as you normally would, sit in front of a fan for greater effect (if it is under 38 degrees).',
         'Drape the cold wet towel over your head, neck, and shoulders for around 2 minutes and repeat every 10 minutes.',
-        'Re-wet the towel as needed to maintain its cooling effect when it starts to dry out or warm up.',
+        'Re-wet the towel or clothing as needed to maintain its cooling effect when it starts to dry out or warm up.',
         'Use a breathable, lightweight fabric like cotton for the towel to maximise the evaporative cooling effect.',
         'Combine the wet towel method with other cooling strategies, such as fans or air conditioning, for better results.',
       ],
@@ -250,6 +251,7 @@ export const coolingStrategies: Record<string, CoolingStrategy> = {
     extraInfo: {
       bestUse: [
         'Begin with lukewarm water and gradually decrease the temperature to a level that is cool and refreshing.',
+        'Shower for 5-15 minutes and repeat as needed (roughly every hour).',
         'Use a shower head with different settings that allow you to control the water flow and coverage.',
         'Focus the cool water all over your body to maximise cool water coverage.',
       ],

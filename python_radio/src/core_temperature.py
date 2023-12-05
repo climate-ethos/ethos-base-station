@@ -12,7 +12,7 @@ class RiskLevelData(TypedDict):
   Ta: float
   RH: float
 
-def calculate_predicted_core_temperature(data: RiskLevelData) -> Union[None, float]:
+def calculate_change_core_temperature(data: RiskLevelData) -> Union[None, float]:
   print('Calculating core temp...')
   # Extract types
   heightM = data.get('heightM')
@@ -39,5 +39,6 @@ def calculate_predicted_core_temperature(data: RiskLevelData) -> Union[None, flo
   model.PAR = 1.6
   model.simulate(180)
 
+  start_core_temp = model.dict_results()['TcrPelvis'][0]
   final_core_temp = model.dict_results()['TcrPelvis'][-1]
-  return final_core_temp
+  return final_core_temp - start_core_temp

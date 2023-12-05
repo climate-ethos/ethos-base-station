@@ -12,7 +12,7 @@
       </div>
       <div class="q-mt-sm">
         <q-icon name="phone" />
-        {{ phone }}
+        07 {{ phone }}
       </div>
     </q-card-section>
   </q-card>

@@ -2,16 +2,16 @@
   <BaseModalScroll>
     <template #header>
       <div class="row items-center">
+        <div class="fontsize-20 text-bold q-ml-md">{{ strategy.name }}</div>
+        <q-space />
         <q-btn
-          class="fontsize-12"
+          class="fontsize-12 q-mr-lg"
           icon="arrow_back"
           color="primary"
           @click="$emit('back')"
         >
           back
         </q-btn>
-        <div class="fontsize-20 text-bold q-ml-md">{{ strategy.name }}</div>
-        <q-space />
         <q-btn
           icon="close"
           color="primary"

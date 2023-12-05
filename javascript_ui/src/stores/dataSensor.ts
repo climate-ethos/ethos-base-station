@@ -32,7 +32,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         voltage: undefined,
         rssi: undefined,
         lastSeen: undefined,
-        coreTemperature: undefined,
+        coreTemperatureDelta: undefined,
         riskLevel: undefined,
       },
       {
@@ -43,7 +43,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         voltage: undefined,
         rssi: undefined,
         lastSeen: undefined,
-        coreTemperature: undefined,
+        coreTemperatureDelta: undefined,
         riskLevel: undefined,
       },
       {
@@ -54,7 +54,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         voltage: undefined,
         rssi: undefined,
         lastSeen: undefined,
-        coreTemperature: undefined,
+        coreTemperatureDelta: undefined,
         riskLevel: undefined,
       },
       {
@@ -65,7 +65,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         voltage: undefined,
         rssi: undefined,
         lastSeen: undefined,
-        coreTemperature: undefined,
+        coreTemperatureDelta: undefined,
         riskLevel: undefined,
       },
     ] as Array<SensorData>, // sensor data
@@ -221,10 +221,10 @@ export const useDataSensorStore = defineStore('dataSensor', {
         sensorData.voltage = voltage;
         sensorData.rssi = rssi;
         sensorData.lastSeen = new Date(Date.now());
-        sensorData.coreTemperature =
-          await socketStore.calculatePredictedCoreTemperature(sensorData);
+        sensorData.coreTemperatureDelta =
+          await socketStore.calculateChangeCoreTemperature(sensorData);
         const oldRiskLevel = sensorData.riskLevel; // Save old risk level
-        sensorData.riskLevel = getRiskLevel(sensorData.coreTemperature);
+        sensorData.riskLevel = getRiskLevel(sensorData.coreTemperatureDelta);
 
         // Send sensor data to database
         databaseStore.postDocument('sensor', {
@@ -234,7 +234,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
           humidity: sensorData.humidity,
           voltage: sensorData.voltage,
           rssi: sensorData.rssi,
-          coreTemperature: sensorData.coreTemperature,
+          coreTemperatureDelta: sensorData.coreTemperatureDelta,
         });
 
         // Check whether to send alert and alert if necessary

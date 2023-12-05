@@ -61,20 +61,20 @@ export const findOutdoorSensorIndex = (sensorData: Array<SensorData>) => {
 
 /**
  * Determine the risk level based on the given core temperature.
- * @param {number | undefined} coreTemperature - The core temperature value.
+ * @param {number | undefined} coreTemperatureDelta - The core temperature value.
  * @returns {RiskLevel | undefined} Returns the risk level or undefined if the input is invalid or unknown error occurs.
  */
-export const getRiskLevel = (coreTemperature: number | undefined) => {
-  if (!coreTemperature) {
+export const getRiskLevel = (coreTemperatureDelta: number | undefined) => {
+  if (!coreTemperatureDelta) {
     console.error(
       'Unable to calculate risk level (core temperature undefined)'
     );
     return undefined;
-  } else if (coreTemperature >= 37.9) {
+  } else if (coreTemperatureDelta >= 0.2) {
     return RiskLevel.HIGH;
-  } else if (coreTemperature >= 37.8) {
+  } else if (coreTemperatureDelta >= 0.11) {
     return RiskLevel.MEDIUM;
-  } else if (coreTemperature < 37.8) {
+  } else if (coreTemperatureDelta < 0.11) {
     return RiskLevel.LOW;
   } else {
     console.error('Unable to calculate risk level (unknown error)');

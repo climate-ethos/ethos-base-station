@@ -15,7 +15,7 @@ export interface SensorData {
   voltage: number | undefined;
   rssi: number | undefined;
   lastSeen: Date | undefined;
-  coreTemperature: number | undefined;
+  coreTemperatureDelta: number | undefined;
   riskLevel: RiskLevel | undefined;
 }
 

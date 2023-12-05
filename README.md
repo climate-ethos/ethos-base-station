@@ -116,7 +116,7 @@ Definitions for the structure can be found in `javascript_ui/src/typings/databas
   sensorId: number | undefined;
   temperature: number | undefined;
   humidity: number | undefined;
-  coreTemperature: number | undefined;
+  coreTemperatureDelta: number | undefined;
 }
 ```
 
@@ -216,13 +216,13 @@ The Data Sensor store is designed to manage sensor data, including alert states 
 
 - `alertSensor`: Holds the sensor data for the current alert. It is of type `SensorData` which includes fields like `id`, `name`, `temperature`, etc.
 
-- `allSensorData`: An array that contains objects of type `SensorData`. Each object holds information about a sensor including its `id`, `name`, `temperature`, `humidity`, `lastSeen`, `coreTemperature`, and `riskLevel`.
+- `allSensorData`: An array that contains objects of type `SensorData`. Each object holds information about a sensor including its `id`, `name`, `temperature`, `humidity`, `lastSeen`, `coreTemperatureDelta`, and `riskLevel`.
   - `id`: Sensor identification number.
   - `name`: Sensor name (in this case where it is located).
   - `temperature`: Current temperature data from the sensor (in degrees Celsius).
   - `humidity`: Current humidity data from the sensor (relative humidity).
   - `lastSeen`: The most recent time the sensor was active.
-  - `coreTemperature`: Calculated core temperature, using the JOS-3 model.
+  - `coreTemperatureDelta`: Calculated change of core temperature from baseline, using the JOS-3 model.
   - `riskLevel`: Calculated risk level based on core temperature.
 
 The `allSensorData` array is initialized with four sensor objects, each having their fields set to `undefined`.

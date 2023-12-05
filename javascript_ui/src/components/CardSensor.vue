@@ -42,7 +42,7 @@
       <q-card-section class="q-ml-sm q-pa-none row">
         <div class="fontsize-22 text-bold">DONT USE FAN</div>
         <q-btn
-          icon="question_mark"
+          icon="info"
           @click.stop="isShowFanModel = true"
           class="q-mr-md absolute-right"
           color="warning"

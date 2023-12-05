@@ -13,7 +13,7 @@ export interface SensorDatabaseStructure {
   humidity: number | undefined;
   voltage: number | undefined;
   rssi: number | undefined;
-  coreTemperature: number | undefined;
+  coreTemperatureDelta: number | undefined;
 }
 
 export interface WeatherDatabaseStructure {
