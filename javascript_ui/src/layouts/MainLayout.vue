@@ -31,7 +31,7 @@
         <div @click="showChangeDateTimeModalHandler.handlePress()">
           <BaseCurrentTime class="fontsize-20" />
         </div>
-        <BaseNetworkConnection />
+        <BaseNetworkConnection @click="surveyStore.showSurvey" />
 
         <q-toolbar-title></q-toolbar-title>
 
@@ -88,6 +88,7 @@ import { defineComponent, ref, computed, provide } from 'vue';
 
 import { useKeyboardStore } from 'src/stores/keyboard';
 import { useVolumeStore } from 'src/stores/volume';
+import { useSurveyStore } from 'src/stores/survey';
 import RepeatedPressHandler from 'src/helpers/RepeatedPressHandler';
 
 import BaseNetworkConnection from 'src/components/BaseNetworkConnection.vue';
@@ -122,6 +123,7 @@ export default defineComponent({
   setup() {
     const keyboardStore = useKeyboardStore();
     const volumeStore = useVolumeStore();
+    const surveyStore = useSurveyStore();
     let isShowSettingsButton = ref(false);
     let isShowVolumeModal = ref(false);
     let isShowChangeDateTimeModal = ref(false);
@@ -160,6 +162,7 @@ export default defineComponent({
 
     return {
       keyboardStore,
+      surveyStore,
       volumeIcon,
       isShowSettingsButton,
       isShowVolumeModal,
