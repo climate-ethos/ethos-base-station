@@ -31,7 +31,7 @@
         <div @click="showChangeDateTimeModalHandler.handlePress()">
           <BaseCurrentTime class="fontsize-20" />
         </div>
-        <BaseNetworkConnection @click="surveyStore.showSurvey" />
+        <BaseNetworkConnection @click="showDemoSurvey" />
 
         <q-toolbar-title></q-toolbar-title>
 
@@ -161,6 +161,13 @@ export default defineComponent({
       isShowChangeDateTimeModal.value = true;
     });
 
+    // Function to show the demo survey
+    const showDemoSurvey = () => {
+      surveyStore.isActiveBomAlert = true;
+      surveyStore.alertsSinceLastSurvey = 2;
+      surveyStore.showSurvey();
+    };
+
     return {
       keyboardStore,
       surveyStore,
@@ -172,6 +179,7 @@ export default defineComponent({
       isShowFanModal,
       showSettingsButtonHandler,
       hideSettingsButton,
+      showDemoSurvey,
       isShowChangeDateTimeModal,
       showChangeDateTimeModalHandler,
     };
