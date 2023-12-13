@@ -10,6 +10,7 @@ import { useWeatherStore } from 'stores/weather';
 import { useDataPreferencesStore } from './stores/dataPreferences';
 import { useDatabaseStore } from './stores/database';
 import { useSurveyStore } from './stores/survey';
+import { useSocketBomStore } from './stores/socketBom';
 import { useDateTimeStore } from './stores/dateTime';
 import { useDataUserStore } from './stores/dataUser';
 
@@ -32,6 +33,10 @@ export default defineComponent({
     // Start updating time
     const dateTimeStore = useDateTimeStore();
     dateTimeStore.startInterval();
+
+    // Setup BOM survey pooling
+    const socketBomStore = useSocketBomStore();
+    socketBomStore.startPolling();
 
     // Initialize database
     const databaseStore = useDatabaseStore();

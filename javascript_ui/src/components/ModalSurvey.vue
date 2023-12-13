@@ -1,3 +1,13 @@
+<!-- The structure of the survey is given below -->
+<!--
+  1. (if ethos alert) Were you home on the day of the survey when any of the Ethos heat alerts came through? (Options: Yes/No)
+  2. (if ethos alert) Were you aware of any alerts from the Ethos System? (Options: Yes/No)
+  3. (if bom alert) Were you aware of any alerts from The Bureau of Meteorology for the date of the survey? (Options: Yes/No)
+  4. (if bom alert and yes) How did you hear about The Bureau of Meteorology alert (select all that apply). (Newspaper, TV, Radio, Online news, BOM Website, BOM application, Social media, Word of mouth (e.g. friends or family), The Ethos Survey, Other)
+  5. Were you home on the day of the survey to implement cooling strategies?
+  6. (if home) What cooling strategies did you use (if any)? (Users can tick all that apply.)
+  7. (if used cooling strategies) How effective do you feel the cooling strategies used were? (This will be based on a Likert scale.)
+-->
 <template>
   <q-dialog
     full-width
@@ -15,28 +25,120 @@
         </div>
       </template>
       <template #main>
+        <!-- HEADER TEXT -->
         <p class="fontsize-20">
-          It appears you have had {{ surveyStore.alertsInLastTimePeriod }} heat
-          alert/s recently. We'd appreciate if you could fill out this short
-          survey (4 questions).
+          <!-- If Ethos heat alert survey -->
+          <span v-if="surveyStore.alertsInLastTimePeriod > 0">
+            It appears you have had
+            {{ surveyStore.alertsInLastTimePeriod }} heat alert/s recently.
+          </span>
+          <!-- If BOM alert survey -->
+          <span v-if="surveyStore.isShowBomQuestions">
+            The Bureau of Meteorology (BOM) issued a Severe or Extreme heatwave
+            alert for South East Queensland today.
+          </span>
+          We'd appreciate if you could fill out this short survey (survey sent
+          on the: {{ surveyStore.surveyDisplayDateString }}).
         </p>
 
-        <!-- Survey Questions -->
+        <!-- SURVEY QUESTIONS -->
+        <!-- Question 1 -->
+        <template v-if="surveyStore.alertsInLastTimePeriod > 0">
+          <div class="q-mt-lg text-bold fontsize-20">
+            Were you home on the day of the survey when any of the Ethos heat
+            alerts came through?
+            <span>
+              (survey sent on the: {{ surveyStore.surveyDisplayDateString }})
+            </span>
+          </div>
+          <q-option-group
+            :options="yesOrNoOptions"
+            type="radio"
+            class="q-mb-xl fontsize-20"
+            v-model="surveyStore.surveyAnswers.wasHomeForEthosAlert"
+          />
+        </template>
+
+        <!-- Question 2 -->
+        <template
+          v-if="
+            surveyStore.alertsInLastTimePeriod > 0 &&
+            surveyStore.surveyAnswers.wasHomeForEthosAlert
+          "
+        >
+          <div class="q-mt-lg text-bold fontsize-20">
+            Were you aware of any alerts from the Ethos System?
+          </div>
+          <q-option-group
+            :options="yesOrNoOptions"
+            type="radio"
+            class="q-mb-xl fontsize-20"
+            v-model="surveyStore.surveyAnswers.awareOfEthosAlert"
+          />
+        </template>
+
+        <!-- Question 3 -->
+        <template v-if="surveyStore.isShowBomQuestions">
+          <div class="q-mt-lg text-bold fontsize-20">
+            Were you aware of any heatwave alerts from The Bureau of Metrology
+            (BOM) for the date of the survey?
+            <span>
+              (survey sent on the: {{ surveyStore.surveyDisplayDateString }})
+            </span>
+          </div>
+          <q-option-group
+            :options="yesOrNoOptions"
+            type="radio"
+            class="q-mb-xl fontsize-20"
+            v-model="surveyStore.surveyAnswers.awareOfBomAlert"
+          />
+        </template>
+
+        <!-- Question 4 -->
+        <template
+          v-if="
+            surveyStore.isShowBomQuestions &&
+            surveyStore.surveyAnswers.awareOfBomAlert
+          "
+        >
+          <div class="q-mt-lg text-bold fontsize-20">
+            How did you hear about the BOM heatwave alert? (select all that
+            apply)
+          </div>
+          <q-option-group
+            :options="howAwareOfBomAlertOptions"
+            type="checkbox"
+            class="q-mb-xl fontsize-20"
+            v-model="surveyStore.surveyAnswers.howAwareOfBomAlert"
+          />
+          <input-keyboard
+            v-if="
+              surveyStore.surveyAnswers.howAwareOfBomAlert.includes('other')
+            "
+            v-model="surveyStore.surveyAnswers.howAwareOfBomAlertOther"
+            :custom-rule="() => true"
+            type="text"
+            label="How did you hear of BOM warning? Click here to enter more info..."
+          />
+        </template>
+
+        <!-- Question 5 -->
         <div class="q-mt-lg text-bold fontsize-20">
-          Were you home today when any of the Ethos heat alerts came through?
+          Were you home on the day of the survey to implement cooling
+          strategies?
           <span>
             (survey sent on the: {{ surveyStore.surveyDisplayDateString }})
           </span>
         </div>
         <q-option-group
-          :options="wasHomeOptions"
+          :options="yesOrNoOptions"
           type="radio"
           class="q-mb-xl fontsize-20"
-          v-model="surveyStore.surveyAnswers.wasHome"
+          v-model="surveyStore.surveyAnswers.wasHomeForCooling"
         />
 
-        <!-- Only show other questions if they were home -->
-        <template v-if="surveyStore.surveyAnswers.wasHome === true">
+        <!-- Question 6 -->
+        <template v-if="surveyStore.surveyAnswers.wasHomeForCooling">
           <div class="q-mt-lg text-bold fontsize-20">
             What cooling strategies did you use (if any)?
           </div>
@@ -46,21 +148,33 @@
             class="q-mb-xl fontsize-20"
             v-model="surveyStore.surveyAnswers.coolingStrategiesUsed"
           />
+          <input-keyboard
+            v-if="
+              surveyStore.surveyAnswers.coolingStrategiesUsed.includes('other')
+            "
+            v-model="surveyStore.surveyAnswers.coolingStrategiesUsedOther"
+            :custom-rule="() => true"
+            type="text"
+            label="What other cooling strategies did you use? Click here to enter more info..."
+          />
+        </template>
 
-          <!-- Only ask how effective if they did cool themselves -->
-          <template
-            v-if="surveyStore.surveyAnswers.coolingStrategiesUsed.length > 0"
-          >
-            <div class="q-mt-lg text-bold fontsize-20">
-              How effective do you feel the cooling strategies used were?
-            </div>
-            <q-option-group
-              :options="howEffectiveOptions"
-              type="radio"
-              class="q-mb-xl fontsize-20"
-              v-model="surveyStore.surveyAnswers.howEffective"
-            />
-          </template>
+        <!-- Question 7 -->
+        <template
+          v-if="
+            surveyStore.surveyAnswers.wasHomeForCooling &&
+            surveyStore.surveyAnswers.coolingStrategiesUsed.length > 0
+          "
+        >
+          <div class="q-mt-lg text-bold fontsize-20">
+            How effective do you feel the cooling strategies used were?
+          </div>
+          <q-option-group
+            :options="howEffectiveOptions"
+            type="radio"
+            class="q-mb-xl fontsize-20"
+            v-model="surveyStore.surveyAnswers.howEffective"
+          />
         </template>
 
         <q-btn
@@ -69,7 +183,6 @@
           size="xl"
           class="q-mt-xl full-width"
           v-close-popup
-          :disabled="!isSurveyComplete"
         />
       </template>
     </BaseModalScroll>
@@ -77,14 +190,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import BaseModalScroll from './BaseModalScroll.vue';
 import { useSurveyStore } from 'src/stores/survey';
 import { coolingStrategies } from 'src/helpers/coolingStrategies';
+import InputKeyboard from 'src/components/InputKeyboard.vue';
 
 export default defineComponent({
   name: 'ModalSurvey',
-  components: { BaseModalScroll },
+  components: { BaseModalScroll, InputKeyboard },
   setup() {
     const surveyStore = useSurveyStore();
 
@@ -93,7 +207,7 @@ export default defineComponent({
       surveyStore.postSurveyAnswers();
     };
 
-    const wasHomeOptions = [
+    const yesOrNoOptions = [
       { label: 'Yes', value: true },
       { label: 'No', value: false },
     ];
@@ -101,6 +215,20 @@ export default defineComponent({
     const coolingStrategiesUsedOptions = Object.keys(coolingStrategies)
       .map((key) => ({ label: coolingStrategies[key].name, value: key }))
       .concat([{ label: 'Other', value: 'other' }]);
+
+    const howAwareOfBomAlertOptions = [
+      { label: 'Newspaper', value: 'newspaper' },
+      { label: 'TV', value: 'tv' },
+      { label: 'Radio', value: 'radio' },
+      { label: 'Online news', value: 'online news' },
+      { label: 'Social media', value: 'social media' },
+      {
+        label: 'Word of mouth (e.g. friends or family)',
+        value: 'word of mouth',
+      },
+      { label: 'The ethos system', value: 4 },
+      { label: 'Other', value: 'other' },
+    ];
 
     const howEffectiveOptions = [
       { label: 'Not effective at all', value: 1 },
@@ -110,28 +238,13 @@ export default defineComponent({
       { label: 'Extremely effective', value: 5 },
     ];
 
-    // Whether the survey is complete
-    const isSurveyComplete = computed(() => {
-      if (surveyStore.surveyAnswers.wasHome === undefined) {
-        return false; // "Were you home today?" question not answered.
-      } else if (surveyStore.surveyAnswers.wasHome === true) {
-        if (
-          surveyStore.surveyAnswers.coolingStrategiesUsed.length > 0 &&
-          surveyStore.surveyAnswers.howEffective === undefined
-        ) {
-          return false; // User cooled themselves but didn't indicate how effective
-        }
-      }
-      return true; // All questions answered.
-    });
-
     return {
       surveyStore,
       onHide,
-      wasHomeOptions,
+      yesOrNoOptions,
       coolingStrategiesUsedOptions,
+      howAwareOfBomAlertOptions,
       howEffectiveOptions,
-      isSurveyComplete,
     };
   },
 });

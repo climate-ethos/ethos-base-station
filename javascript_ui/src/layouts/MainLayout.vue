@@ -75,6 +75,7 @@
 
     <q-footer
       class="text-black"
+      style="z-index: 9999999999"
       elevated
       :model-value="keyboardStore.isKeyboardBound"
     >

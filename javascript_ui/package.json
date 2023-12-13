@@ -1,6 +1,6 @@
 {
   "name": "ethos-electron-app",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Project that displays temperature information and presents warnings/advice depending on the situation",
   "productName": "Ethos Heat Monitor",
   "author": "Connor Forbes <cforbes.software@gmail.com>",

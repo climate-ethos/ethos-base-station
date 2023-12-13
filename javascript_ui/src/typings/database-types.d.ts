@@ -35,8 +35,14 @@ export interface PreferencesDatabaseStructure {
 }
 
 export interface SurveyDatabaseStructure {
-  wasHome: undefined | boolean;
+  wasHomeForEthosAlert: undefined | boolean;
+  awareOfEthosAlert: undefined | boolean;
+  awareOfBomAlert: undefined | boolean;
+  howAwareOfBomAlert: Array<string>;
+  howAwareOfBomAlertOther: string;
+  wasHomeForCooling: undefined | boolean;
   coolingStrategiesUsed: Array<string>;
+  coolingStrategiesUsedOther: string;
   howEffective: undefined | number;
 }
 
