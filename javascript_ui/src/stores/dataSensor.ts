@@ -142,7 +142,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         humidity: 45.9,
         lastSeen: new Date(Date.now() - 34 * 1000),
         riskLevel: RiskLevel.LOW,
-        coreTemperature: 37.3,
+        coreTemperatureDelta: 0,
         voltage: 4.2,
         rssi: -70,
       };
@@ -152,7 +152,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         humidity: 51.2,
         lastSeen: new Date(Date.now() - 520 * 1000),
         riskLevel: RiskLevel.MEDIUM,
-        coreTemperature: 37.3,
+        coreTemperatureDelta: 0.1,
         voltage: 4.2,
         rssi: -84,
       };
@@ -162,7 +162,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         humidity: 49.7,
         lastSeen: new Date(Date.now() - 185 * 1000),
         riskLevel: RiskLevel.LOW,
-        coreTemperature: 37.3,
+        coreTemperatureDelta: 0,
         voltage: 4.2,
         rssi: -84,
       };
@@ -172,7 +172,7 @@ export const useDataSensorStore = defineStore('dataSensor', {
         humidity: 56.3,
         lastSeen: new Date(Date.now() - 120 * 1000),
         riskLevel: RiskLevel.HIGH,
-        coreTemperature: 37.3,
+        coreTemperatureDelta: 0.2,
         voltage: 4.2,
         rssi: -104,
       };
