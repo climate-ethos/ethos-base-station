@@ -21,7 +21,13 @@
         <div class="row items-center">
           <div>Survey</div>
           <q-space />
-          <q-btn icon="close" color="primary" v-close-popup>Close</q-btn>
+          <q-btn
+            icon="close"
+            color="primary"
+            v-close-popup
+            :disable="disableCloseButton"
+            >Close</q-btn
+          >
         </div>
       </template>
       <template #main>
@@ -166,15 +172,25 @@
             surveyStore.surveyAnswers.coolingStrategiesUsed.length > 0
           "
         >
-          <div class="q-mt-lg text-bold fontsize-20">
-            How effective do you feel the cooling strategies used were?
+          <div
+            v-for="(strategy, index) in surveyStore.surveyAnswers
+              .coolingStrategiesUsed"
+            :key="index"
+            class="q-mt-lg"
+          >
+            <div class="text-bold fontsize-20">
+              How effective do you feel the
+              {{ coolingStrategies[strategy].name }} strategy was?
+            </div>
+            <q-option-group
+              :options="howEffectiveOptions"
+              type="radio"
+              class="q-mb-xl fontsize-20"
+              v-model="
+                surveyStore.surveyAnswers.effectivenessOfStrategies[strategy]
+              "
+            />
           </div>
-          <q-option-group
-            :options="howEffectiveOptions"
-            type="radio"
-            class="q-mb-xl fontsize-20"
-            v-model="surveyStore.surveyAnswers.howEffective"
-          />
         </template>
 
         <q-btn
@@ -190,17 +206,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch, ref } from 'vue';
 import BaseModalScroll from './BaseModalScroll.vue';
 import { useSurveyStore } from 'src/stores/survey';
 import { coolingStrategies } from 'src/helpers/coolingStrategies';
 import InputKeyboard from 'src/components/InputKeyboard.vue';
+import { useKeyboardStore } from 'src/stores/keyboard';
 
 export default defineComponent({
   name: 'ModalSurvey',
   components: { BaseModalScroll, InputKeyboard },
   setup() {
     const surveyStore = useSurveyStore();
+    const keyboardStore = useKeyboardStore();
 
     const onHide = () => {
       // Post data to store when survey closed
@@ -238,10 +256,32 @@ export default defineComponent({
       { label: 'Extremely effective', value: 5 },
     ];
 
+    // This logic handles disabling the close button for 0.6s after the keyboard is closed
+    const disableCloseButton = ref(false);
+    let timeoutId: number | null = null; // Reference for the timeout
+    watch(
+      () => keyboardStore.isKeyboardBound,
+      (newValue) => {
+        if (newValue) {
+          disableCloseButton.value = true;
+          if (timeoutId) {
+            clearTimeout(timeoutId); // Clear the existing timeout
+          }
+        } else {
+          // When keyboard is unbound, start a new timer
+          timeoutId = setTimeout(() => {
+            disableCloseButton.value = false;
+          }, 600) as unknown as number;
+        }
+      }
+    );
+
     return {
       surveyStore,
+      disableCloseButton,
       onHide,
       yesOrNoOptions,
+      coolingStrategies,
       coolingStrategiesUsedOptions,
       howAwareOfBomAlertOptions,
       howEffectiveOptions,

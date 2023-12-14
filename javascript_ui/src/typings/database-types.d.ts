@@ -43,7 +43,7 @@ export interface SurveyDatabaseStructure {
   wasHomeForCooling: undefined | boolean;
   coolingStrategiesUsed: Array<string>;
   coolingStrategiesUsedOther: string;
-  howEffective: undefined | number;
+  effectivenessOfStrategies: Record<string, number>;
 }
 
 export interface AlertDatabaseStructure {

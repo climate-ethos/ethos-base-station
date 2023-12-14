@@ -30,7 +30,7 @@ export const useSurveyStore = defineStore('survey', {
       wasHomeForCooling: undefined,
       coolingStrategiesUsed: [],
       coolingStrategiesUsedOther: '',
-      howEffective: undefined,
+      effectivenessOfStrategies: {},
     } as SurveyDatabaseStructure,
   }),
   actions: {
