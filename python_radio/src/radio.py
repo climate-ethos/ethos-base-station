@@ -1,13 +1,9 @@
 
 from adafruit_rfm9x import RFM9x
-import time
 from typing import Union, Optional, TypedDict
 from logger import Logger
 # For unpacking binary data
 import struct
-
-# For typing stop_event
-from threading import Event
 
 # For radio encryption
 from Crypto.Cipher import AES
