@@ -62,6 +62,11 @@ class Logger:
         # Use the named logger instance to log the error
         Logger._logger.error(msg)
 
+    @staticmethod
+    def warn(msg):
+        # Use the named logger instance to log the warning
+        Logger._logger.warn(msg)
+
 # Setup logger
 Logger.setup()
 

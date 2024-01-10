@@ -1,7 +1,7 @@
 
 from adafruit_rfm9x import RFM9x
 import time
-from typing import Union
+from typing import Union, Optional, TypedDict
 from logger import Logger
 # For unpacking binary data
 import struct
@@ -22,13 +22,20 @@ load_dotenv(dotenv_path=dotenv_path)
 AES_KEY_STRING = os.getenv('AES_KEY')
 AES_KEY = AES_KEY_STRING.encode("utf-8")
 
+class RadioData(TypedDict):
+    id: int
+    temperature: float
+    humidity: float
+    voltage: float
+    rssi: float
+
 def decrypt_data(data: bytes) -> bytes:
     """Decrypt data using AES in ECB mode."""
     cipher = AES.new(AES_KEY, AES.MODE_ECB)
     decrypted_data = cipher.decrypt(data)
     return decrypted_data
 
-def radio_listen(rfm9x: RFM9x):
+def radio_listen(rfm9x: RFM9x) -> Optional[RadioData]:
   # Radio listen loop
   try:
     radio_packet = rfm9x.receive(timeout=5.0)
@@ -42,10 +49,12 @@ def radio_listen(rfm9x: RFM9x):
 
   if len(radio_packet) < 16:
     # The radio packet must not be the right type
+    Logger.error(f"Received packet of length {len(radio_packet)}")
     return
 
   if len(radio_packet) > 16:
     # We may have received some extra bytes in transit, try trimming them off the end
+    Logger.warn(f"Received packet of length {len(radio_packet)}, trimming to 16 bytes")
     radio_packet = radio_packet[:16]
 
   # Decrypt recieved radio data
@@ -69,22 +78,17 @@ def radio_listen(rfm9x: RFM9x):
 
   # Log radio data
   Logger.log_radio_data(radio_data)
-  # Return sensor ID
-  return radio_data["id"]
+  # Return sensor data
+  return radio_data
 
 
-def process_packet(packet: bytearray, rssi: Union[float, int]):
+def process_packet(packet: bytearray, rssi: Union[float, int]) -> Optional[RadioData]:
   try:
     # Unpack the packet into respective fields "IIIITTTTHHHHVVVV"
     # Where I is ID, T is temperature, H is humidity and V is voltage
     sensorId, temperatureC, humidityRH, batteryVoltage = struct.unpack('ifff', packet)
 
-    # Sanity check values to assure that we are getting correct radio signal
-    if not (0 < sensorId < 1000
-            and -100 < temperatureC < 100
-            and 0 <= humidityRH <= 100
-            and 0 <= batteryVoltage <= 10):
-      raise ValueError("Incorrect data... id: {0}, temp: {1}, RH: {2}, voltage: {3}".format(sensorId, temperatureC, humidityRH, batteryVoltage))
+    # Removed sanity check as we want to return all values
 
     return {
       "id": sensorId,
