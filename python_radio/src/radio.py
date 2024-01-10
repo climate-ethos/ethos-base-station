@@ -37,16 +37,16 @@ def radio_listen(rfm9x: RFM9x) -> Optional[RadioData]:
     radio_packet = rfm9x.receive(timeout=5.0)
   except Exception as e:
     Logger.error(f"Error receiving packet: {e}")
-    return
+    return None
 
   if radio_packet is None:
     # No data received, listen again
-    return
+    return None
 
   if len(radio_packet) < 16:
     # The radio packet must not be the right type
     Logger.error(f"Received packet of length {len(radio_packet)}")
-    return
+    return None
 
   if len(radio_packet) > 16:
     # We may have received some extra bytes in transit, try trimming them off the end
@@ -58,7 +58,7 @@ def radio_listen(rfm9x: RFM9x) -> Optional[RadioData]:
     decrypted_packet = decrypt_data(radio_packet)
   except:
     Logger.error(f"Error decrypting data")
-    return
+    return None
 
   # Process packet string to radio data
   rssi = rfm9x.last_rssi
@@ -66,11 +66,11 @@ def radio_listen(rfm9x: RFM9x) -> Optional[RadioData]:
     radio_data = process_packet(decrypted_packet, rssi)
   except Exception as e:
     Logger.error(f"Error processing packet: {e}")
-    return
+    return None
 
   if radio_data is None:
     # Radio data was of wrong type
-    return
+    return None
 
   # Log radio data
   Logger.log_radio_data(radio_data)

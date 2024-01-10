@@ -46,6 +46,15 @@ if __name__ == '__main__':
 
   # Start radio listen
   while True:
+    # Display sorted list of active sensor IDs
+    clear_terminal()
+    print("Active sensor IDs:", sorted(active_sensor_ids.keys()))
+    print("Unable to get measurement:", sorted(unable_to_get_measurement_ids.keys()))
+    print("Invalid sensor values:", sorted(invalid_sensor_values_ids.keys()))
+    print("Error initializing sensor:", sorted(error_initializing_sensor_ids.keys()))
+    print("Invalid voltage:", sorted(invalid_voltage_ids.keys()))
+
+    # Listen for radio data
     radio_data = radio_listen(rfm9x)
     if radio_data is None:
       continue
@@ -57,8 +66,6 @@ if __name__ == '__main__':
     voltage = radio_data["voltage"]
 
     if sensorId:
-      active_sensor_ids[sensorId] = time.time()
-
       if temperature == -900 or humidity == -900:
         unable_to_get_measurement_ids[sensorId] = time.time()
       elif temperature == -800 or humidity == -800:
@@ -67,17 +74,11 @@ if __name__ == '__main__':
         error_initializing_sensor_ids[sensorId] = time.time()
       elif voltage == -900:
         invalid_voltage_ids[sensorId] = time.time()
+      else:
+        active_sensor_ids[sensorId] = time.time()
 
     prune_old_ids(active_sensor_ids, TIME_LIMIT)
     prune_old_ids(unable_to_get_measurement_ids, TIME_LIMIT)
     prune_old_ids(invalid_sensor_values_ids, TIME_LIMIT)
     prune_old_ids(error_initializing_sensor_ids, TIME_LIMIT)
     prune_old_ids(invalid_voltage_ids, TIME_LIMIT)
-
-    # Display sorted list of active sensor IDs
-    clear_terminal()
-    print("Active sensor IDs:", sorted(active_sensor_ids.keys()))
-    print("Unable to get measurement:", sorted(unable_to_get_measurement_ids.keys()))
-    print("Invalid sensor values:", sorted(invalid_sensor_values_ids.keys()))
-    print("Error initializing sensor:", sorted(error_initializing_sensor_ids.keys()))
-    print("Invalid voltage:", sorted(invalid_voltage_ids.keys()))
