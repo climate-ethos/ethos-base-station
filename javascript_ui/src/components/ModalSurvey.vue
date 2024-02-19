@@ -180,7 +180,16 @@
           >
             <div class="text-bold fontsize-20">
               How effective do you feel the
-              {{ coolingStrategies[strategy].name }} strategy was?
+              {{
+                coolingStrategies[strategy]
+                  ? coolingStrategies[strategy].name
+                  : `Other (${
+                      surveyStore.surveyAnswers.coolingStrategiesUsedOther
+                        ? surveyStore.surveyAnswers.coolingStrategiesUsedOther
+                        : 'not specified'
+                    })`
+              }}
+              strategy was?
             </div>
             <q-option-group
               :options="howEffectiveOptions"
@@ -240,11 +249,13 @@ export default defineComponent({
       { label: 'Radio', value: 'radio' },
       { label: 'Online news', value: 'online news' },
       { label: 'Social media', value: 'social media' },
+      { label: 'BOM website', value: 'bom website' },
+      { label: 'BOM application', value: 'bom application' },
       {
         label: 'Word of mouth (e.g. friends or family)',
         value: 'word of mouth',
       },
-      { label: 'The ethos system', value: 4 },
+      { label: 'The ethos system', value: 'ethos' },
       { label: 'Other', value: 'other' },
     ];
 
