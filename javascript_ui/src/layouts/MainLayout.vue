@@ -17,7 +17,10 @@
           v-if="$route.path !== '/settings'"
           src="ethos.svg"
           height="50"
-          @click="showSettingsButtonHandler.handlePress()"
+          @click="
+            dataSensorStore.setDemoData();
+            showSettingsButtonHandler.handlePress();
+          "
         />
         <q-btn
           v-if="$route.path !== '/' && $route.path !== '/initialize'"
@@ -104,6 +107,7 @@ import ModalFanInfo from 'src/components/ModalFanInfo.vue';
 import ModalSurvey from 'src/components/ModalSurvey.vue';
 import ModalRoomSelection from 'src/components/ModalRoomSelection.vue';
 import ModalChangeDateTime from 'src/components/ModalChangeDateTime.vue';
+import { useDataSensorStore } from 'src/stores/dataSensor';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -122,6 +126,7 @@ export default defineComponent({
     ModalChangeDateTime,
   },
   setup() {
+    const dataSensorStore = useDataSensorStore();
     const keyboardStore = useKeyboardStore();
     const volumeStore = useVolumeStore();
     const surveyStore = useSurveyStore();
@@ -169,6 +174,7 @@ export default defineComponent({
     };
 
     return {
+      dataSensorStore,
       keyboardStore,
       surveyStore,
       volumeIcon,

@@ -136,46 +136,41 @@ export const useDataSensorStore = defineStore('dataSensor', {
 
   actions: {
     setDemoData() {
-      this.allSensorData[0] = {
-        ...this.allSensorData[0],
-        temperature: 31.1,
-        humidity: 45.9,
-        lastSeen: new Date(Date.now() - 34 * 1000),
-        riskLevel: RiskLevel.LOW,
-        coreTemperatureDelta: 0,
-        voltage: 4.2,
-        rssi: -70,
-      };
-      this.allSensorData[1] = {
-        ...this.allSensorData[1],
-        temperature: 33.4,
-        humidity: 51.2,
-        lastSeen: new Date(Date.now() - 600 * 1000),
-        riskLevel: RiskLevel.LOW,
-        coreTemperatureDelta: 0.1,
-        voltage: 4.2,
-        rssi: -84,
-      };
-      this.allSensorData[2] = {
-        ...this.allSensorData[2],
-        temperature: 29.2,
-        humidity: 49.7,
-        lastSeen: new Date(Date.now() - 185 * 1000),
-        riskLevel: RiskLevel.LOW,
-        coreTemperatureDelta: 0,
-        voltage: 4.2,
-        rssi: -84,
-      };
-      this.allSensorData[3] = {
-        ...this.allSensorData[3],
-        temperature: 35.5,
-        humidity: 56.3,
-        lastSeen: new Date(Date.now() - 120 * 1000),
-        riskLevel: RiskLevel.MEDIUM,
-        coreTemperatureDelta: 0.2,
-        voltage: 4.2,
-        rssi: -104,
-      };
+      // Sensor 0 (Main bedroom)
+      this.allSensorData[0].temperature = 31.1;
+      this.allSensorData[0].humidity = 45.9;
+      this.allSensorData[0].lastSeen = new Date(Date.now() - 34 * 1000);
+      this.allSensorData[0].riskLevel = RiskLevel.LOW;
+      this.allSensorData[0].coreTemperatureDelta = 0;
+      this.allSensorData[0].voltage = 4.2;
+      this.allSensorData[0].rssi = -70;
+
+      // Sensor 1 (Living room)
+      this.allSensorData[1].temperature = 33.4;
+      this.allSensorData[1].humidity = 51.2;
+      this.allSensorData[1].lastSeen = new Date(Date.now() - 600 * 1000);
+      this.allSensorData[1].riskLevel = RiskLevel.LOW;
+      this.allSensorData[1].coreTemperatureDelta = 0.1;
+      this.allSensorData[1].voltage = 4.2;
+      this.allSensorData[1].rssi = -84;
+
+      // Sensor 2 (Kitchen)
+      this.allSensorData[2].temperature = 29.2;
+      this.allSensorData[2].humidity = 49.7;
+      this.allSensorData[2].lastSeen = new Date(Date.now() - 185 * 1000);
+      this.allSensorData[2].riskLevel = RiskLevel.LOW;
+      this.allSensorData[2].coreTemperatureDelta = 0;
+      this.allSensorData[2].voltage = 4.2;
+      this.allSensorData[2].rssi = -84;
+
+      // Sensor 3 (Outside)
+      this.allSensorData[3].temperature = 35.5;
+      this.allSensorData[3].humidity = 56.3;
+      this.allSensorData[3].lastSeen = new Date(Date.now() - 120 * 1000);
+      this.allSensorData[3].riskLevel = RiskLevel.MEDIUM;
+      this.allSensorData[3].coreTemperatureDelta = 0.2;
+      this.allSensorData[3].voltage = 4.2;
+      this.allSensorData[3].rssi = -104;
     },
     showDemoAlert() {
       console.log('Showing demo alert');
