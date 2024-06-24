@@ -3,10 +3,8 @@
     <q-card-section horizontal class="full-height">
       <q-card-section>
         <div class="text-center">
-          <q-icon :name="iconName" size="100px" />
-          <div class="fontsize-16 text-capitalize">
-            {{ weatherStore.weatherDescription }}
-          </div>
+          <q-icon name="ion-sunny" size="100px" />
+          <div class="fontsize-16 text-capitalize">Clear Sky</div>
         </div>
       </q-card-section>
 
@@ -15,9 +13,7 @@
       <div class="full-width">
         <q-card-section class="q-pa-sm">
           <div class="fontsize-22 text-bold">
-            <span v-if="weatherStore.stationName">
-              {{ weatherStore.stationName }} -
-            </span>
+            <span> Southport - </span>
             <span>Weather Station</span>
           </div>
         </q-card-section>
@@ -27,10 +23,8 @@
         <q-card-section class="q-pa-sm fontsize-26">
           <div class="row">
             <div class="col">
-              <div>
-                Temperature: {{ weatherStore.currentTemp?.toFixed(1) }}°C
-              </div>
-              <div>Humidity: {{ weatherStore.currentHumidity }}% RH</div>
+              <div>Temperature: 35.1°C</div>
+              <div>Humidity: 59% RH</div>
               <q-btn
                 @click="displayDetailedForecast"
                 class="q-mt-sm fontsize-14"
