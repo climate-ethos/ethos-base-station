@@ -30,6 +30,7 @@ export default {
     const showDemoAlert = () => {
       console.log('Showing alert in 5 seconds');
       setTimeout(() => {
+        dataSensorStore.showDemoAlert();
         dataAlertsStore.alertRiskLevel = RiskLevel.MEDIUM;
         playAudio(
           dataPreferencesStore.audioType,

@@ -135,47 +135,66 @@ export const useDataSensorStore = defineStore('dataSensor', {
   },
 
   actions: {
+    setDemoData() {
+      this.allSensorData[0] = {
+        ...this.allSensorData[0],
+        temperature: 31.1,
+        humidity: 45.9,
+        lastSeen: new Date(Date.now() - 34 * 1000),
+        riskLevel: RiskLevel.LOW,
+        coreTemperatureDelta: 0,
+        voltage: 4.2,
+        rssi: -70,
+      };
+      this.allSensorData[1] = {
+        ...this.allSensorData[1],
+        temperature: 33.4,
+        humidity: 51.2,
+        lastSeen: new Date(Date.now() - 600 * 1000),
+        riskLevel: RiskLevel.LOW,
+        coreTemperatureDelta: 0.1,
+        voltage: 4.2,
+        rssi: -84,
+      };
+      this.allSensorData[2] = {
+        ...this.allSensorData[2],
+        temperature: 29.2,
+        humidity: 49.7,
+        lastSeen: new Date(Date.now() - 185 * 1000),
+        riskLevel: RiskLevel.LOW,
+        coreTemperatureDelta: 0,
+        voltage: 4.2,
+        rssi: -84,
+      };
+      this.allSensorData[3] = {
+        ...this.allSensorData[3],
+        temperature: 35.5,
+        humidity: 56.3,
+        lastSeen: new Date(Date.now() - 120 * 1000),
+        riskLevel: RiskLevel.MEDIUM,
+        coreTemperatureDelta: 0.2,
+        voltage: 4.2,
+        rssi: -104,
+      };
+    },
+    showDemoAlert() {
+      console.log('Showing demo alert');
+      const dataAlertsStore = useDataAlertsStore();
+
+      // Update sensor data
+      const sensorData = this.allSensorData[1];
+      sensorData.temperature = 34.4;
+      sensorData.humidity = 53.9;
+      sensorData.lastSeen = new Date(Date.now());
+      sensorData.coreTemperatureDelta = 0.11;
+      const oldRiskLevel = sensorData.riskLevel; // Save old risk level
+      sensorData.riskLevel = RiskLevel.MEDIUM;
+
+      // Check whether to send alert and alert if necessary
+      dataAlertsStore.handleAlertLogic(sensorData, oldRiskLevel);
+    },
     setup() {
-      // this.allSensorData[0] = {
-      //   ...this.allSensorData[0],
-      //   temperature: 33.1,
-      //   humidity: 45.9,
-      //   lastSeen: new Date(Date.now() - 34 * 1000),
-      //   riskLevel: RiskLevel.LOW,
-      //   coreTemperatureDelta: 0,
-      //   voltage: 4.2,
-      //   rssi: -70,
-      // };
-      // this.allSensorData[1] = {
-      //   ...this.allSensorData[1],
-      //   temperature: 35.4,
-      //   humidity: 51.2,
-      //   lastSeen: new Date(Date.now() - 520 * 1000),
-      //   riskLevel: RiskLevel.MEDIUM,
-      //   coreTemperatureDelta: 0.1,
-      //   voltage: 4.2,
-      //   rssi: -84,
-      // };
-      // this.allSensorData[2] = {
-      //   ...this.allSensorData[2],
-      //   temperature: 29.2,
-      //   humidity: 49.7,
-      //   lastSeen: new Date(Date.now() - 185 * 1000),
-      //   riskLevel: RiskLevel.LOW,
-      //   coreTemperatureDelta: 0,
-      //   voltage: 4.2,
-      //   rssi: -84,
-      // };
-      // this.allSensorData[3] = {
-      //   ...this.allSensorData[3],
-      //   temperature: 38.5,
-      //   humidity: 56.3,
-      //   lastSeen: new Date(Date.now() - 120 * 1000),
-      //   riskLevel: RiskLevel.HIGH,
-      //   coreTemperatureDelta: 0.2,
-      //   voltage: 4.2,
-      //   rssi: -104,
-      // };
+      this.setDemoData();
 
       // Load stores
       const databaseStore = useDatabaseStore();
