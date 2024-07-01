@@ -170,10 +170,10 @@ export const useDataSensorStore = defineStore('dataSensor', {
       this.allSensorData[2].rssi = -84;
 
       // Sensor 3 (Outside)
-      this.allSensorData[3].temperature = 35.5;
+      this.allSensorData[3].temperature = 33.2;
       this.allSensorData[3].humidity = 56.3;
       this.allSensorData[3].lastSeen = new Date(now.getTime() - 120 * 1000);
-      this.allSensorData[3].riskLevel = RiskLevel.MEDIUM;
+      this.allSensorData[3].riskLevel = RiskLevel.LOW;
       this.allSensorData[3].coreTemperatureDelta = 0.2;
       this.allSensorData[3].voltage = 4.2;
       this.allSensorData[3].rssi = -104;
@@ -182,14 +182,31 @@ export const useDataSensorStore = defineStore('dataSensor', {
       console.log('Showing demo alert');
       const dateTimeStore = useDateTimeStore();
       const now = dateTimeStore.currentDate;
+      const sensorData = this.allSensorData[1];
+
+      const mediumAlertTemperature = 34.4;
+      const highAlertTemperature = 36.7;
 
       // Update sensor data
-      const sensorData = this.allSensorData[1];
-      sensorData.temperature = 34.4;
-      sensorData.humidity = 53.9;
-      sensorData.lastSeen = now;
-      sensorData.coreTemperatureDelta = 0.11;
-      sensorData.riskLevel = RiskLevel.MEDIUM;
+      if (
+        sensorData.temperature &&
+        sensorData.temperature < mediumAlertTemperature
+      ) {
+        // Show medium alert
+        sensorData.temperature = mediumAlertTemperature;
+        sensorData.humidity = 53.9;
+        sensorData.lastSeen = now;
+        sensorData.coreTemperatureDelta = 0.11;
+        sensorData.riskLevel = RiskLevel.MEDIUM;
+      } else {
+        // Show high alert
+        const sensorData = this.allSensorData[1];
+        sensorData.temperature = highAlertTemperature;
+        sensorData.humidity = 52.3;
+        sensorData.lastSeen = now;
+        sensorData.coreTemperatureDelta = 0.11;
+        sensorData.riskLevel = RiskLevel.HIGH;
+      }
     },
     setup() {
       this.setDemoData();
