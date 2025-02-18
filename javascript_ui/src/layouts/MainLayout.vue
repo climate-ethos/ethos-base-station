@@ -42,6 +42,13 @@
         <SleepButton />
 
         <q-btn
+          @click="sendTestPushNotification()"
+          class="q-mr-lg fontsize-16"
+          color="info"
+          label="send push notification"
+        />
+
+        <q-btn
           v-if="$route.path !== '/settings' && $route.path !== '/phoneAppHome'"
           @click="isShowCoolingModal = true"
           class="q-mr-lg fontsize-16"
@@ -111,6 +118,8 @@ import ModalFanInfo from 'src/components/ModalFanInfo.vue';
 import ModalSurvey from 'src/components/ModalSurvey.vue';
 import ModalRoomSelection from 'src/components/ModalRoomSelection.vue';
 import ModalChangeDateTime from 'src/components/ModalChangeDateTime.vue';
+import { useDataPhoneNumberStore } from 'src/stores/dataPhoneNumberStore';
+import { RiskLevel } from 'src/typings/data-types';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -132,6 +141,7 @@ export default defineComponent({
   setup() {
     const keyboardStore = useKeyboardStore();
     const volumeStore = useVolumeStore();
+    const dataPhoneNumberStore = useDataPhoneNumberStore();
     let isShowSettingsButton = ref(false);
     let isShowVolumeModal = ref(false);
     let isShowChangeDateTimeModal = ref(false);
@@ -168,6 +178,13 @@ export default defineComponent({
       isShowChangeDateTimeModal.value = true;
     });
 
+    const sendTestPushNotification = () => {
+      dataPhoneNumberStore.sendAlertPushNotifications(
+        'Main bedroom',
+        RiskLevel.MEDIUM
+      );
+    };
+
     return {
       keyboardStore,
       volumeIcon,
@@ -180,6 +197,7 @@ export default defineComponent({
       hideSettingsButton,
       isShowChangeDateTimeModal,
       showChangeDateTimeModalHandler,
+      sendTestPushNotification,
     };
   },
 });
